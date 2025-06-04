@@ -1,0 +1,307 @@
+﻿@model JumboSaccoPortal.Controllers.LoanApplicationPageModel
+@{
+    ViewBag.Title = "New Loan Application";
+}
+
+<div class="pageheader">
+    <h1>New Loan Application</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+
+<div class="pagecontent">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-error">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    <div class="alert alert-error" style="display:none">
+        @TempData["ErrorMessage"]
+    </div>
+
+    <div class="innercontent">
+        <div class="section-view">
+            <p><strong>Member Name: </strong>@Model.usermodel.MemberName</p>
+            <p id="eligibilitypid"><strong>Maximum Eligibility: </strong> Please select a Loan Type to calculate eligibility.</p>
+        </div>
+
+        @using (Html.BeginForm("SubmitLoanApplication", "Loans", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.usermodel.MemberNumber)
+            @Html.HiddenFor(m => m.usermodel.TotalDeposits, new { id = "memberShareCapital" })
+
+    <div class="section-view">
+        <h2>Loan Application Details</h2>
+
+        <div class="cpgroup">
+            <label for="LoanType">Loan Type:</label>
+            <select id="LoanType" name="LoanType" class="form-control" required>
+                <option value="">-- Select Loan Type --</option>
+                @if (Model.loantypesmodel != null)
+                {
+                    foreach (var loantype in Model.loantypesmodel.LoanTypes)
+                    {
+                        <option value="@loantype.LoanCode"
+                                data-max-installments="@loantype.LoanInstallments"
+                                data-multiplier="@loantype.LoanMultiplier">
+                            @loantype.LoanDescription
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="cpgroup">
+            <label for="RequestedAmount">Requested Amount (Kshs):</label>
+            <input type="number" id="RequestedAmount" name="RequestedAmount"
+                   class="form-control"
+                   min="1000" step="100" required disabled />
+        </div>
+
+        <div class="cpgroup">
+            <label for="RepaymentPeriod">Repayment Period (Months):</label>
+            <input type="number" id="RepaymentPeriod" name="RepaymentPeriod"
+                   class="form-control" min="1" required disabled />
+        </div>
+
+
+        <h2>Required Documents</h2>
+        <div class="cpgroup">
+            <label for="IDCopy">National ID Copy (PDF/Image):</label>
+            <input type="file" id="IDCopy" name="IDCopy" class="form-control-file" accept=".pdf,.jpg,.jpeg,.png" required disabled />
+        </div>
+
+        <div class="cpgroup">
+            <label for="KRAPin">KRA Pin Certificate (PDF/Image):</label>
+            <input type="file" id="KRAPin" name="KRAPin" class="form-control-file" accept=".pdf,.jpg,.jpeg,.png" required disabled />
+        </div>
+
+        <h3>Attach Three Most Recent Payslips</h3>
+        <div class="cpgroup">
+            <label for="Payslip">Latest Payslip 1 (PDF/Image):</label>
+            <input type="file" id="Payslip1" name="Payslip1" class="form-control-file" accept=".pdf,.jpg,.jpeg,.png" required disabled />
+        </div>
+
+        <div class="cpgroup">
+            <label for="Payslip">Latest Payslip 2 (PDF/Image):</label>
+            <input type="file" id="Payslip2" name="Payslip2" class="form-control-file" accept=".pdf,.jpg,.jpeg,.png" required disabled />
+        </div>
+
+        <div class="cpgroup">
+            <label for="Payslip">Latest Payslip 3(PDF/Image):</label>
+            <input type="file" id="Payslip3" name="Payslip3" class="form-control-file" accept=".pdf,.jpg,.jpeg,.png" required disabled />
+        </div>
+
+        <h2>Optional Documents</h2>
+        <div class="cpgroup">
+            <label for="CollateralCopy">Collateral Document Copy (PDF/Image):</label>
+            <input type="file" id="CollateralCopy" name="CollateralCopy" class="form-control-file" accept=".pdf,.jpg,.jpeg,.png" required disabled />
+        </div>
+
+        <div class="cpgroup">
+            <button type="submit" class="btn btn-primary" id="submitButton" disabled>Submit Application</button>
+            <a href="@Url.Action("Index", "Loans")" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var errorDiv = $('.alert-error');
+        var repaymentPeriodInput = $('#RepaymentPeriod');
+        var requestedAmountInput = $('#RequestedAmount');
+        var eligibilityDisplay = $('#eligibilitypid'); // Reference to the eligibility paragraph
+        var memberShareCapital = parseFloat($('#memberShareCapital').val() || '0'); // Get member's share capital, default to 0 if null/empty
+
+        // Array of input fields to be enabled/disabled together
+        var fieldsToToggle = [
+            requestedAmountInput,
+            repaymentPeriodInput,
+            $('#IDCopy'),
+            $('#KRAPin'),
+            $('#Payslip1'),
+            $('#Payslip2'),
+            $('#Payslip3'),
+            $('#CollateralCopy'),
+            $('#submitButton')
+        ];
+
+        // This will now be dynamically updated based on loan type selection
+        var currentCalculatedMaxLoanEligibility = 0; // Initialize to 0
+
+        function showClientError(message) {
+            errorDiv.text(message);
+            errorDiv.show();
+            $('html, body').animate({
+                scrollTop: errorDiv.offset().top - 50
+            }, 500);
+        }
+
+        function clearClientError() {
+            errorDiv.text('');
+            errorDiv.hide();
+        }
+
+        // Function to enable/disable fields
+        function toggleFields(enable) {
+            fieldsToToggle.forEach(function (field) {
+                field.prop('disabled', !enable);
+            });
+        }
+
+        // Initially disable all relevant fields on page load
+        toggleFields(false);
+
+
+        // Validate requested amount doesn't exceed maximum eligibility
+        requestedAmountInput.on('change', function () {
+            var requestedAmount = parseFloat($(this).val());
+            if (isNaN(requestedAmount) || requestedAmount < 1000) {
+                showClientError('Requested amount must be at least 1,000 Kshs.');
+                $(this).val(1000); // Set to min
+            }
+            else if (currentCalculatedMaxLoanEligibility > 0 && requestedAmount > currentCalculatedMaxLoanEligibility) {
+                showClientError('Requested amount cannot exceed your maximum eligibility of ' + currentCalculatedMaxLoanEligibility.toLocaleString() + ' Kshs.');
+                $(this).val(currentCalculatedMaxLoanEligibility);
+            } else {
+                clearClientError();
+            }
+        });
+
+        // Store the maximum installments for the currently selected loan type
+        var currentMaxInstallments = 0; // Initialize to 0
+
+        // Event listener for Loan Type change
+        $('#LoanType').on('change', function () {
+            clearClientError();
+            var selectedOption = $(this).find('option:selected');
+            var maxInstallments = parseInt(selectedOption.data('max-installments'));
+            var multiplier = parseFloat(selectedOption.data('multiplier')); // Get the multiplier
+
+            if ($(this).val() === "") {
+                // If no loan type is selected
+                toggleFields(false); // Disable all fields
+                repaymentPeriodInput.val(''); // Clear value
+                repaymentPeriodInput.removeAttr('max'); // Remove max attribute
+                requestedAmountInput.val(''); // Clear requested amount
+                requestedAmountInput.removeAttr('max'); // Remove max attribute from requested amount
+                currentMaxInstallments = 0; // Reset stored max
+                currentCalculatedMaxLoanEligibility = 0; // Reset calculated eligibility
+                eligibilityDisplay.html('<strong>Maximum Eligibility: </strong> Please select a Loan Type to calculate eligibility.'); // Reset eligibility message
+            } else {
+                // A loan type is selected, enable fields
+                toggleFields(true);
+
+                if (!isNaN(maxInstallments) && maxInstallments > 0) {
+                    currentMaxInstallments = maxInstallments;
+                    repaymentPeriodInput.prop('disabled', false); // Ensure this is enabled
+                    repaymentPeriodInput.attr('max', maxInstallments);
+                    // Adjust current value if it exceeds the new max
+                    repaymentPeriodInput.val(Math.min(parseInt(repaymentPeriodInput.val()) || 1, maxInstallments));
+                } else {
+                    showClientError("Maximum installments for this loan type are not defined or are invalid. Please select another loan type.");
+                    repaymentPeriodInput.prop('disabled', true);
+                    repaymentPeriodInput.val('');
+                    repaymentPeriodInput.removeAttr('max');
+                    currentMaxInstallments = 0;
+                }
+
+                // Calculate and update max eligibility based on multiplier
+                if (!isNaN(multiplier) && memberShareCapital > 0) {
+                    currentCalculatedMaxLoanEligibility = memberShareCapital * multiplier;
+                    eligibilityDisplay.html('<strong>Maximum Eligibility: </strong>' + currentCalculatedMaxLoanEligibility.toLocaleString() + ' Kshs.');
+                    requestedAmountInput.attr('max', currentCalculatedMaxLoanEligibility); // Set max attribute on requested amount input
+                } else {
+                    showClientError("Multiplier for this loan type is not defined or is invalid, or member share capital is not available. Maximum eligibility cannot be calculated.");
+                    currentCalculatedMaxLoanEligibility = 0; // Set to 0 if calculation fails
+                    eligibilityDisplay.html('<strong>Maximum Eligibility: </strong> Not available.');
+                    requestedAmountInput.removeAttr('max'); // Remove max if eligibility cannot be calculated
+                }
+            }
+        });
+
+        // Event listener for Repayment Period input change/blur for validation
+        repaymentPeriodInput.on('change blur', function () {
+            clearClientError();
+            var enteredPeriod = parseInt($(this).val());
+
+            if (isNaN(enteredPeriod) || enteredPeriod < 1) {
+                showClientError('Please enter a valid repayment period (a positive number of months).');
+                $(this).val(1); // Set to min
+            } else if (currentMaxInstallments > 0 && enteredPeriod > currentMaxInstallments) {
+                showClientError('Repayment period cannot exceed ' + currentMaxInstallments + ' months for the selected loan type.');
+                $(this).val(currentMaxInstallments); // Set to max allowed
+            }
+        });
+
+        // Final validation before form submission
+        $('form').on('submit', function (e) {
+            clearClientError();
+
+            if ($('#LoanType').val() === "") { // Check if loan type is selected
+                showClientError('Please select a Loan Type.');
+                e.preventDefault(); // Stop form submission
+                return false;
+            }
+
+            var enteredPeriod = parseInt(repaymentPeriodInput.val());
+            if (isNaN(enteredPeriod) || enteredPeriod < 1) {
+                showClientError('Please enter a valid repayment period (a positive number of months).');
+                e.preventDefault();
+                return false;
+            }
+
+            if (currentMaxInstallments > 0 && enteredPeriod > currentMaxInstallments) {
+                showClientError('Please correct the repayment period. It must not exceed ' + currentMaxInstallments + ' months for this loan type.');
+                e.preventDefault();
+                return false;
+            }
+
+            var requestedAmount = parseFloat(requestedAmountInput.val());
+            if (isNaN(requestedAmount) || requestedAmount <= 0) {
+                showClientError('Please enter a valid requested amount (a positive number).');
+                e.preventDefault();
+                return false;
+            }
+            if (requestedAmount < 1000) {
+                showClientError('Requested amount must be at least 1,000 Kshs.');
+                e.preventDefault();
+                return false;
+            }
+            if (currentCalculatedMaxLoanEligibility > 0 && requestedAmount > currentCalculatedMaxLoanEligibility) {
+                showClientError('Requested amount cannot exceed your maximum eligibility of ' + currentCalculatedMaxLoanEligibility.toLocaleString() + ' Kshs.');
+                e.preventDefault();
+                return false;
+            }
+
+
+            // Client-side validation for file uploads (ensure files are selected if required)
+            if (!$('#IDCopy').val()) {
+                showClientError('Please upload your National ID Copy.');
+                e.preventDefault();
+                return false;
+            }
+            if (!$('#KRAPin').val()) {
+                showClientError('Please upload your KRA Pin Certificate.');
+                e.preventDefault();
+                return false;
+            }
+            if (!$('#Payslip1').val() || !$('#Payslip2').val() || !$('#Payslip3').val()) {
+                showClientError('Please upload all three latest payslips.');
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>

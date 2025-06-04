@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LoginsLayout.cshtml";
+}
+
+<section class="loginarea">
+    <div class="top-side">
+        <img src="~/Content/images/generallogo.png" alt="Jumbo Sacco" class="topsidemage" />
+    </div>
+    <div class="loginbox">
+        <div class="loginbox-header">
+            <h1>Login</h1>
+        </div>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <form action="/Login/LoginSubmit" method="post" class="loginform">
+            <!-- Username or Email -->
+            <div class="form-group">
+                <input type="text" id="username" name="username" class="form-input" onchange="ConfirmInputs()" placeholder="Member Number" required />
+                <span class="inputerror" id="spanerror">Payroll Number is required *</span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <input type="password" id="password" name="password" class="form-input" onchange="ConfirmInputs()" placeholder="Password" required />
+                <span class="inputerror" id="spanerror1">Password is required *</span>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="loginbutton">Login</button>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="form-group">
+                <p>Forgot Password, <a href="/Login/ResetPassword">Click here</a> to reset your password</p>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<script>
+    function ConfirmInputs() {
+        const spanerror = document.getElementById('spanerror');
+        const spanerror1 = document.getElementById('spanerror1');
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (!username) {
+            spanerror.style.display = 'block';
+        }
+        if (username) {
+            spanerror.style.display = 'none';
+        }
+        if (!password) {
+            spanerror1.style.display = 'block';
+        }
+        if (password) {
+            spanerror1.style.display = 'none';
+        }
+        if (!captcha) {
+            spanerror2.style.display = 'block';
+        }
+        if (captcha) {
+            spanerror2.style.display = 'none';
+        }
+    }
+</script>

@@ -1,0 +1,133 @@
+﻿@model JumboSaccoPortal.Models.infoclasses.OnlineLoanApplication
+
+@{
+    ViewBag.Title = "Online Loan Applications";
+}
+
+<div class="pageheader">
+    <h1>Loan Application Details - @Model.LoanAppID</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+
+<div class="pagecontent">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-error">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="innercontent">
+        <div class="section-view">
+            <h2>Loan Details</h2>
+            <p><strong>Loan Type: </strong>@Model.LoanType</p>
+            <p><strong>Loan Status: </strong>@Model.Status</p>
+            <p><strong>Requested Amount: </strong>@Model.RequestedAmount Kshs</p>
+            <p><strong>Request Date: </strong>@Model.RequestDate</p>
+            <p><strong>Last Updated Date: </strong>@Model.LastUpdateDate</p>
+            <p><strong>Total Amount Guaranteed So Far: </strong>@Model.TotalGuaranteed</p>
+        </div>
+
+        <!-- Add Guarantor Section -->
+        <div class="section-view">
+            <h3>Add Guarantor</h3>
+            <div>
+                @using (Html.BeginForm("SearchGuarantor", "Loans", FormMethod.Post, new { id = "searchGuarantorForm" }))
+                {
+                    @Html.Hidden("loanId", Model.LoanAppID)
+                    <div class="form-group">
+                        <label for="guarantorId">Guarantor Member Number:</label>
+                        <input type="text" id="guarantorId" name="guarantorId" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                }
+            </div>
+
+            <div id="guarantorDetails" style="display: none;">
+                @using (Html.BeginForm("AddGuarantor", "Loans", FormMethod.Post))
+                {
+                    @Html.Hidden("loanId", Model.LoanAppID)
+                    @Html.Hidden("guarantorId", "", new { id = "addGuarantorId" })
+
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <span id="guarantorName"></span>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Guarantor</button>
+                }
+            </div>
+        </div>
+
+        <div class="openloansarea">
+            @if (Model.OnlineGuarantors.Any())
+            {
+                <h3>Loan Guarantors</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Guarantor Name</th>
+                            <th>Guarantorship Amount</th>
+                            <th>Guarantorship Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var guarantor in Model.OnlineGuarantors)
+                        {
+                            <tr>
+                                <td>@guarantor.GuarantorName</td>
+                                <td>@guarantor.ApprovedAmount</td>
+                                <td>@guarantor.GuarantorshipStatus</td>
+                                <td>
+                                    @if (@guarantor.GuarantorshipStatus == "Removed")
+                                    {
+                                    }
+                                    else
+                                    {
+                                        <button onclick="window.location.href = '@Url.Action("RemoveGuarantor", "Loans", new { loanid = Model.LoanAppID, guarantorshipid = guarantor.LoanAppID })'">Remove</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+    <script>
+        $(document).ready(function () {
+            // Handle guarantor search form submission with AJAX
+            $('#searchGuarantorForm').submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            $('#guarantorName').text(response.guarantorName);
+                            $('#addGuarantorId').val(response.guarantorId);
+                            $('#guarantorDetails').show();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while searching for the guarantor.');
+                    }
+                });
+            });
+        });
+    </script>

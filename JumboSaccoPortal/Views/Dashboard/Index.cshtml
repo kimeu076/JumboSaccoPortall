@@ -1,0 +1,175 @@
+﻿@model JumboSaccoPortal.Models.infoclasses.UserDetails
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="pageheader">
+    <h1>Welcome <span>@Model.Name</span></h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+
+<div class="dashcontent">
+    <div class="dashleft">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+        <div class="balances">
+            <h3 class="balanceheader">Account Balances</h3>
+            <div class="innerbalances">
+                <div class="scbalance">
+                    <h3>Share Capital Balance</h3>
+                    <h4><span>@Model.SharesCapitalAmount</span> Ksh</h4>
+                </div>
+                <div class="depbalance">
+                    <h3>Total Deposits Balance</h3>
+                    <h4><span>@Model.TotalDepositsAmount</span> Ksh</h4>
+                </div>
+                <div class="depbalance">
+                    <h3>Normal Deposits Balance</h3>
+                    <h4><span>@Model.NormalDepositsAmount</span> Ksh</h4>
+                </div>
+            </div>
+            <div class="innerbalances">
+                <div class="fdbalance">
+                    <h3>School Fees Savings</h3>
+                    <h4><span>@Model.SchoolFeesAmount</span> Ksh</h4>
+                </div>
+                <div class="loansbalance">
+                    <h3>Special Product Savings</h3>
+                    <h4><span>@Model.SpecialsAmount</span> Ksh</h4>
+                </div>
+                <div class="loansbalance">
+                    <h3>Holiday Savings</h3>
+                    <h4><span>@Model.HolidaySavingsAmount</span> Ksh</h4>
+                </div>
+            </div>
+            <div class="innerbalances">
+                <div class="fdbalance">
+                    <h3>Dividend Amount</h3>
+                    <h4><span>@Model.DividendAmount</span> Ksh</h4>
+                </div>
+                <div class="loansbalance">
+                    <h3>Housing Savings</h3>
+                    <h4><span>@Model.HousingSavingsAmount</span> Ksh</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="recenttrans">
+            <h3>Ministatement</h3>
+            <table border="1" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Model.UserMinistatements)
+                    {
+                        <tr>
+                            <td>@transaction.TransactionDate</td>
+                            <td>@transaction.Description</td>
+                            <td>@transaction.TransactionAmount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="dashright">
+        <div class="userdetails">
+            <h2>My Details</h2>
+            <p>Full Names: <span class="detailsspan">@Model.Name</span></p>
+            <p>Sacco Member Number: <span class="detailsspan">@Model.MemberNumber</span></p>
+            <p>ID Number: <span class="detailsspan">@Model.IDNumber</span></p>
+            <p>Phone Number: <span class="detailsspan">@Model.PhoneNumber</span></p>
+            <p>Email Address: <span class="detailsspan">@Model.Email</span></p>
+            <p>Date of Birth: <span class="detailsspan">@Model.DateOfBirth</span></p>
+            <p>Gender: <span class="detailsspan">@Model.Gender</span></p>
+        </div>
+        <div class="additionalbalances">
+            <div class="additionalbalance">
+                <h3>Total Loan Balances</h3>
+                <h4><span>@Model.LoanBalanceAmount</span> Ksh</h4>
+            </div>
+            <div class="additionalbalance">
+                <h3>Outstanding Loan Interest</h3>
+                <h4><span>@Model.LoanInterestAmount</span> Ksh</h4>
+            </div>
+            <div class="additionalbalance">
+                <h3>Un-Allocated Funds</h3>
+                <h4><span>@Model.UnallocatedAmount</span> Ksh</h4>
+            </div>
+            <div class="additionalbalance">
+                <h3>Free Shares to Self</h3>
+                <h4><span>@Model.FreeSharestoSelf</span> Ksh</h4>
+            </div>
+            <div class="additionalbalance">
+                <h3>Free Shares to Others</h3>
+                <h4><span>@Model.FreeSharestoOthers</span> Ksh</h4>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script>document.addEventListener("DOMContentLoaded", function () {
+        const images = document.querySelectorAll("#ad-slideshow .ad-image");
+        let currentImageIndex = 0;
+
+        function showNextImage() {
+            images.forEach((img, index) => {
+                img.style.opacity = index === currentImageIndex ? "1" : "0";
+            });
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+        }
+
+        // Show the first image
+        showNextImage();
+
+        // Change image every 5 seconds
+        setInterval(showNextImage, 5000);
+    });</script>
+
+<style>
+    .advertisements {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #ad-slideshow {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+    }
+
+        #ad-slideshow .ad-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+</style>

@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Jumbo Sacco</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/dashboard.css" />
+    <link rel="icon" type="image/x-icon" href="~/Content/images/logobg.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <section class="mainarea">
+        <div class="sidenav" id="sidenav">
+            <div class="topnav">
+                <div class="top-topnav">
+                    <img src="~/Content/images/generallogo.png" alt="Jumbo Sacco" class="navlogo" />
+                </div>
+                <div class="bottom-topnav">
+                    <a href="@Url.Action("Index", "Dashboard")" class="@((Request.RawUrl.Contains("/Dashboard") || Request.RawUrl == "/") ? "active" : "")">
+                        <div><i class="fa fa-institution"></i> Dashboard</div>
+                    </a>
+                    <a href="@Url.Action("Index", "Statements")" class="@(Request.RawUrl.Contains("/Statements") ? "active" : "")">
+                        <div><i class="fa fa-bar-chart"></i> Reports</div>
+                    </a>
+                    <div class="menu-item @((Request.RawUrl.Contains("/Loans"))||((Request.RawUrl.Contains("/Online"))) ? "open" : "")">
+                        <a href="javascript:void(0);" class="submenu-toggle">
+                            <div><i class="fa fa-money"></i> Loans</div>
+                            <i class="fa fa-chevron-down rotate-icon"></i>
+                        </a>
+                        <div class="submenu">
+                            <a href="@Url.Action("Index", "Loans")" class="@(Request.RawUrl.Equals("/Loans") ? "active" : "")"><div><i class="fa fa-money"></i>My Loans</div></a>
+                            <a href="@Url.Action("LoanCalculator", "Loans")" class="@((Request.RawUrl.Equals("/Loans/LoanCalculator") || Request.RawUrl.Equals("/Loans/CalculateLoan")) ? "active" : "")"><div><i class="fa fa-calculator"></i>Loan Calculator</div></a>
+                            <a href="@Url.Action("OnlineLoanApplications", "Loans")" class="@((Request.RawUrl.Equals("/Loans/OnlineLoanApplications") || Request.RawUrl.Contains("/Loans/LoanApplicationDetails")) ? "active" : "")"><div><i class="fa fa-spinner"></i>Online Loan Applications</div></a>
+                            <a href="@Url.Action("NewLoanApplication", "Loans")" class="@((Request.RawUrl.Equals("/Loans/NewLoanApplication") || Request.RawUrl.Contains("/Loans/NewLoanApplication")) ? "active" : "")"><div><i class="fa fa-paper-plane-o"></i>New Loan Application</div></a>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Index", "Guarantorship")" class="@(Request.RawUrl.Contains("/Guarantorship") ? "active" : "")">
+                        <div><i class="fa fa-check-square-o"></i> Guarantorship</div>
+                    </a>
+                    <a href="@Url.Action("Index", "Downloads")" class="@(Request.RawUrl.Contains("/Downloads") ? "active" : "")">
+                        <div><i class="fa fa-folder"></i> Downloads Center</div>
+                    </a>
+                    <!--a href="@Url.Action("Index", "Support")" class="@(Request.RawUrl.Contains("/Support") ? "active" : "")">
+                        <div><i class="fa fa-headphones"></i> Support</div>
+                    </a-->
+                    <a href="@Url.Action("Index", "Profile")" class="@(Request.RawUrl.Contains("/Profile") ? "active" : "")">
+                        <div><i class="fa fa-street-view"></i> Profile</div>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="topbar">
+            <div class="leftbar">
+                <button class="menu-btn" onclick="openNav()">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <img src="~/Content/images/generallogo.png" alt="Jumbo Sacco" class="mobilenavlogo" />
+            </div>
+            <div class="rightbar">
+                <a href="@Url.Action("Logout", "Dashboard")">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </div>
+        </div>
+        <div id="mobilenav" class="overlay">
+            <div class="innernav">
+                <div class="mobilelogoarea">
+                    <img src="~/Content/images/generallogo.png" alt="Jumbo Sacco" class="mobilenavlogo" />
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><i class="fa fa-remove"></i></a>
+                </div>
+                <div class="overlay-content">
+                    <a href="@Url.Action("Index", "Dashboard")" class="@((Request.RawUrl.Contains("/Dashboard") || Request.RawUrl == "/") ? "active" : "")">
+                        <div><i class="fa fa-institution"></i> Dashboard</div>
+                    </a>
+                    <a href="@Url.Action("Index", "Statements")" class="@(Request.RawUrl.Contains("/Statements") ? "active" : "")">
+                        <div><i class="fa fa-bar-chart"></i> Reports</div>
+                    </a>
+                    <div class="menu-item @(Request.RawUrl.Contains("/Loans") ? "open" : "")">
+                        <a href="javascript:void(0);" class="submenu-toggle">
+                            <div><i class="fa fa-money"></i> Loans</div>
+                            <i class="fa fa-chevron-down rotate-icon"></i>
+                        </a>
+                        <div class="submenu">
+                            <a href="@Url.Action("Index", "Loans")" class="@(Request.RawUrl.Equals("/Loans") ? "active" : "")"><div><i class="fa fa-money"></i>My Loans</div></a>
+                            <a href="@Url.Action("LoanCalculator", "Loans")" class="@((Request.RawUrl.Equals("/Loans/LoanCalculator") || Request.RawUrl.Equals("/Loans/CalculateLoan")) ? "active" : "")"><div><i class="fa fa-calculator"></i>Loan Calculator</div></a>
+                            <a href="@Url.Action("OnlineLoanApplications", "Loans")" class="@((Request.RawUrl.Equals("/Loans/OnlineLoanApplications") || Request.RawUrl.Contains("/Loans/LoanApplicationDetails")) ? "active" : "")"><div><i class="fa fa-spinner"></i>Online Loan Applications</div></a>
+                            <a href="@Url.Action("NewLoanApplication", "Loans")" class="@((Request.RawUrl.Equals("/Loans/NewLoanApplication") || Request.RawUrl.Contains("/Loans/NewLoanApplication")) ? "active" : "")"><div><i class="fa fa-paper-plane-o"></i>New Loan Application</div></a>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Index", "Guarantorship")" class="@(Request.RawUrl.Contains("/Guarantorship") ? "active" : "")">
+                        <div><i class="fa fa-check-square-o"></i> Guarantorship</div>
+                    </a>
+                    <a href="@Url.Action("Index", "Downloads")" class="@(Request.RawUrl.Contains("/Downloads") ? "active" : "")">
+                        <div><i class="fa fa-folder"></i> Downloads Center</div>
+                    </a>
+                    <!--a href="@Url.Action("Index", "Support")" class="@(Request.RawUrl.Contains("/Support") ? "active" : "")">
+        <div><i class="fa fa-headphones"></i> Support</div>
+    </a-->
+                    <a href="@Url.Action("Index", "Profile")" class="@(Request.RawUrl.Contains("/Profile") ? "active" : "")">
+                        <div><i class="fa fa-street-view"></i> Profile</div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            @RenderBody()
+        </div>
+
+    </section>
+
+    <script>
+        function openNav() {
+            document.getElementById("mobilenav").style.width = "100%";
+        }
+
+        function closeNav() {
+            document.getElementById("mobilenav").style.width = "0%";
+        }
+
+        document.querySelectorAll('.submenu-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function () {
+                const menuItem = this.parentElement;
+
+                // Toggle open class to show/hide submenu
+                menuItem.classList.toggle('open');
+
+                // Optionally close other open submenus
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    if (item !== menuItem) {
+                        item.classList.remove('open');
+                    }
+                });
+            });
+        });
+
+    </script>
+    <style>
+        .submenu-toggle {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</body>
+
+</html>
+

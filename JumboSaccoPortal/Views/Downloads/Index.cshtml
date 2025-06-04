@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Downloads Center - Folders";
+}
+
+@model JumboSaccoPortal.Controllers.FolderListViewModel
+
+<div class="pageheader">
+    <h1>Downloads Center</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+<div class="pagecontent">
+    <div class="innercontent">
+        <div class="section-view">
+            <div class="documentsarea">
+                <h3>Available Folders</h3>
+
+                @if (Model.Subfolders.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Folder Name</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var folder in Model.Subfolders)
+                            {
+                                <tr>
+                                    <td>@folder</td>
+                                    <td>
+                                        <a href="@Url.Action("Documents", "Downloads", new { folderName = folder })" class="btn btn-primary btn-sm float-right">
+                                            View Documents
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No folders found.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

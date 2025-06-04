@@ -1,0 +1,53 @@
+﻿@model JumboSaccoPortal.Models.infoclasses.RootLoanResponse
+
+@{
+    ViewBag.Title = "My Loans";
+}
+
+<div class="pageheader">
+    <h1>My Loans</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+<div class="pagecontent">
+    <div class="innercontent">
+        <div class="openloansarea">
+            <h3>My Loans</h3>
+            @if (Model.Loans != null && Model.Loans.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Loan Code</th>
+                            <th>Product Name</th>
+                            <th>Outstanding Balance</th>
+                            <th>Loan Status</th>
+                            <th>Remaining Installments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var loan in Model.Loans)
+                        {
+                            <tr>
+                                <td>@loan.LoanCode</td>
+                                <td>@loan.LoanProductName</td>
+                                <td>@loan.OutstandingBalance</td>
+                                <td>@loan.LoanSASRAStatus</td>
+                                <td>@loan.RemainingInstallments</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-error">
+                    No Outstanding Loans Found.
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+

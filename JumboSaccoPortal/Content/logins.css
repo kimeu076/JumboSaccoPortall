@@ -1,0 +1,236 @@
+﻿:root {
+    --msea-blue: #283c85;
+    --msea-hoverblue: #4D61A9;
+    --msea-red: #df2b2a;
+    --msea-orange: #eb8924;
+    --text-grayishcolor: #2E2E31;
+    --msea-green: #68b849;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(45deg, #FF6B6B, #FFD166, #A7D9D3, #4ECDC4);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite alternate;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+a {
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+/*Navbar Styling*/
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.navlogo {
+    width: 250px;
+    padding: 0 10px;
+}
+
+.navright a, .loginbutton {
+    background-color: var(--msea-blue);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 3px;
+    border: none;
+}
+
+    .navright a:hover, .loginbutton:hover {
+        background-color: var(--msea-hoverblue);
+    }
+/*Main Area Styling*/
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginarea {
+    border: 1px solid #ccc;
+    padding: 20px 20px;
+    border-radius: 7px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    width: 25%;
+    background-color: #fff;
+}
+
+.top-side {
+    display: flex;
+}
+
+.topsidemage {
+    width: 80%;
+    margin: 0px auto;
+    padding: 10px 0 20px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.loginbox-header h1 {
+    margin: 10px auto;
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--msea-blue);
+}
+
+/*Form Styling*/
+.loginform {
+    margin: 20px 0;
+}
+
+.inputerror {
+    color: red;
+    display: none;
+    font-size: 0.8rem;
+}
+/*Footer Styling*/
+footer {
+    color: var(--msea-blue);
+    text-align: center;
+    padding: 3px 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-grayishcolor);
+    margin: 10px 0;
+}
+
+.form-input {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 7px 15px;
+}
+
+    .form-input:focus {
+        outline: none;
+        border: 1px solid #898686;
+    }
+
+.captcharea {
+    display: flex;
+    align-content: center;
+    margin: 10px auto;
+    gap: 20px;
+    background-color: #E1E1E1;
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+}
+
+    .captcharea img {
+        border: 1px solid #ccc;
+        width: 50%;
+    }
+
+    .captcharea button {
+        padding: 7px 15px;
+        border: none;
+        background-color: var(--msea-green);
+        border-radius: 3px;
+        color: #fff;
+        margin: auto;
+    }
+
+        .captcharea button:hover {
+            background-color: #71C64F;
+        }
+
+.loginbutton {
+    width: 70%;
+    margin: 10px auto;
+}
+
+footer p {
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+}
+
+.alert {
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.alert-success {
+    background-color: #d0ffd7;
+    color: #093500;
+    border: 1px solid #093500;
+}
+
+.alert-error {
+    background-color: #fec4c4;
+    color: #790101;
+    border: 1px solid #790101;
+}
+
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 20px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .navlogo {
+        width: 200px;
+    }
+
+    .navright {
+        font-size: 0.8rem;
+    }
+
+    .loginarea {
+        width: 90%;
+        padding: 20px;
+        border-radius: 3px;
+    }
+
+    .topsidemage {
+        width: 200px;
+    }
+}

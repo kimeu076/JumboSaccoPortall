@@ -1,0 +1,920 @@
+﻿:root {
+    --main-color: #00497e;
+    --main-light-color: #91d400;
+    --secondary-color: #00497e; /* Green */
+    --accent-color: #ECECFF; /* Red */
+    --background-color: #F3F4FF; /* Light Gray */
+    --text-color: #2c3e50; /* Dark Gray */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--background-color);
+}
+
+h1, h2, h3, h4, h5, p {
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1.3rem;
+}
+
+h4 {
+    font-size: 1.2rem;
+}
+
+h5 {
+    font-size: 1.1rem;
+}
+
+p {
+    font-size: 1.0rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+.nothingerror{
+    color: red;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+.alert {
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.alert-success {
+    background-color: #d0ffd7;
+    color: #093500;
+    border: 1px solid #093500;
+}
+
+.alert-error {
+    background-color: #fec4c4;
+    color: #790101;
+    border: 1px solid #790101;
+}
+/*Layout Styling*/
+footer {
+    background-color: var(--main-color);
+    color: #ffd800;
+    padding: 8px;
+    text-align: center
+}
+footer p{
+    font-size: 0.8rem;
+}
+footer a{
+    font-weight: bold;
+    color: #ffd800;
+}
+/*Main Area styling*/
+.mainarea {
+    flex: 1;
+    border: 1px solid var(--main-color);
+    display: flex;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+}
+.topbar, #mobilenav {
+    display: none;
+}
+.sidenav {
+    width: 300px;
+    border-right: 1px solid #ccc;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    background-color : var(--main-color);
+}
+.content{
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-color);
+    overflow-y : auto;
+}
+
+.innercontent{
+    padding: 0 20px;
+}
+
+.navlogo {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.topnav{
+    flex:1;
+}
+.bottom-topnav{
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+.bottom-topnav a{
+    color: #fff;
+    font-size: 1rem;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    border-bottom : 1px solid #ccc;
+}
+
+.bottom-topnav a:hover{
+    background-color: #ddd;
+    color: var(--text-color);
+}
+.bottom-topnav a i{
+    font-size: 1rem;
+    margin-right: 10px;
+}
+.bottom-topnav a.active{
+    color: var(--secondary-color);
+    background-color: #fff;
+}
+
+.pageheader {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 25px;
+    background-color: var(--main-color);
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px 10px;
+    border: 1px solid #ccc;
+    color: #fff;
+}
+.pageheader a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border-radius: 50%;
+    font-size:24px;
+    text-align: center;  
+    line-height: 40px; 
+    transition: background-color 0.3s ease;
+    color: red;
+}
+.pageheader a:hover{
+    background-color: yellow;
+    color: #023047;
+}
+
+.pageheader a i{
+    transition: color 0.3s ease;
+}
+
+
+
+/*Loans Page Styling*/
+
+.openloansarea, .closedloansarea {
+    background-color: var(--background-color);
+    padding: 20px 10px;
+    margin: 15px 0;
+}
+
+/*Loans Table*/
+
+.openloansarea table, .documentsarea table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.openloansarea table thead tr, .documentsarea table thead tr {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.openloansarea table th,
+.openloansarea table td,
+.documentsarea table th,
+.documentsarea table td{
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+}
+
+.openloansarea table td:last-child,
+.openloansarea table th:last-child{
+    text-align: center;
+    width: 100px;
+    padding: 0;
+}
+
+.documentsarea table td:last-child,
+.documentsarea table th:last-child{
+    text-align: center;
+    width: 200px;
+    padding: 0;
+}
+
+.openloansarea table tbody tr,
+.documentsarea table tbody tr{
+    border-bottom: 1px solid #ddd;
+}
+
+.openloansarea table tbody tr:nth-of-type(even),
+.documentsarea table tbody tr:nth-of-type(even){
+    background-color: var(--accent-color);
+}
+
+.openloansarea table tbody tr:last-of-type,
+.documentsarea table tbody tr:last-of-type{
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.openloansarea table tbody tr:hover,
+.documentsarea table tbody tr:hover{
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.openloansarea table td button,
+.documentsarea table td a{
+    font-size: 0.7rem;
+    border: none;
+    background-color: var(--main-color);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 2px;
+}
+
+/*Loan Details Page*/
+.loandetailsarea {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--main-color);
+    padding: 20px;
+    margin: 10px 0;
+}
+
+.loandetailsarea h4{
+    margin: 0 0 10px 0;
+}
+
+.loanspecs{
+    display: flex;
+}
+.loanspecs1{
+    width: 40%;
+}
+.loandetailsarea p {
+    margin: 10px 0;
+    font-weight: bold;
+}
+.loandetailsarea p span{
+    font-weight: normal;
+}
+
+.loan-details{
+    width: 80%;
+    margin: 10px auto;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 5px;
+}
+
+.loandetailsclose {
+    color: #fff;
+    float: right;
+    font-size: 2rem;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    padding: 0 10px;
+    border-radius: 7px;
+    background-color: #D10000;
+}
+
+.loandetailsclose:hover,
+.loandetailsclose:focus {
+    background-color: #00547F;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*Loan Details Modal*/
+
+#modalContent h3, #modalContent p {
+    margin: 10px;
+}
+
+#modalContent h4 {
+    text-align: center;
+    margin: 10px;
+}
+
+.ldetailsrows{
+    display: flex;
+    margin-top: 20px;
+}
+.ldetailscolumn{
+    width: 50%;
+    margin-top: -10px;
+}
+
+#modalContent table {
+    width: 95%;
+    margin: 10px auto;
+    text-align: left;
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+#modalContent table thead tr {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+#modalContent table th,
+#modalContent table td {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+}
+
+
+
+/*Statements Page*/
+.sectionform {
+    margin: 10px;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sectionform input, .sectionform select, .form-control{
+    padding: 3px 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    flex: 1;
+    font-size: 0.8rem;
+}
+
+.statementbtn, .sectionform button{
+    padding: 5px 20px;
+    background-color: var(--secondary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    padding: 5px 20px;
+    background-color: var(--secondary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+.btn-success {
+    padding: 5px 20px;
+    background-color: green;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.btn-danger {
+    padding: 5px 20px;
+    background-color: darkred;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+
+/*Profile Page*/
+#changepassform, #supportform, #loanCalculatorForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px auto;
+    padding: 20px 10px 10px 10px;
+    width: 95%;
+    background-color: var(--accent-background-color);
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+.cpgroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px;
+}
+
+.cpgroup label{
+    flex: 0.5;
+    text-align: left;
+    margin-right: 10px;
+    font-size: 0.9rem;
+}
+
+.cpgroup input, .cpgroup select {
+    flex: 2;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    box-sizing: border-box;
+
+}
+
+.cpgroup textarea {
+    flex: 2;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cpgroup button {
+    margin-left: auto;
+    padding: 5px 15px;
+    border: none;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.cpgroup button:hover {
+    background-color: #0056b3;
+}
+
+
+
+/*Board Pages*/
+
+#dpaline, #adline, #rdline, #dsbline {
+    border: none;
+    height: 2px;
+    margin: 10px 0 5px 0;
+}
+
+
+.approvalsarea table {
+    width: 90%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.approvalsarea table thead tr {
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+
+
+.pendingapps table thead tr, #dpaline {
+    background-color: #D36D00;
+}
+.pendingapps table tbody tr:last-of-type {
+    border-bottom: 2px solid #D36D00;
+}
+
+.apprapps table thead tr, #adline {
+    background-color: #00CE0A;
+}
+.apprapps table tbody tr:last-of-type {
+    border-bottom: 2px solid #00CE0A;
+}
+
+.rejapps table thead tr, #rdline {
+    background-color: #D30000;
+}
+.rejapps table tbody tr:last-of-type {
+    border-bottom: 2px solid #D30000;
+}
+
+.disbursedarea table thead tr, #dsbline {
+    background-color: #005CD4;
+}
+.disbursedarea table tbody tr:last-of-type {
+    border-bottom: 2px solid #005CD4;
+}
+
+
+.approvalsarea table th,
+.approvalsarea table td {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+}
+
+.approvalsarea table td:last-child,
+.approvalsarea table th:last-child,
+.pendingapps table td:nth-last-child(2),
+.pendingapps table th:nth-last-child(2) {
+    text-align: center;
+    width: 100px;
+    padding: 0;
+}
+
+.approvalsarea table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.approvalsarea table tbody tr:nth-of-type(even) {
+    background-color: var(--accent-color);
+}
+
+.approvalsarea table tbody tr:hover {
+    background-color: var(--secondary-accent-color);
+    cursor: pointer;
+}
+
+.approvalsarea table td button {
+    font-size: 0.7rem;
+    border: none;
+    background-color: var(--main-color);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 2px;
+}
+
+/*Loan Calculator Page*/
+.calculation-result {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.calculation-result h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.calculation-result p {
+    margin-bottom: 5px;
+}
+
+.calculation-result .message {
+    color: green; /* Or red for errors */
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+
+#loanCalculationResults {
+    box-shadow: 0 0px 16px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    margin: 20px 0;
+    padding: 15px;
+}
+
+#repaymentSchedule {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+#repaymentSchedule > div {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: calc(33.33% - 20px);
+    margin-right: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0px 16px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+}
+
+#repaymentSchedule > div:nth-child(3n) {
+    margin-right: 0;
+}
+
+#repaymentSchedule strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.section-view p{
+    margin: 10px 0 ;
+}
+
+
+.backabutton {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: var(--main-color);
+    color: #fff;
+}
+
+.backpbtn{
+    margin: 20px 0;
+}
+@media (max-width: 768px) {
+    .backpbtn {
+        margin: 10px;
+    }
+
+    #repaymentSchedule {
+        flex-direction: column;
+    }
+
+    #repaymentSchedule > div {
+        width: 100%;
+    }
+
+    #changepassform, #supportform, #loanCalculatorForm {
+        width: 100%;
+    }
+    .cpgroup {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: left;
+    }
+    .cpgroup label {
+        flex: 1;
+        float: left;
+        text-align: left;
+    }
+
+    .cpgroup input {
+        flex: 3;
+    }
+
+    .content {
+        margin: 0;
+        margin-top: 10px;
+        padding: 5px;
+    }
+
+    .mainarea {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .sidenav {
+        display: none;
+    }
+
+    #mobilenav {
+        display: block;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .leftbar, .rightbar {
+        display: flex;
+        align-items: center;
+    }
+
+    .mobilenavlogo {
+        width: 180px;
+        padding: 10px;
+        margin: 0 10px;
+        border-radius: 3px;
+        background-color: #fff;
+    }
+
+    .leftbar button {
+        background: none;
+        border: none;
+    }
+
+        .leftbar button i, .rightbar a i {
+            font-size: 1.5rem;
+            color: var(--main-color);
+        }
+    .mobilelogoarea a i {
+        color: #D10000;
+        font-size: 1.5rem;
+    }
+
+    .rightbar a {
+        padding: 10px;
+    }
+
+    .overlay {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0, 0.3);
+        overflow-x: hidden;
+        transition: 0.5s;
+    }
+
+    .innernav {
+        background-color: var(--main-color);
+        width: 300px;
+        height: 100%;
+        padding: 20px 10px;
+    }
+
+    .overlay-content {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        margin: 10px;
+        padding: 10px 0;
+    }
+
+    .overlay-content a {
+        margin: 3px 0;
+        padding: 10px 5px;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+
+    .overlay-content a.active {
+        background-color: #fff;
+        color: var(--text-color);
+    }
+
+    .mobilelogoarea {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+    }
+
+    .overlay-content a i {
+        margin-right: 5px;
+    }
+
+    .pageheader a {
+        display: none;
+    }
+
+    .pageheader h1 {
+        font-size: 1.2rem;
+    }
+
+    .pageheader {
+        padding: 10px;
+        margin: 0 5px;
+    }
+
+    .innercontent {
+        padding: 10px 0;
+    }
+
+    .loandetailsarea {
+        padding: 10px;
+    }
+
+    .loanspecs {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .loanspecs1 {
+        width: 100%;
+        margin-top: -10px;
+    }
+
+    .openloansarea table, .documentsarea table {
+        font-size: 0.7rem;
+    }
+
+    .openloansarea table th,
+    .openloansarea table td,
+    .documentsarea table th,
+    .documentsarea table td{
+        padding: 5px 7px;
+        border: 1px solid #ddd;
+    }
+
+    .openloansarea table td:last-child,
+    .openloansarea table th:last-child{
+        width: fit-content;
+        padding: 5px;
+    }
+
+    .documentsarea table td:last-child,
+    .documentsarea table th:last-child{
+        width: 150px;
+        padding: 5px;
+    }
+
+    
+
+    .openloansarea table td button,
+    .documentsarea table td a{
+        font-size: 0.6rem;
+        padding: 3px 7px;
+    }
+
+    #modalContent h3, #modalContent p {
+        margin: 10px 5px;
+    }
+
+    #modalContent table {
+        width: 95%;
+    }
+
+        #modalContent table th,
+        #modalContent table td {
+            padding: 3px 5px;
+        }
+
+    .ldetailsrows {
+        flex-direction: column;
+    }
+
+    .ldetailscolumn {
+        width: 100%;
+    }
+
+    .sectionform {
+        width: 100%;
+    }
+}

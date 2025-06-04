@@ -1,0 +1,121 @@
+﻿@model JumboSaccoPortal.Models.infoclasses.UserDetails
+@using System.Linq
+@{
+    ViewBag.Title = "Profile";
+}
+
+<div class="pageheader">
+    <h1>Profile</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+<div class="pagecontent">
+    <div class="innercontent">
+        <div class="section-view">
+            <div class="section-view-heading">
+                <h3>My Profile</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="section-view-details userinfo">
+                <p>Full Names: <span class="detailsspan">@Model.Name</span></p>
+                <p>Sacco Member Number: <span class="detailsspan">@Model.MemberNumber</span></p>
+                <p>Account Type: <span class="detailsspan">@Model.AccountCategory</span></p>
+                <p>Sacco Payoll Number: <span class="detailsspan">@Model.PayrollNumber</span></p>
+                <p>ID Number: <span class="detailsspan">@Model.IDNumber</span></p>
+                <p>Phone Number: <span class="detailsspan">@Model.PhoneNumber</span></p>
+                <p>Email Address: <span class="detailsspan">@Model.Email</span></p>
+                <p>Gender: <span class="detailsspan">@Model.Gender</span></p>
+                <p>Bank Name: <span class="detailsspan">@Model.BankName</span></p>
+                <p>Bank Branch Code: <span class="detailsspan">@Model.BankBranchCode</span></p>
+                <p>Bank Account Number: <span class="detailsspan">@Model.BankAccountNo</span></p>
+            </div>
+        </div>
+
+        <div class="section-view">
+            <div class="section-view-heading">
+                <h3>Next Of Kin Details</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="openloansarea">
+                @if (ViewBag.NextOfKInDetails != null && ViewBag.NextOfKInDetails.NextofKins != null)
+                {
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Relationship</th>
+                                <th>Address</th>
+                                <th>Allocation</th>
+                                <th>Entry Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var kin in ViewBag.NextOfKInDetails.NextofKins)
+                            {
+                                <tr>
+                                    <td>@kin.KinName</td>
+                                    <td>@kin.KinRelationship</td>
+                                    <td>@kin.Address</td>
+                                    <td>@kin.Allocation</td>
+                                    <td>@kin.EntryNumber</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-error">
+                        No Next of Kin Information Found.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="section-view">
+            <div class="section-view-heading">
+                <h3>Change Account Details</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="section-view-subheading">
+                <h5>Change Account Password</h5>
+            </div>
+            <div class="section-view-details">
+                <p>In order to change your password, please provide the old and new passwords.</p>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-error">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+                <form method="post" action="@Url.Action("SubmitRequest", "Profile")" id="changepassform">
+
+                    <input type="text" id="username" name="username" value="@Model.PayrollNumber" hidden />
+                    <div class="cpgroup">
+                        <label>Old Pass</label>
+                        <input type="password" id="oldpass" name="oldpass" value="@ViewBag.Oldpass" required />
+                    </div>
+                    <div class="cpgroup">
+                        <label>New Pass</label>
+                        <input type="password" id="newpass" name="newpass" value="@ViewBag.Newpass" required />
+                    </div>
+                    <div class="cpgroup">
+                        <label>Confirm New Pass</label>
+                        <input type="password" id="confnewpass" name="confnewpass" value="@ViewBag.Confnewpass" required />
+                    </div>
+                    <div class="cpgroup">
+                        <button type="submit">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

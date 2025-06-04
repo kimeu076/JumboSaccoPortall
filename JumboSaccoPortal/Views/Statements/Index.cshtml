@@ -1,0 +1,162 @@
+﻿@{
+    ViewBag.Title = "Statements";
+}
+
+<div class="pageheader">
+    <h1>Statements & Reports</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+<div class="pagecontent">
+    <div class="innercontent">
+        <div class="section-view">
+            <p>On this page, you can view and download your Reports and Statement.</p>
+        </div>
+
+        <div class="section-view">
+            <h2>Statements & Reports</h2>
+            <div class="sectionform">
+                <label for="statementType">Statement/Report Type:</label>
+                <select id="fosastatementType" name="statementType" class="form-control">
+                    <option>Select Statement Type</option>
+                    <option value="MSTMT">Member Statement</option>
+                    <option value="LGRD">Loans Guaranteed Report</option>
+                    <option value="LGRS">Loans Guarantors Report</option>
+                    <option value="LOANSTMT">Loans Statement</option>
+                    <option value="REPAYSCH">Loans Repayment Schedule</option>
+                </select>
+            </div>
+
+            <div class="sectionform" id="fosatype" style="display:none;">
+                <label for="fosaType">Outstanding Loans</label>
+                <select id="fosaType" name="fosaType" required>
+                    <option value="">-- Select Loan Number --</option>
+                    @if (ViewBag.MemberLoans != null)
+                    {
+                        foreach (var FOSAType in ViewBag.MemberLoans)
+                        {
+                            <option value="@FOSAType.LoanCode">@FOSAType.LoanCode</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="sectionform" id="formstartdate" style="display:none;">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="fosastartDate" class="form-control">
+            </div>
+
+            <div class="sectionform" id="endstartdate" style="display:none;">
+                <label for="endDate">End Date:</label>
+                <input type="date" id="fosaendDate" class="form-control">
+            </div>
+
+            <button type="button" onclick="generateFOSAStatement()" class="statementbtn">Generate Statement</button>
+        </div>
+
+        
+
+        <div id="pdfPreviewContainer" style="display:none;" class="section-view">
+            <h3>Statement Preview</h3>
+            <iframe id="pdfPreviewFrame" style="width: 100%; height: 80vh; border: none;"></iframe>
+            <a id="downloadLink" href="" download="statement.pdf">Download Statement</a>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fosaStatementTypeSelect = document.getElementById('fosastatementType');
+        const fosaStartDateDiv = document.getElementById('formstartdate');
+        const fosaEndDateDiv = document.getElementById('endstartdate');
+        const fosatypeeDiv = document.getElementById('fosatype');
+
+        fosaStatementTypeSelect.addEventListener('change', function () {
+            if (this.value === 'MSTMT') {
+                fosaStartDateDiv.style.display = 'block';
+                fosaEndDateDiv.style.display = 'block';
+                fosatypeeDiv.style.display = 'none';
+            } else if (this.value === 'REPAYSCH') {
+                fosatypeeDiv.style.display = 'block';
+            } else {
+                fosaStartDateDiv.style.display = 'none';
+                fosaEndDateDiv.style.display = 'none';
+                fosatypeeDiv.style.display = 'none';
+            }
+        });
+
+    });
+
+    function previewPdfInNewTab(base64Pdf) {
+        if (!base64Pdf) {
+            alert('No PDF available to preview.');
+            return;
+        }
+
+        const pdfBlob = new Blob([Uint8Array.from(atob(base64Pdf), c => c.charCodeAt(0))], { type: 'application/pdf' });
+
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        const previewWindow = window.open(pdfUrl, '_blank');
+        if (!previewWindow) {
+            alert('Please enable pop-ups to preview the statement.');
+        }
+    }
+
+    function previewPdfInIframe(base64Pdf) {
+        if (!base64Pdf) {
+            alert('No PDF available to preview.');
+            return;
+        }
+
+        const iframe = document.getElementById('pdfPreviewFrame');
+        iframe.src = `data:application/pdf;base64,${base64Pdf}`;
+
+        const previewContainer = document.getElementById('pdfPreviewContainer');
+        previewContainer.style.display = 'block';
+    }
+
+    function previewPdf(base64Pdf) {
+        if (window.innerWidth <= 768) {
+            previewPdfInNewTab(base64Pdf);
+        } else {
+            previewPdfInIframe(base64Pdf);
+        }
+    }
+
+    async function generateFOSAStatement() {
+        const statementType = document.getElementById('fosastatementType').value;
+        const FOSAAccount = document.getElementById('fosaType').value;
+        const startDate = document.getElementById('fosastartDate').value;
+        const endDate = document.getElementById('fosaendDate').value;
+
+        if (statementType == "MSTMT" && (!startDate || !endDate)) {
+            alert('Please fill all the fields.');
+            return;
+        } else if (statementType == "REPAYSCH" && (!FOSAAccount)) {
+            alert('Please fill all the fields.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/Statements/GetFOSAPdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ statementType, FOSAAccount, startDate, endDate }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch the PDF.');
+            }
+
+            const { base64Pdf } = await response.json();
+            previewPdf(base64Pdf);
+        } catch (error) {
+            console.error(error);
+            alert('Your request could not be completed. This may be due to you lacking transactions within the period. For more details, kindly contact JUMBO Sacco.');
+        }
+    }
+
+   
+</script>

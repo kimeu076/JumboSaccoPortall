@@ -1,0 +1,241 @@
+﻿:root {
+    --main-color: #00497e;
+    --main-light-color: #91d400;
+    --secondary-color: #00497e; /* Green */
+    --accent-color: #ECECFF; /* Red */
+    --background-color: #F3F4FF; /* Light Gray */
+    --text-color: #2c3e50; /* Dark Gray */
+}
+
+.dashcontent {
+    flex: 1;
+    margin: 20px 0 0px 0;
+    padding: 0;
+    display: flex;
+    gap:20px;
+    overflow-y: auto;
+}
+
+.dashleft {
+    width: 70%;
+}
+.dashright {
+    width: 30%;
+    border-left: 1px solid #ccc;
+    padding: 10px 15px;
+}
+/*Balances*/
+.balanceheader{
+    padding: 0 20px;
+}
+.innerbalances {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    margin: 5px;
+    padding: 10px 0;
+}
+.scbalance, .loansbalance, .fdbalance, .depbalance {
+    flex: 1;
+    width: 50%;
+    border-radius: 3px;
+    box-shadow: 0 0px 16px rgba(0, 0, 0, 0.2);
+    background-color: var(--background-color);
+    padding: 10px 20px;
+}
+
+.additionalbalance {
+    width: 100%;
+    border-radius: 3px;
+    box-shadow: 0 0px 16px rgba(0, 0, 0, 0.2);
+    background-color: var(--background-color);
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-left: 5px solid #00A2D9;
+}
+
+.innerbalances h3, .additionalbalance h3 {
+    margin: 3px 0;
+}
+.scbalance {
+    border-left: 5px solid #00A2D9;
+}
+
+.loansbalance {
+    border-left: 5px solid #D9AA00;
+}
+
+.fdbalance {
+    border-left: 5px solid #FF0202;
+}
+
+.depbalance {
+    border-left: 5px solid #0fa700;
+}
+/*Recent Tranactions Section*/
+
+.recenttrans{
+    padding: 10px 20px;
+}
+.recenttrans h3{
+    margin: 10px;
+}
+.recenttrans table {
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.recenttrans th, .recenttrans td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.recenttrans th {
+    background-color: var(--secondary-color);
+    color: #fff;
+    font-weight: bold;
+}
+
+.recenttrans tr:nth-child(even) {
+    background-color: var(--accent-color);
+}
+
+.recenttrans tr:hover {
+    background-color: #f1f1f1;
+}
+
+/*User Details Section*/
+.userdetails {
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0px 16px 2px rgba(0, 153, 71, 0.5);
+    background-color: var(--background-color);
+    padding: 20px;
+}
+
+.userdetails h2{
+    margin: 10px 0 ;
+}
+.userdetails p{
+    font-weight: bold;
+    margin: 5px 0;
+}
+.userdetails p span{
+    font-weight: normal;
+}
+
+
+
+/*Profile Page*/
+.section-view {
+    box-shadow: 0 0px 16px rgba(0, 0, 0, 0.2);
+    background-color: var(--background-color);
+    margin: 20px 0;
+    padding: 15px;
+}
+
+.section-view-heading h3{
+    font-size: 1.6rem;
+}
+.section-view-heading{
+    margin: 10px 0;
+}
+
+.divider{
+    border: 1px solid #ccc;
+}
+
+.section-view-subheading{
+    margin: 7px 0;
+}
+.section-view-subheading h5{
+    font-size: 1.2rem;
+}
+.section-view-details {
+    margin: 10px 0;
+}
+
+.userinfo{
+    display: flex;
+    flex-direction:column;
+    gap: 7px;
+}
+.userinfo p{
+    font-weight: bold;
+}
+.userinfo p span{
+    font-weight: normal;
+}
+
+/*Dropdowns Styling*/
+.menu-item {
+    position: relative;
+}
+
+.rotate-icon {
+    transition: transform 0.3s ease; /* Smooth rotation */
+    margin-right: 8px; /* Space between text and icon */
+}
+
+.menu-item.open .rotate-icon {
+    transform: rotate(180deg); /* Rotate icon when submenu is visible */
+}
+
+.submenu {
+    display: none;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.submenu a {
+    text-decoration: none;
+    color: #fff;
+    padding: 7px 8px;
+    display: flex;
+}
+
+.submenu a:hover {
+    background-color: #fff;
+    color: var(--text-color);
+}
+
+.menu-item.open .submenu {
+    display: flex;
+}
+
+.additionalbalances{
+    margin: 20px 10px;
+}
+
+@media (max-width: 768px) {
+    .dashcontent{
+        flex-direction: column;
+    }
+    .dashleft, .dashright{
+        width: 100%;
+    }
+    .innerbalances h3{
+        font-size: 0.9rem;
+    }
+    .innerbalances h4 {
+        font-size: 0.8rem;
+    }
+    .innerbalances{
+        gap: 10px;
+        margin: 0px 5px;
+    }
+    .scbalance, .loansbalance, .fdbalance, .depbalance{
+        padding: 5px 10px;
+    }
+    .recenttrans {
+        padding: 10px 10px;
+    }
+    .dashright{
+        display: none;
+    }
+
+    .section-view{
+        margin: 10px 5px;
+    }
+}

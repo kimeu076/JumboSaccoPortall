@@ -1,0 +1,201 @@
+﻿@model JumboSaccoPortal.Models.infoclasses.LoanCalculatorTypes
+
+@{
+    ViewBag.Title = "My Loans";
+}
+
+
+<div class="pageheader">
+    <h1>My Loans</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+<div class="pagecontent">
+    <div class="innercontent">
+        <div class="section-view">
+            <p>On this page, you can calculate a loan and find out its repayments.</p>
+        </div>
+
+        <div class="section-view">
+            <div class="cpgroup">
+            <label for="loantype">Loan Type:</label>
+                <select id="loantype" name="loantype" required>
+                    <option value="">-- Select Loan Type --</option>
+                    @if (Model != null && Model.LoanTypes != null)
+                    {
+                        foreach (var loantype in Model.LoanTypes)
+                        {
+                            <option value="@loantype.LoanCode">@loantype.LoanDescription</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="cpgroup">
+                <label for="loanAmount">Loan Amount (KES):</label>
+                <input type="number" id="loanAmount" name="loanAmount" min="1" required>
+            </div>
+
+            <div class="cpgroup">
+                <label for="loanPeriod">Loan Period (Months):</label>
+                <input type="number" id="loanPeriod" name="loanPeriod" min="1" required>
+            </div>
+
+            <div class="cpgroup">
+                <button type="button" id="calculateLoan">Calculate Loan</button>
+            </div>
+
+        </div>
+
+        <div id="loanCalculationResults" style="display:none">
+        </div>
+
+        <div id="repaymentSchedule">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const calculateButton = document.getElementById('calculateLoan');
+        const loanTypeDropdown = document.getElementById('loantype');
+        const loanAmountInput = document.getElementById('loanAmount');
+        const loanPeriodInput = document.getElementById('loanPeriod');
+        const resultsDiv = document.getElementById('loanCalculationResults');
+        const scheduleDiv = document.getElementById('repaymentSchedule');
+
+        calculateButton.addEventListener('click', function() {
+            const selectedLoanCode = loanTypeDropdown.value;
+            const loanAmount = parseFloat(loanAmountInput.value);
+            const loanPeriodMonths = parseInt(loanPeriodInput.value);
+
+            if (!selectedLoanCode || isNaN(loanAmount) || isNaN(loanPeriodMonths) || loanAmount <= 0 || loanPeriodMonths <= 0) {
+                resultsDiv.innerHTML = '<p style="color: red;">Please select a loan type and enter valid loan amount and period.</p>';
+                scheduleDiv.innerHTML = '';
+                resultsDiv.style.display = 'block';
+                return;
+            }
+
+            const loanTypes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.LoanTypes));
+            const selectedLoan = loanTypes.find(loan => loan.LoanCode === selectedLoanCode);
+
+            if (selectedLoan) {
+                const annualInterestRate = parseFloat(selectedLoan.LoanInterest) / 100;
+                const loaninterest = parseFloat(selectedLoan.LoanInterest);
+                const maximuminstallments = parseFloat(selectedLoan.LoanInstallments);
+                const interestRateMonthly = annualInterestRate / 12;
+                const repaymentMethod = selectedLoan.LoanRepaymentMethod;
+                let monthlyRepayment = 0;
+
+
+                if (loanPeriodMonths > maximuminstallments) {
+                    resultsDiv.innerHTML = `<div class="alert alert-error">Loan period (${loanPeriodMonths} months) cannot be longer than the maximum installments which are (${maximuminstallments} months).</div>`;
+                    scheduleDiv.innerHTML = '';
+                    resultsDiv.style.display = 'block';
+                    return;
+                }
+
+                let scheduleHTML = '';
+                let remainingBalance = loanAmount;
+                const currentDate = new Date();
+                let currentMonth = currentDate.getMonth();
+                let currentYear = currentDate.getFullYear();
+
+                let loanBalance = loanAmount;
+
+                for (let i = 1; i <= loanPeriodMonths; i++) {
+                    let interestPayment = 0;
+                    let principalPayment = 0;
+                    let loanInsurance = 550;
+                    let totalPayment = 0;
+
+                    if (repaymentMethod === 'Reducing Balance') {
+                        principalPayment = parseFloat((loanAmount / loanPeriodMonths).toFixed(2));
+                        interestPayment = parseFloat(((annualInterestRate) * (loanBalance / loanPeriodMonths)).toFixed(2));
+                        totalPayment = parseFloat(principalPayment + interestPayment + loanInsurance);
+                        loanBalance -= principalPayment;
+                    }
+                    else if (repaymentMethod === 'Straight Line') {
+                        principalPayment = parseFloat((loanAmount / loanPeriodMonths).toFixed(2));
+                        interestPayment = parseFloat(((annualInterestRate) * (loanAmount / loanPeriodMonths)).toFixed(2));
+                        totalPayment = parseFloat(principalPayment + interestPayment + loanInsurance);
+                        loanBalance -= principalPayment;
+                    }
+                    else if (repaymentMethod === 'Amortised') {
+                        const monthlyInterestRate = annualInterestRate / 12;
+                        const powerFactor = Math.pow(1 + monthlyInterestRate, -loanPeriodMonths);
+                        let totalMonthlyRepayment;
+
+                        if (1 - powerFactor === 0) {
+                            totalMonthlyRepayment = loanAmount / loanPeriodMonths;
+                        } else {
+                            totalMonthlyRepayment = (monthlyInterestRate / (1 - powerFactor)) * loanAmount;
+                        }
+
+                        totalMonthlyRepayment = parseFloat(totalMonthlyRepayment.toFixed(2));
+
+                        const interestPaymentThisMonth = parseFloat((monthlyInterestRate * loanBalance).toFixed(2));
+                        const principalPaymentThisMonth = parseFloat((totalMonthlyRepayment - interestPaymentThisMonth).toFixed(2));
+                        totalPayment = parseFloat((totalMonthlyRepayment + loanInsurance).toFixed(2));
+                        loanBalance -= principalPaymentThisMonth;
+                        principalPayment = principalPaymentThisMonth;
+                        interestPayment = interestPaymentThisMonth;
+
+                    }
+                    else {
+                        principalPayment = parseFloat((loanAmount / loanPeriodMonths).toFixed(2));
+                        interestPayment = parseFloat(((annualInterestRate) * loanBalance).toFixed(2));
+                        totalPayment = parseFloat(principalPayment + interestPayment + loanInsurance);
+                        loanBalance -= principalPayment;
+                    }
+
+                    const formattedBalance = Math.max(0, loanBalance).toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+                    const formattedPrincipal = Math.max(0, principalPayment).toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+                    const formattedinterest = Math.max(0, interestPayment).toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+                    const formattedtotalrepayment = Math.max(0, totalPayment).toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+                    const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(currentYear, currentMonth, 1));
+
+                    scheduleHTML += `
+                        <div>
+                            <strong>${monthName} ${currentYear}</strong>
+                            <p>Repayment: ${formattedtotalrepayment}</p>
+                            <p>Balance: ${formattedBalance}</p>
+                        </div>
+                    `;
+
+                    currentMonth++;
+                    if (currentMonth > 11) {
+                        currentMonth = 0;
+                        currentYear++;
+                    }
+                }
+
+                const scheduleItems = $(scheduleDiv).children();
+                scheduleItems.last().css('margin-right', '0');
+
+                scheduleDiv.innerHTML = scheduleHTML;
+
+                const formattedAmount = loanAmount.toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+                const formattedOverallRepayment = monthlyRepayment.toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+
+                resultsDiv.innerHTML = `
+                    <h3>Loan Calculation Results</h3>
+                    <p><strong>Loan Type:</strong> ${selectedLoan.LoanDescription}</p>
+                    <p><strong>Loan Amount Applied For:</strong> ${formattedAmount}</p>
+                    <p><strong>Loan Period:</strong> ${loanPeriodMonths} months</p>
+                `;
+                resultsDiv.style.display = 'block';
+
+            } else {
+                resultsDiv.innerHTML = '<p style="color: red;">Selected loan type not found.</p>';
+                scheduleDiv.innerHTML = '';
+                resultsDiv.style.display = 'block';
+            }
+        });
+
+
+    });
+
+    
+</script>

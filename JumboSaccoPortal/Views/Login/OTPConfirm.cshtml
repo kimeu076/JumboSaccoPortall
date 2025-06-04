@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LoginsLayout.cshtml";
+}
+
+<section class="loginarea">
+    <div class="top-side">
+        <img src="~/Content/images/generallogo.png" alt="Jumbo Sacco" class="topsidemage" />
+    </div>
+    <div class="loginbox">
+        <div class="loginbox-header">
+            <h1>OTP Confirm</h1>
+        </div>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+    <form action="/Login/OTPLogin" method="post" class="loginform">
+        <div class="form-group">
+            <input type="text" id="otp" name="otp" class="form-input" onchange="ConfirmInputs()" placeholder="One-Time-Password" required />
+            <span class="inputerror" id="spanerror">One Time Password is required *</span>
+        </div>
+
+        @if (TempData["LoggingIn"] != null)
+        {
+            <div class="form-group">
+                <button type="submit" class="loginbutton">Login</button>
+            </div>
+        }
+
+        @if (TempData["ResettingPass"] != null)
+        {
+            <div class="form-group">
+                <button type="submit" class="loginbutton">Confirm OTP</button>
+            </div>
+        }
+        
+
+        <div class="form-group">
+            <p>Forgot Password, <a href="/Login/ResetPassword">Click here</a> to reset your password</p>
+        </div>
+    </form>
+    </div>
+</section>
+
+
+<script>
+    function ConfirmInputs() {
+        const spanerror = document.getElementById('spanerror');
+        const otp = document.getElementById('otp').value;
+        if (!otp) {
+            spanerror.style.display = 'block';
+        }
+        if (otp) {
+            spanerror.style.display = 'none';
+        }
+        if (!password) {
+            spanerror1.style.display = 'block';
+        }
+        if (password) {
+            spanerror1.style.display = 'none';
+        }
+        if (!captcha) {
+            spanerror2.style.display = 'block';
+        }
+        if (captcha) {
+            spanerror2.style.display = 'none';
+        }
+    }
+</script>

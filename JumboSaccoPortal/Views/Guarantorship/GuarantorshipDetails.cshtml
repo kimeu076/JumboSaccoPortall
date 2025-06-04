@@ -1,0 +1,250 @@
+﻿@model JumboSaccoPortal.Models.infoclasses.GuarantorshipDetails
+
+@{
+    ViewBag.Title = "GuarantorshipDetails";
+}
+
+<div class="pageheader">
+    <h1>Guarantorship Details - @Model.GuarantorshipID</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+
+<div class="pagecontent">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-error">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    <div class="alert alert-error" style="display: none;">
+    </div>
+    <div class="alert alert-success" style="display: none;">
+    </div>
+
+    <div class="innercontent">
+        <div class="section-view">
+            <h2>Guarantorship Details</h2>
+            <p><strong>Requestor Name: </strong>@Model.RequestorName</p>
+            <p><strong>Loan Requested Amount: </strong>@Model.LoanAmount Ksh</p>
+            <p><strong>Guarantorship Status: </strong><span id="guarantorshipStatus">@Model.Status</span></p>
+            <p><strong>Request Date: </strong>@Model.GuarantorshipRequestDate</p>
+            <p><strong>Total Amount Guaranteed So Far: </strong>@Model.TotalGuaranteed Ksh</p>
+            @if (Model.Status == "New")
+            {
+                <p><strong>Maximum Amount Guaranteeable: </strong><span id="maxGuaranteeAbility">@Model.MemberMaximumAbility</span> Ksh</p>
+            }
+
+            @if (Model.Status == "Approved")
+            {
+                <p><strong>Guaranteed Amount: </strong>@Model.MemberMaximumAbility Ksh</p>
+            }
+
+            @if (Model.Status == "New")
+            {
+                <div id="initialActions">
+                    <button type="button" id="btnApproveInitiate" class="btn btn-success">Approve</button>
+                    <button type="button" id="btnReject" class="btn btn-danger">Reject</button>
+                </div>
+            }
+
+            <div id="guaranteeAmountSection" class="cpgroup" style="display: none;">
+                <label for="AmountToGuarantee">Amount to Guarantee (Kshs):</label>
+                <input type="number" id="AmountToGuarantee" name="AmountToGuarantee"
+                                   class="form-control" min="1" step="100" required />
+                <button type="button" id="btnApproveAmount" class="btn btn-primary mt-2">Guarantee Amount</button>
+            </div>
+
+            <div id="rejectCommentSection" class="cpgroup" style="display: none;">
+                <label for="RejectComment">Reason for Rejection:</label>
+                <textarea id="RejectComment" name="RejectComment" class="form-control" rows="3"></textarea>
+                <button type="button" id="btnConfirmReject" class="btn btn-danger mt-2">Confirm Rejection</button>
+                <button type="button" id="btnCancelReject" class="btn btn-default mt-2">Cancel</button>
+            </div>
+
+            <div id="otpSection" class="cpgroup" style="display: none;">
+                <label for="OTP">Enter OTP:</label>
+                <input type="text" id="OTP" name="OTP" class="form-control" maxlength="6" required />
+                <button type="button" id="btnVerifyOTP" class="btn btn-success mt-2">Verify OTP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var errorDiv = $('.alert-error');
+        var successDiv = $('.alert-success');
+        var maxGuaranteeAbility = parseFloat($('#maxGuaranteeAbility').text().replace(/,/g, '')) || 0;
+        var guarantorshipID = '@Model.GuarantorshipID';
+
+        function showClientError(message) {
+            errorDiv.text(message);
+            errorDiv.show();
+        }
+
+        function showClientSuccess(message) {
+            successDiv.text(message);
+            successDiv.show();
+        }
+
+        function clearClientError() {
+            errorDiv.text('');
+            errorDiv.hide();
+        }
+        function clearClientSuccess() {
+            successDiv.text('');
+            successDiv.hide();
+        }
+
+
+        // --- Step 1: Initial Approve/Reject Buttons ---
+        $('#btnApproveInitiate').on('click', function () {
+            clearClientError();
+            clearClientSuccess();
+            $('#initialActions').hide();
+            $('#guaranteeAmountSection').show();
+            $('#AmountToGuarantee').val(maxGuaranteeAbility); // Pre-fill with max ability
+            $('#AmountToGuarantee').attr('max', maxGuaranteeAbility); // Set max attribute
+            // Scroll to the newly shown section
+            $('html, body').animate({
+                scrollTop: $('#guaranteeAmountSection').offset().top - 50
+            }, 500);
+        });
+
+        // When the main Reject button is clicked
+        $('#btnReject').on('click', function () {
+            clearClientError();
+            clearClientSuccess();
+            $('#initialActions').hide(); // Hide initial buttons
+            $('#rejectCommentSection').show(); // Show the comment section
+            // Scroll to the comment section
+            $('html, body').animate({
+                scrollTop: $('#rejectCommentSection').offset().top - 50
+            }, 500);
+            $('#RejectComment').focus(); // Focus on the textarea
+        });
+
+        // When the "Confirm Rejection" button is clicked
+        $('#btnConfirmReject').on('click', function () {
+            clearClientError();
+            clearClientSuccess();
+            var rejectComment = $('#RejectComment').val().trim();
+
+            if (rejectComment === '') {
+                showClientError('Please provide a reason for rejection.');
+                return;
+            }
+
+                $.ajax({
+                    url: '@Url.Action("RejectGuarantorship", "Guarantorship")',
+                    type: 'POST',
+                    data: {
+                        guarantorshipId: guarantorshipID,
+                        rejectComment: rejectComment // Send the comment to the controller
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.reload();
+                        } else {
+                            showClientError(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        showClientError('An error occurred while rejecting the request. Please try again later.');
+                        //showClientError('An error occurred while rejecting the request: ' + xhr.responseText);
+                    }
+                });
+        });
+
+        $('#btnCancelReject').on('click', function () {
+            clearClientError();
+            clearClientSuccess();
+            $('#rejectCommentSection').hide();
+            $('#RejectComment').val('');
+            $('#initialActions').show();
+        });
+
+        // --- Step 2: Amount to Guarantee Input and Button (unchanged) ---
+        $('#btnApproveAmount').on('click', function () {
+            clearClientError();
+            clearClientSuccess();
+            var amountToGuarantee = parseFloat($('#AmountToGuarantee').val());
+
+            if (isNaN(amountToGuarantee) || amountToGuarantee <= 0) {
+                showClientError('Please enter a valid amount to guarantee.');
+                return;
+            }
+
+            if (amountToGuarantee > maxGuaranteeAbility) {
+                showClientError('Amount to guarantee cannot exceed your maximum ability of ' + maxGuaranteeAbility + ' Kshs.');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("InitiateGuarantorshipApproval", "Guarantorship")',
+                type: 'POST',
+                data: {
+                    guarantorshipId: guarantorshipID,
+                    amountToGuarantee: amountToGuarantee
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#guaranteeAmountSection').hide();
+                        $('#otpSection').show();
+                        showClientSuccess(response.message);
+                    } else {
+                        showClientError(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showClientError('An error occurred while initiating approval: ' + xhr.responseText);
+                }
+            });
+        });
+
+        // --- Step 3: OTP Verification (unchanged) ---
+        $('#btnVerifyOTP').on('click', function () {
+            clearClientError();
+            clearClientSuccess();
+            var otp = $('#OTP').val();
+            var amountToGuarantee = parseFloat($('#AmountToGuarantee').val());
+
+            if (otp.trim() === '') {
+                showClientError('Please enter the OTP.');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("FinalizeGuarantorshipApproval", "Guarantorship")',
+                type: 'POST',
+                data: {
+                    guarantorshipId: guarantorshipID,
+                    otp: otp
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#guarantorshipStatus').text('Approved');
+                        $('#otpSection').hide();
+                        $('#initialActions').hide();
+                        $('#guaranteeAmountSection').hide();
+                        window.location.reload();
+                    } else {
+                        showClientError(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showClientError('An error occurred during OTP verification: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,1259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://tempuri.org/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="MiniStatement">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membno" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MiniStatementResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MiniStatementResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DashboardInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membernumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DashboardInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DashboardInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberStatement">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="startdate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="enddate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberStatementResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MemberStatementResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanGuarantorsReport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membno" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanGuarantorsReportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoanGuarantorsReportResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanGuaranteedReport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membno" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanGuaranteedReportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoanGuaranteedReportResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoansStatement">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membno" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoansStatementResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoansStatementResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanRepaymentSchedule">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loannumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanRepaymentScheduleResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoanRepaymentScheduleResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberStatementLoans">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membernumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberStatementLoansResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MemberStatementLoansResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberLoans">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membernumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberLoansResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MemberLoansResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanTypesCalculator">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membernumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanTypesCalculatorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoanTypesCalculatorResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="NextOfkinDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="membernumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="NextOfkinDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NextOfkinDetailsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberLogin">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberLoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MemberLoginResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConfirmLoginOTP">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="otp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConfirmLoginOTPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConfirmLoginOTPResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PasswordResetInitiation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PasswordResetInitiationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PasswordResetInitiationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConfirmResetOTP">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="otp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ConfirmResetOTPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ConfirmResetOTPResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateNewPasword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateNewPaswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateNewPaswordResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ResetPasswordOnPortal">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="oldpassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newpassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ResetPasswordOnPortalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ResetPasswordOnPortalResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMemberOnlineLoanApplications">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="memberid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMemberOnlineLoanApplicationsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMemberOnlineLoanApplicationsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLoanApplicationDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="loanid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLoanApplicationDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLoanApplicationDetailsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveGuarantorByRequestor">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="guarantorshipid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveGuarantorByRequestorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RemoveGuarantorByRequestorResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchGuarantor">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="guarantorid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchGuarantorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchGuarantorResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddGuarantor">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="loanid" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="guarantorid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddGuarantorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddGuarantorResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StartLoanApplications">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="memberid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="loantype" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="requestedamount" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="foldername" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StartLoanApplicationsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="StartLoanApplicationsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMemberGuarantorships">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="memberid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMemberGuarantorshipsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMemberGuarantorshipsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GuarantroshipDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="guarantorship" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GuarantroshipDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GuarantroshipDetailsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StartGuarantorshipApproval">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="guarantorship" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberid" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="amount" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StartGuarantorshipApprovalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="StartGuarantorshipApprovalResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CompleteGuarantorshipApproval">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="guarantorship" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="otp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CompleteGuarantorshipApprovalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CompleteGuarantorshipApprovalResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RejectGuarantorship">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="guarantorship" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comment" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RejectGuarantorshipResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RejectGuarantorshipResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanUserDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="memberid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanUserDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoanUserDetailsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="MiniStatementSoapIn">
+    <wsdl:part name="parameters" element="tns:MiniStatement" />
+  </wsdl:message>
+  <wsdl:message name="MiniStatementSoapOut">
+    <wsdl:part name="parameters" element="tns:MiniStatementResponse" />
+  </wsdl:message>
+  <wsdl:message name="DashboardInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DashboardInfo" />
+  </wsdl:message>
+  <wsdl:message name="DashboardInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DashboardInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="MemberStatementSoapIn">
+    <wsdl:part name="parameters" element="tns:MemberStatement" />
+  </wsdl:message>
+  <wsdl:message name="MemberStatementSoapOut">
+    <wsdl:part name="parameters" element="tns:MemberStatementResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoanGuarantorsReportSoapIn">
+    <wsdl:part name="parameters" element="tns:LoanGuarantorsReport" />
+  </wsdl:message>
+  <wsdl:message name="LoanGuarantorsReportSoapOut">
+    <wsdl:part name="parameters" element="tns:LoanGuarantorsReportResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoanGuaranteedReportSoapIn">
+    <wsdl:part name="parameters" element="tns:LoanGuaranteedReport" />
+  </wsdl:message>
+  <wsdl:message name="LoanGuaranteedReportSoapOut">
+    <wsdl:part name="parameters" element="tns:LoanGuaranteedReportResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoansStatementSoapIn">
+    <wsdl:part name="parameters" element="tns:LoansStatement" />
+  </wsdl:message>
+  <wsdl:message name="LoansStatementSoapOut">
+    <wsdl:part name="parameters" element="tns:LoansStatementResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoanRepaymentScheduleSoapIn">
+    <wsdl:part name="parameters" element="tns:LoanRepaymentSchedule" />
+  </wsdl:message>
+  <wsdl:message name="LoanRepaymentScheduleSoapOut">
+    <wsdl:part name="parameters" element="tns:LoanRepaymentScheduleResponse" />
+  </wsdl:message>
+  <wsdl:message name="MemberStatementLoansSoapIn">
+    <wsdl:part name="parameters" element="tns:MemberStatementLoans" />
+  </wsdl:message>
+  <wsdl:message name="MemberStatementLoansSoapOut">
+    <wsdl:part name="parameters" element="tns:MemberStatementLoansResponse" />
+  </wsdl:message>
+  <wsdl:message name="MemberLoansSoapIn">
+    <wsdl:part name="parameters" element="tns:MemberLoans" />
+  </wsdl:message>
+  <wsdl:message name="MemberLoansSoapOut">
+    <wsdl:part name="parameters" element="tns:MemberLoansResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoanTypesCalculatorSoapIn">
+    <wsdl:part name="parameters" element="tns:LoanTypesCalculator" />
+  </wsdl:message>
+  <wsdl:message name="LoanTypesCalculatorSoapOut">
+    <wsdl:part name="parameters" element="tns:LoanTypesCalculatorResponse" />
+  </wsdl:message>
+  <wsdl:message name="NextOfkinDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:NextOfkinDetails" />
+  </wsdl:message>
+  <wsdl:message name="NextOfkinDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:NextOfkinDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="MemberLoginSoapIn">
+    <wsdl:part name="parameters" element="tns:MemberLogin" />
+  </wsdl:message>
+  <wsdl:message name="MemberLoginSoapOut">
+    <wsdl:part name="parameters" element="tns:MemberLoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmLoginOTPSoapIn">
+    <wsdl:part name="parameters" element="tns:ConfirmLoginOTP" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmLoginOTPSoapOut">
+    <wsdl:part name="parameters" element="tns:ConfirmLoginOTPResponse" />
+  </wsdl:message>
+  <wsdl:message name="PasswordResetInitiationSoapIn">
+    <wsdl:part name="parameters" element="tns:PasswordResetInitiation" />
+  </wsdl:message>
+  <wsdl:message name="PasswordResetInitiationSoapOut">
+    <wsdl:part name="parameters" element="tns:PasswordResetInitiationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmResetOTPSoapIn">
+    <wsdl:part name="parameters" element="tns:ConfirmResetOTP" />
+  </wsdl:message>
+  <wsdl:message name="ConfirmResetOTPSoapOut">
+    <wsdl:part name="parameters" element="tns:ConfirmResetOTPResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateNewPaswordSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateNewPasword" />
+  </wsdl:message>
+  <wsdl:message name="UpdateNewPaswordSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateNewPaswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="ResetPasswordOnPortalSoapIn">
+    <wsdl:part name="parameters" element="tns:ResetPasswordOnPortal" />
+  </wsdl:message>
+  <wsdl:message name="ResetPasswordOnPortalSoapOut">
+    <wsdl:part name="parameters" element="tns:ResetPasswordOnPortalResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberOnlineLoanApplicationsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMemberOnlineLoanApplications" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberOnlineLoanApplicationsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMemberOnlineLoanApplicationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLoanApplicationDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLoanApplicationDetails" />
+  </wsdl:message>
+  <wsdl:message name="GetLoanApplicationDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLoanApplicationDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveGuarantorByRequestorSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveGuarantorByRequestor" />
+  </wsdl:message>
+  <wsdl:message name="RemoveGuarantorByRequestorSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveGuarantorByRequestorResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchGuarantorSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchGuarantor" />
+  </wsdl:message>
+  <wsdl:message name="SearchGuarantorSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchGuarantorResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddGuarantorSoapIn">
+    <wsdl:part name="parameters" element="tns:AddGuarantor" />
+  </wsdl:message>
+  <wsdl:message name="AddGuarantorSoapOut">
+    <wsdl:part name="parameters" element="tns:AddGuarantorResponse" />
+  </wsdl:message>
+  <wsdl:message name="StartLoanApplicationsSoapIn">
+    <wsdl:part name="parameters" element="tns:StartLoanApplications" />
+  </wsdl:message>
+  <wsdl:message name="StartLoanApplicationsSoapOut">
+    <wsdl:part name="parameters" element="tns:StartLoanApplicationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberGuarantorshipsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMemberGuarantorships" />
+  </wsdl:message>
+  <wsdl:message name="GetMemberGuarantorshipsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMemberGuarantorshipsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GuarantroshipDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:GuarantroshipDetails" />
+  </wsdl:message>
+  <wsdl:message name="GuarantroshipDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:GuarantroshipDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="StartGuarantorshipApprovalSoapIn">
+    <wsdl:part name="parameters" element="tns:StartGuarantorshipApproval" />
+  </wsdl:message>
+  <wsdl:message name="StartGuarantorshipApprovalSoapOut">
+    <wsdl:part name="parameters" element="tns:StartGuarantorshipApprovalResponse" />
+  </wsdl:message>
+  <wsdl:message name="CompleteGuarantorshipApprovalSoapIn">
+    <wsdl:part name="parameters" element="tns:CompleteGuarantorshipApproval" />
+  </wsdl:message>
+  <wsdl:message name="CompleteGuarantorshipApprovalSoapOut">
+    <wsdl:part name="parameters" element="tns:CompleteGuarantorshipApprovalResponse" />
+  </wsdl:message>
+  <wsdl:message name="RejectGuarantorshipSoapIn">
+    <wsdl:part name="parameters" element="tns:RejectGuarantorship" />
+  </wsdl:message>
+  <wsdl:message name="RejectGuarantorshipSoapOut">
+    <wsdl:part name="parameters" element="tns:RejectGuarantorshipResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoanUserDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:LoanUserDetails" />
+  </wsdl:message>
+  <wsdl:message name="LoanUserDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:LoanUserDetailsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ProxyServiceSoap">
+    <wsdl:operation name="MiniStatement">
+      <wsdl:input message="tns:MiniStatementSoapIn" />
+      <wsdl:output message="tns:MiniStatementSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DashboardInfo">
+      <wsdl:input message="tns:DashboardInfoSoapIn" />
+      <wsdl:output message="tns:DashboardInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MemberStatement">
+      <wsdl:input message="tns:MemberStatementSoapIn" />
+      <wsdl:output message="tns:MemberStatementSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoanGuarantorsReport">
+      <wsdl:input message="tns:LoanGuarantorsReportSoapIn" />
+      <wsdl:output message="tns:LoanGuarantorsReportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoanGuaranteedReport">
+      <wsdl:input message="tns:LoanGuaranteedReportSoapIn" />
+      <wsdl:output message="tns:LoanGuaranteedReportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoansStatement">
+      <wsdl:input message="tns:LoansStatementSoapIn" />
+      <wsdl:output message="tns:LoansStatementSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoanRepaymentSchedule">
+      <wsdl:input message="tns:LoanRepaymentScheduleSoapIn" />
+      <wsdl:output message="tns:LoanRepaymentScheduleSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MemberStatementLoans">
+      <wsdl:input message="tns:MemberStatementLoansSoapIn" />
+      <wsdl:output message="tns:MemberStatementLoansSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MemberLoans">
+      <wsdl:input message="tns:MemberLoansSoapIn" />
+      <wsdl:output message="tns:MemberLoansSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoanTypesCalculator">
+      <wsdl:input message="tns:LoanTypesCalculatorSoapIn" />
+      <wsdl:output message="tns:LoanTypesCalculatorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="NextOfkinDetails">
+      <wsdl:input message="tns:NextOfkinDetailsSoapIn" />
+      <wsdl:output message="tns:NextOfkinDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MemberLogin">
+      <wsdl:input message="tns:MemberLoginSoapIn" />
+      <wsdl:output message="tns:MemberLoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmLoginOTP">
+      <wsdl:input message="tns:ConfirmLoginOTPSoapIn" />
+      <wsdl:output message="tns:ConfirmLoginOTPSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PasswordResetInitiation">
+      <wsdl:input message="tns:PasswordResetInitiationSoapIn" />
+      <wsdl:output message="tns:PasswordResetInitiationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmResetOTP">
+      <wsdl:input message="tns:ConfirmResetOTPSoapIn" />
+      <wsdl:output message="tns:ConfirmResetOTPSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateNewPasword">
+      <wsdl:input message="tns:UpdateNewPaswordSoapIn" />
+      <wsdl:output message="tns:UpdateNewPaswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ResetPasswordOnPortal">
+      <wsdl:input message="tns:ResetPasswordOnPortalSoapIn" />
+      <wsdl:output message="tns:ResetPasswordOnPortalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberOnlineLoanApplications">
+      <wsdl:input message="tns:GetMemberOnlineLoanApplicationsSoapIn" />
+      <wsdl:output message="tns:GetMemberOnlineLoanApplicationsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLoanApplicationDetails">
+      <wsdl:input message="tns:GetLoanApplicationDetailsSoapIn" />
+      <wsdl:output message="tns:GetLoanApplicationDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveGuarantorByRequestor">
+      <wsdl:input message="tns:RemoveGuarantorByRequestorSoapIn" />
+      <wsdl:output message="tns:RemoveGuarantorByRequestorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchGuarantor">
+      <wsdl:input message="tns:SearchGuarantorSoapIn" />
+      <wsdl:output message="tns:SearchGuarantorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddGuarantor">
+      <wsdl:input message="tns:AddGuarantorSoapIn" />
+      <wsdl:output message="tns:AddGuarantorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StartLoanApplications">
+      <wsdl:input message="tns:StartLoanApplicationsSoapIn" />
+      <wsdl:output message="tns:StartLoanApplicationsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberGuarantorships">
+      <wsdl:input message="tns:GetMemberGuarantorshipsSoapIn" />
+      <wsdl:output message="tns:GetMemberGuarantorshipsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GuarantroshipDetails">
+      <wsdl:input message="tns:GuarantroshipDetailsSoapIn" />
+      <wsdl:output message="tns:GuarantroshipDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StartGuarantorshipApproval">
+      <wsdl:input message="tns:StartGuarantorshipApprovalSoapIn" />
+      <wsdl:output message="tns:StartGuarantorshipApprovalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CompleteGuarantorshipApproval">
+      <wsdl:input message="tns:CompleteGuarantorshipApprovalSoapIn" />
+      <wsdl:output message="tns:CompleteGuarantorshipApprovalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RejectGuarantorship">
+      <wsdl:input message="tns:RejectGuarantorshipSoapIn" />
+      <wsdl:output message="tns:RejectGuarantorshipSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoanUserDetails">
+      <wsdl:input message="tns:LoanUserDetailsSoapIn" />
+      <wsdl:output message="tns:LoanUserDetailsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ProxyServiceSoap" type="tns:ProxyServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="MiniStatement">
+      <soap:operation soapAction="http://tempuri.org/MiniStatement" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DashboardInfo">
+      <soap:operation soapAction="http://tempuri.org/DashboardInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberStatement">
+      <soap:operation soapAction="http://tempuri.org/MemberStatement" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanGuarantorsReport">
+      <soap:operation soapAction="http://tempuri.org/LoanGuarantorsReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanGuaranteedReport">
+      <soap:operation soapAction="http://tempuri.org/LoanGuaranteedReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoansStatement">
+      <soap:operation soapAction="http://tempuri.org/LoansStatement" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanRepaymentSchedule">
+      <soap:operation soapAction="http://tempuri.org/LoanRepaymentSchedule" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberStatementLoans">
+      <soap:operation soapAction="http://tempuri.org/MemberStatementLoans" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberLoans">
+      <soap:operation soapAction="http://tempuri.org/MemberLoans" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanTypesCalculator">
+      <soap:operation soapAction="http://tempuri.org/LoanTypesCalculator" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NextOfkinDetails">
+      <soap:operation soapAction="http://tempuri.org/NextOfkinDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberLogin">
+      <soap:operation soapAction="http://tempuri.org/MemberLogin" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmLoginOTP">
+      <soap:operation soapAction="http://tempuri.org/ConfirmLoginOTP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PasswordResetInitiation">
+      <soap:operation soapAction="http://tempuri.org/PasswordResetInitiation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmResetOTP">
+      <soap:operation soapAction="http://tempuri.org/ConfirmResetOTP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateNewPasword">
+      <soap:operation soapAction="http://tempuri.org/UpdateNewPasword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResetPasswordOnPortal">
+      <soap:operation soapAction="http://tempuri.org/ResetPasswordOnPortal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberOnlineLoanApplications">
+      <soap:operation soapAction="http://tempuri.org/GetMemberOnlineLoanApplications" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLoanApplicationDetails">
+      <soap:operation soapAction="http://tempuri.org/GetLoanApplicationDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveGuarantorByRequestor">
+      <soap:operation soapAction="http://tempuri.org/RemoveGuarantorByRequestor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGuarantor">
+      <soap:operation soapAction="http://tempuri.org/SearchGuarantor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddGuarantor">
+      <soap:operation soapAction="http://tempuri.org/AddGuarantor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StartLoanApplications">
+      <soap:operation soapAction="http://tempuri.org/StartLoanApplications" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberGuarantorships">
+      <soap:operation soapAction="http://tempuri.org/GetMemberGuarantorships" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GuarantroshipDetails">
+      <soap:operation soapAction="http://tempuri.org/GuarantroshipDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StartGuarantorshipApproval">
+      <soap:operation soapAction="http://tempuri.org/StartGuarantorshipApproval" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CompleteGuarantorshipApproval">
+      <soap:operation soapAction="http://tempuri.org/CompleteGuarantorshipApproval" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RejectGuarantorship">
+      <soap:operation soapAction="http://tempuri.org/RejectGuarantorship" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanUserDetails">
+      <soap:operation soapAction="http://tempuri.org/LoanUserDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ProxyServiceSoap12" type="tns:ProxyServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="MiniStatement">
+      <soap12:operation soapAction="http://tempuri.org/MiniStatement" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DashboardInfo">
+      <soap12:operation soapAction="http://tempuri.org/DashboardInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberStatement">
+      <soap12:operation soapAction="http://tempuri.org/MemberStatement" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanGuarantorsReport">
+      <soap12:operation soapAction="http://tempuri.org/LoanGuarantorsReport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanGuaranteedReport">
+      <soap12:operation soapAction="http://tempuri.org/LoanGuaranteedReport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoansStatement">
+      <soap12:operation soapAction="http://tempuri.org/LoansStatement" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanRepaymentSchedule">
+      <soap12:operation soapAction="http://tempuri.org/LoanRepaymentSchedule" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberStatementLoans">
+      <soap12:operation soapAction="http://tempuri.org/MemberStatementLoans" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberLoans">
+      <soap12:operation soapAction="http://tempuri.org/MemberLoans" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanTypesCalculator">
+      <soap12:operation soapAction="http://tempuri.org/LoanTypesCalculator" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NextOfkinDetails">
+      <soap12:operation soapAction="http://tempuri.org/NextOfkinDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberLogin">
+      <soap12:operation soapAction="http://tempuri.org/MemberLogin" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmLoginOTP">
+      <soap12:operation soapAction="http://tempuri.org/ConfirmLoginOTP" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PasswordResetInitiation">
+      <soap12:operation soapAction="http://tempuri.org/PasswordResetInitiation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfirmResetOTP">
+      <soap12:operation soapAction="http://tempuri.org/ConfirmResetOTP" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateNewPasword">
+      <soap12:operation soapAction="http://tempuri.org/UpdateNewPasword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResetPasswordOnPortal">
+      <soap12:operation soapAction="http://tempuri.org/ResetPasswordOnPortal" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberOnlineLoanApplications">
+      <soap12:operation soapAction="http://tempuri.org/GetMemberOnlineLoanApplications" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLoanApplicationDetails">
+      <soap12:operation soapAction="http://tempuri.org/GetLoanApplicationDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveGuarantorByRequestor">
+      <soap12:operation soapAction="http://tempuri.org/RemoveGuarantorByRequestor" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGuarantor">
+      <soap12:operation soapAction="http://tempuri.org/SearchGuarantor" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddGuarantor">
+      <soap12:operation soapAction="http://tempuri.org/AddGuarantor" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StartLoanApplications">
+      <soap12:operation soapAction="http://tempuri.org/StartLoanApplications" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMemberGuarantorships">
+      <soap12:operation soapAction="http://tempuri.org/GetMemberGuarantorships" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GuarantroshipDetails">
+      <soap12:operation soapAction="http://tempuri.org/GuarantroshipDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StartGuarantorshipApproval">
+      <soap12:operation soapAction="http://tempuri.org/StartGuarantorshipApproval" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CompleteGuarantorshipApproval">
+      <soap12:operation soapAction="http://tempuri.org/CompleteGuarantorshipApproval" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RejectGuarantorship">
+      <soap12:operation soapAction="http://tempuri.org/RejectGuarantorship" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoanUserDetails">
+      <soap12:operation soapAction="http://tempuri.org/LoanUserDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ProxyService">
+    <wsdl:port name="ProxyServiceSoap" binding="tns:ProxyServiceSoap">
+      <soap:address location="http://localhost:57865/ProxyService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ProxyServiceSoap12" binding="tns:ProxyServiceSoap12">
+      <soap12:address location="http://localhost:57865/ProxyService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

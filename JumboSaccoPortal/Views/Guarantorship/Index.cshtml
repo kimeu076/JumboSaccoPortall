@@ -1,0 +1,57 @@
+﻿@model JumboSaccoPortal.Models.infoclasses.MemberGuarantorships
+
+@{
+    ViewBag.Title = "Guarantorshisps";
+}
+
+<div class="pageheader">
+    <h1>Online Loan Guarantorships</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+<div class="pagecontent">
+    <div class="innercontent">
+        <div class="openloansarea">
+            @if (Model.Guarantorships.Any())
+            {
+                <h3>Guarantorships</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Loan Amount</th>
+                            <th>Requestor Name</th>
+                            <th>Status</th>
+                            <th>Request Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var loan in Model.Guarantorships)
+                        {
+                            <tr>
+                                <td>@loan.GuarantorshipID</td>
+                                <td>@loan.RequestedAmount</td>
+                                <td>@loan.RequestorName</td>
+                                <td>@loan.Status</td>
+                                <td>@loan.RequestedDate</td>
+                                <td>
+                                    <button onclick="window.location.href = '@Url.Action("GuarantorshipDetails", "Guarantorship", new { guarantorshipid = loan.GuarantorshipID})'">Details</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-error">
+                    No Pending Guarantorship Applications Found.
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
