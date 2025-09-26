@@ -10,29 +10,59 @@ namespace JumboSaccoPortal.Controllers
 {
     public class DownloadsController : Controller
     {
-        private string _rootDocumentFolderPath;
+        private string _saccoDocumentFolderPath;
+        private string _loanDocumentFolderPath;
 
-        public ActionResult Index() // Shows the list of folders
+        public ActionResult Index(string type = "sacco") // Default = Sacco documents
         {
             if (Session["memberno"] == null)
             {
                 return RedirectToAction("Index", "Login");
             }
-            _rootDocumentFolderPath = ConfigurationManager.AppSettings["SaccoDocuments"];
 
-            if (!Directory.Exists(_rootDocumentFolderPath))
+            if (type.ToLower() == "sacco")
             {
-                Directory.CreateDirectory(_rootDocumentFolderPath);
+                // --- Sacco documents (flat files) ---
+                _saccoDocumentFolderPath = ConfigurationManager.AppSettings["SaccoDocuments"];
+
+                if (!Directory.Exists(_saccoDocumentFolderPath))
+                {
+                    Directory.CreateDirectory(_saccoDocumentFolderPath);
+                }
+
+                var viewModel = new DocumentListViewModel
+                {
+                    FolderName = "Sacco Documents",
+                    Documents = Directory.GetFiles(_saccoDocumentFolderPath)
+                                         .Select(f => new DocumentViewModel
+                                         {
+                                             FileName = Path.GetFileName(f),
+                                             FilePath = f
+                                         })
+                                         .ToList()
+                };
+
+                return View("Documents", viewModel); // Reuse the Documents view
             }
-
-            var viewModel = new FolderListViewModel
+            else
             {
-                Subfolders = Directory.GetDirectories(_rootDocumentFolderPath)
-                                      .Select(d => new DirectoryInfo(d).Name)
-                                      .ToList()
-            };
+                // --- Loan documents (subfolder-based) ---
+                _loanDocumentFolderPath = ConfigurationManager.AppSettings["LoanDocumentsPath"];
 
-            return View(viewModel);
+                if (!Directory.Exists(_loanDocumentFolderPath))
+                {
+                    Directory.CreateDirectory(_loanDocumentFolderPath);
+                }
+
+                var viewModel = new FolderListViewModel
+                {
+                    Subfolders = Directory.GetDirectories(_loanDocumentFolderPath)
+                                          .Select(d => new DirectoryInfo(d).Name)
+                                          .ToList()
+                };
+
+                return View("Index", viewModel); // Folder listing
+            }
         }
 
         public ActionResult Documents(string folderName)
@@ -42,8 +72,8 @@ namespace JumboSaccoPortal.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            _rootDocumentFolderPath = ConfigurationManager.AppSettings["SaccoDocuments"];
-            string currentFolderPath = Path.Combine(_rootDocumentFolderPath, folderName);
+            _loanDocumentFolderPath = ConfigurationManager.AppSettings["LoanDocumentsPath"];
+            string currentFolderPath = Path.Combine(_loanDocumentFolderPath, folderName);
 
             if (!Directory.Exists(currentFolderPath))
             {
@@ -62,7 +92,7 @@ namespace JumboSaccoPortal.Controllers
                                      .ToList()
             };
 
-            return View("Documents", viewModel); // Use a specific view for document listing
+            return View("Documents", viewModel);
         }
 
         public ActionResult Download(string filePath)
@@ -71,6 +101,7 @@ namespace JumboSaccoPortal.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
+
             if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
             {
                 return HttpNotFound();

@@ -89,32 +89,41 @@ namespace JumboSaccoPortal.Controllers
 
         public ActionResult LoginSubmit(string username, string password)
         {
-            using (var client = new ProxyClient())
+            try
             {
-                string response = client.MemberLogin(username, password);
+                using (var client = new ProxyClient())
+                {
+                    string response = client.MemberLogin(username, password);
 
-                Session["userid"] = username;
-                //response = "SUCCESS";
+                    Session["userid"] = username;
 
-                if (response == "SUCCESS")
-                {
-                    TempData["SuccessMessage"] = "Kindly provide the OTP sent to your mobile Phone to log in.";
-                    TempData["LoggingIn"] = "Okay";
-                    TempData["LoggingIn1"] = "Okay";
-                    return RedirectToAction("OTPConfirm");
-                }
-                else if (response == "NOTACTIVE")
-                {
-                    TempData["ErrorMessage"] = "Your account has not been activated. Kindly click the button on the top left part of your screen to activate your account.";
-                    return View("Index");
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "The details provided are not correct. Kindly provide correct credentials or reset your password.";
-                    return View("Index");
+                    if (response == "SUCCESS")
+                    {
+                        TempData["SuccessMessage"] = "Kindly provide the OTP sent to your mobile Phone to log in.";
+                        TempData["LoggingIn"] = "Okay";
+                        TempData["LoggingIn1"] = "Okay";
+                        return RedirectToAction("OTPConfirm");
+                    }
+                    else if (response == "NOTACTIVE")
+                    {
+                        TempData["ErrorMessage"] = "Your account has not been activated...";
+                        return View("Index");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "The details provided are not correct...";
+                        return View("Index");
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                // TEMP: show full error to help debug
+                TempData["ErrorMessage"] = "Login failed: " + ex.Message;
+                return View("Index");
+            }
         }
+
 
         public ActionResult SetPasswordSubmit(string username, string password, string cpassword)
         {

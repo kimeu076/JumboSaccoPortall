@@ -328,7 +328,7 @@ namespace JumboSaccoPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitLoanApplication(UserDetails model, HttpPostedFileBase Payslip1, HttpPostedFileBase Payslip2, HttpPostedFileBase Payslip3, HttpPostedFileBase IDCopy, HttpPostedFileBase KRAPin, HttpPostedFileBase CollateralCopy)
+        public ActionResult SubmitLoanApplication(LoanApplicationPageModel model, HttpPostedFileBase Payslip1, HttpPostedFileBase Payslip2, HttpPostedFileBase Payslip3, HttpPostedFileBase IDCopy, HttpPostedFileBase KRAPin, HttpPostedFileBase CollateralCopy)
         {
             if (Session["memberno"] == null)
             {
@@ -362,7 +362,7 @@ namespace JumboSaccoPortal.Controllers
                 }
 
                 // Create loan application folder
-                string loanFolderName = $"LoanApp_{model.MemberNumber}_{DateTime.Now:yyyyMMddHHmmss}";
+                string loanFolderName = $"LoanApp_{model.usermodel.MemberNumber}_{DateTime.Now:yyyyMMddHHmmss}";
                 string uploadPath = Path.Combine(ConfigurationManager.AppSettings["LoanDocumentsPath"], loanFolderName);
 
                 Directory.CreateDirectory(uploadPath);
@@ -385,7 +385,7 @@ namespace JumboSaccoPortal.Controllers
                 // Prepare loan application data for web service
                 var loanApplication = new
                 {
-                    MemberId = model.MemberNumber,
+                    MemberId = model.usermodel.MemberNumber,
                     LoanType = Request.Form["LoanType"],
                     RequestedAmount = Request.Form["RequestedAmount"],
                     RepaymentPeriod = Request.Form["RepaymentPeriod"],
@@ -419,7 +419,8 @@ namespace JumboSaccoPortal.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An error occurred while processing your application" + ex.Message;
+                TempData["ErrorMessage"] = "An error occurred while processing your application";
+                //TempData["ErrorMessage"] = "An error occurred while processing your application" + ex.Message;
                 return RedirectToAction("NewLoanApplication");
             }
         }

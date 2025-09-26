@@ -153,6 +153,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
+    <Compile Include="Controllers\FeedbackController.cs" />
     <Compile Include="Controllers\GuarantorshipController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoansController.cs" />
@@ -221,6 +222,7 @@
     <Content Include="Views\Loans\NewLoanApplication.cshtml" />
     <Content Include="Views\Guarantorship\Index.cshtml" />
     <Content Include="Views\Guarantorship\GuarantorshipDetails.cshtml" />
+    <Content Include="Views\Feedback\Index.cshtml" />
     <None Include="Web References\ProxyReference\ProxyService.disco" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

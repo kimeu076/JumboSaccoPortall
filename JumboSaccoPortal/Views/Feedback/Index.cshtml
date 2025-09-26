@@ -1,0 +1,86 @@
+@model JumboSaccoPortal.Controllers.MemberFeedbackViewModel
+
+@{
+    ViewBag.Title = "Feedback";
+}
+
+<div class="pageheader">
+    <h1>Feedback</h1>
+    <a href="@Url.Action("Logout", "Dashboard")">
+        <i class="fa fa-power-off"></i>
+    </a>
+</div>
+
+<div class="pagecontent">
+    <div class="innercontent">
+        <div class="section-view">
+            <p>We value your feedback. Please use the form below to tell us about any issues or suggestions you have.</p>
+        </div>
+
+        <div class="section-view">
+            <h2>Send Feedback</h2>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <form method="post" action="@Url.Action("Send", "Feedback")">
+                <div class="feedback-form-group">
+                    <label for="Message" class="feedback-label">Describe the issue or feedback:</label>
+                    <textarea id="Message" name="Message" rows="6" class="feedback-textarea" required></textarea>
+                </div>
+
+                <button type="submit" class="statementbtn">Send Feedback</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .feedback-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .feedback-textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        resize: vertical;
+        font-size: 15px;
+        line-height: 1.4;
+        box-sizing: border-box;
+        background: #fff;
+        height: 150px;
+    }
+
+    .feedback-form-group {
+        margin-bottom: 20px;
+    }
+
+    .alert {
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>

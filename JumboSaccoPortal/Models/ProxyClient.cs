@@ -177,7 +177,7 @@ namespace JumboSaccoPortal.Models
             }
             catch (Exception ex)
             {
-                throw new Exception("Something went wrong. Please try again later.");
+                 throw new Exception("Login failed: " + ex.Message, ex);
             }
         }
 
@@ -318,6 +318,7 @@ namespace JumboSaccoPortal.Models
             catch (Exception ex)
             {
                 throw new Exception("Something went wrong. Please try again later.");
+                //throw new Exception(ex.Message);
             }
         }
         public string GetMemberGuarantorships(string memberid)

@@ -117,12 +117,21 @@
 .userdetails h2{
     margin: 10px 0 ;
 }
-.userdetails p{
-    font-weight: bold;
-    margin: 5px 0;
+.userdetails p {
+    display: flex;
+    flex-direction: column; /* stack title and value vertically */
+    margin: 10px 0;
 }
-.userdetails p span{
+
+.userdetails p {
+    font-weight: bold;
+}
+
+.userdetails p .detailsspan {
     font-weight: normal;
+    margin-top: 3px;
+    word-wrap: break-word; /* allow wrapping of long values */
+    white-space: normal;
 }
 
 

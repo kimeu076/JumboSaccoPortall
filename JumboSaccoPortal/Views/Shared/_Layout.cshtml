@@ -44,11 +44,15 @@
                         <div><i class="fa fa-folder"></i> Downloads Center</div>
                     </a>
                     <!--a href="@Url.Action("Index", "Support")" class="@(Request.RawUrl.Contains("/Support") ? "active" : "")">
-                        <div><i class="fa fa-headphones"></i> Support</div>
-                    </a-->
+        <div><i class="fa fa-headphones"></i> Support</div>
+    </a-->
                     <a href="@Url.Action("Index", "Profile")" class="@(Request.RawUrl.Contains("/Profile") ? "active" : "")">
                         <div><i class="fa fa-street-view"></i> Profile</div>
                     </a>
+                    <a href="@Url.Action("Index", "Feedback")" class="@(Request.RawUrl.Contains("/Feedback") ? "active" : "")">
+                        <div><i class="fa fa-comment"></i> Feedback</div>
+                    </a>
+
 
                 </div>
 
@@ -104,6 +108,10 @@
                     <a href="@Url.Action("Index", "Profile")" class="@(Request.RawUrl.Contains("/Profile") ? "active" : "")">
                         <div><i class="fa fa-street-view"></i> Profile</div>
                     </a>
+                    <a href="@Url.Action("Index", "Feedback")" class="@(Request.RawUrl.Contains("/Feedback") ? "active" : "")">
+                        <div><i class="fa fa-comment"></i> Feedback</div>
+                    </a>
+
 
                 </div>
             </div>
