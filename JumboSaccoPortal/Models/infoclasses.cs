@@ -88,6 +88,10 @@ namespace JumboSaccoPortal.Models
             public string LoanInterestAmount { get; set; }
             [JsonPropertyName("MaxLoanEligibility")]
             public string MaxLoanEligibility { get; set; }
+            [JsonPropertyName("CollateralValue")]
+            public string CollateralValue { get; set; }
+            [JsonPropertyName("CollateralCommittedValue")]
+            public string CollateralCommittedValue { get; set; }
 
             // Add this property to hold the list of ministatements
             [JsonPropertyName("UserMinistatements")]

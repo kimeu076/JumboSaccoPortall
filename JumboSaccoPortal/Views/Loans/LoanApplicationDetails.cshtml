@@ -26,83 +26,119 @@
         </div>
     }
 
-    <div class="innercontent">
-        <div class="section-view">
-            <h2>Loan Details</h2>
-            <p><strong>Loan Type: </strong>@Model.LoanType</p>
-            <p><strong>Loan Status: </strong>@Model.Status</p>
-            <p><strong>Requested Amount: </strong>@Model.RequestedAmount Kshs</p>
-            <p><strong>Request Date: </strong>@Model.RequestDate</p>
-            <p><strong>Last Updated Date: </strong>@Model.LastUpdateDate</p>
-            <p><strong>Total Amount Guaranteed So Far: </strong>@Model.TotalGuaranteed</p>
-        </div>
+<div class="innercontent">
+    <div class="section-view">
+        <h2>Loan Details</h2>
+        <p><strong>Loan Type: </strong>@Model.LoanType</p>
+        <p><strong>Loan Status: </strong>@Model.Status</p>
+        <p><strong>Requested Amount: </strong>@Model.RequestedAmount Kshs</p>
+        <p><strong>Request Date: </strong>@Model.RequestDate</p>
+        <p><strong>Last Updated Date: </strong>@Model.LastUpdateDate</p>
+        <p><strong>Total Amount Guaranteed So Far: </strong>@Model.TotalGuaranteed</p>
+    </div>
 
-        <!-- Add Guarantor Section -->
-        <div class="section-view">
-            <h3>Add Guarantor</h3>
-            <div>
-                @using (Html.BeginForm("SearchGuarantor", "Loans", FormMethod.Post, new { id = "searchGuarantorForm" }))
-                {
-                    @Html.Hidden("loanId", Model.LoanAppID)
-                    <div class="form-group">
-                        <label for="guarantorId">Guarantor Member Number:</label>
-                        <input type="text" id="guarantorId" name="guarantorId" class="form-control" required />
-                    </div>
-                    <button type="submit" class="btn btn-primary">Search</button>
-                }
-            </div>
-
-            <div id="guarantorDetails" style="display: none;">
-                @using (Html.BeginForm("AddGuarantor", "Loans", FormMethod.Post))
-                {
-                    @Html.Hidden("loanId", Model.LoanAppID)
-                    @Html.Hidden("guarantorId", "", new { id = "addGuarantorId" })
-
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <span id="guarantorName"></span>
-                    </div>
-                    <button type="submit" class="btn btn-success">Add Guarantor</button>
-                }
-            </div>
-        </div>
-
-        <div class="openloansarea">
-            @if (Model.OnlineGuarantors.Any())
+    <!-- Add Guarantor Section -->
+    <div class="section-view">
+        <h3>Add Guarantor</h3>
+        <div>
+            @using (Html.BeginForm("SearchGuarantor", "Loans", FormMethod.Post, new { id = "searchGuarantorForm" }))
             {
-                <h3>Loan Guarantors</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Guarantor Name</th>
-                            <th>Guarantorship Amount</th>
-                            <th>Guarantorship Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var guarantor in Model.OnlineGuarantors)
-                        {
-                            <tr>
-                                <td>@guarantor.GuarantorName</td>
-                                <td>@guarantor.ApprovedAmount</td>
-                                <td>@guarantor.GuarantorshipStatus</td>
-                                <td>
-                                    @if (@guarantor.GuarantorshipStatus == "Removed")
-                                    {
-                                    }
-                                    else
-                                    {
-                                        <button onclick="window.location.href = '@Url.Action("RemoveGuarantor", "Loans", new { loanid = Model.LoanAppID, guarantorshipid = guarantor.LoanAppID })'">Remove</button>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                @Html.Hidden("loanId", Model.LoanAppID)
+                <div class="form-group">
+                    <label for="guarantorId">Guarantor Member Number:</label>
+                    <input type="text" id="guarantorId" name="guarantorId" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            }
+        </div>
+
+        <div id="guarantorDetails" style="display: none;">
+            @using (Html.BeginForm("AddGuarantor", "Loans", FormMethod.Post))
+            {
+                @Html.Hidden("loanId", Model.LoanAppID)
+                @Html.Hidden("guarantorId", "", new { id = "addGuarantorId" })
+
+                <div class="form-group">
+                    <label>Name:</label>
+                    <span id="guarantorName"></span>
+                </div>
+                <button type="submit" class="btn btn-success">Add Guarantor</button>
             }
         </div>
     </div>
+    <!-- Add Collateral Section -->
+    <div class="section-view mt-5">
+        <h3>Add Collateral</h3>
+
+        @using (Html.BeginForm("AddCollateral", "Loans", FormMethod.Post, new { id = "addCollateralForm" }))
+        {
+            @Html.Hidden("loanId", Model.LoanAppID)
+
+            <div class="form-group mb-4">
+                <label for="collateralId" class="mb-2"><strong>Select Collateral:</strong></label>
+                <select id="collateralId" name="collateralId" class="form-control" required>
+                    <option value="">-- Select Collateral --</option>
+                 @*  foreach (var item in Model.AvailableCollaterals)
+                    {
+                        <option value="@item.CollateralID" data-value="@item.Value">@item.CollateralName</option>
+                    }
+                     *@
+                </select>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="mb-2"><strong>Collateral Value:</strong></label>
+                <input type="text" id="collateralValue" class="form-control" readonly />
+            </div>
+
+            <div class="form-group mb-4">
+                <label for="collateralAmount" class="mb-2"><strong>Amount to Pledge:</strong></label>
+                <input type="number" id="collateralAmount" name="collateralAmount" class="form-control" required min="1" />
+                <small class="text-muted">Amount cannot exceed the collateral value.</small>
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-success">Add Collateral</button>
+            </div>
+        }
+    </div>
+
+    <div class="openloansarea">
+        @if (Model.OnlineGuarantors.Any())
+        {
+            <h3>Loan Guarantors</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Guarantor Name</th>
+                        <th>Guarantorship Amount</th>
+                        <th>Guarantorship Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var guarantor in Model.OnlineGuarantors)
+                    {
+                        <tr>
+                            <td>@guarantor.GuarantorName</td>
+                            <td>@guarantor.ApprovedAmount</td>
+                            <td>@guarantor.GuarantorshipStatus</td>
+                            <td>
+                                @if (@guarantor.GuarantorshipStatus == "Removed")
+                                {
+                                }
+                                else
+                                {
+                                    <button onclick="window.location.href = '@Url.Action("RemoveGuarantor", "Loans", new { loanid = Model.LoanAppID, guarantorshipid = guarantor.LoanAppID })'">Remove</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
 </div>
 
     <script>
@@ -130,4 +166,24 @@
                 });
             });
         });
+
+        // Handle collateral selection and validation
+        $('#collateralId').change(function () {
+            const selectedValue = $('#collateralId option:selected').data('value') || 0;
+            $('#collateralValue').val(selectedValue);
+            $('#collateralAmount').val('');
+        });
+
+        // Validate collateral amount before submitting
+        $('#addCollateralForm').submit(function (e) {
+            const maxValue = parseFloat($('#collateralValue').val()) || 0;
+            const enteredValue = parseFloat($('#collateralAmount').val()) || 0;
+
+            if (enteredValue > maxValue) {
+                e.preventDefault();
+                alert('The pledged amount cannot exceed the collateral value.');
+            }
+        });
+
     </script>
+

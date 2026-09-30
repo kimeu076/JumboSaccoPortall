@@ -83,6 +83,7 @@
             </div>
             <div class="section-view-details">
                 <p>In order to change your password, please provide the old and new passwords.</p>
+
                 @if (TempData["SuccessMessage"] != null)
                 {
                     <div class="alert alert-success">
@@ -96,21 +97,34 @@
                         @TempData["ErrorMessage"]
                     </div>
                 }
-                <form method="post" action="@Url.Action("SubmitRequest", "Profile")" id="changepassform">
 
-                    <input type="text" id="username" name="username" value="@Model.PayrollNumber" hidden />
+                <form method="post" action="@Url.Action("SubmitRequest", "Profile")" id="changepassform">
+                    <input type="hidden" id="username" name="username" value="@Model.MemberNumber" />
+
                     <div class="cpgroup">
-                        <label>Old Pass</label>
-                        <input type="password" id="oldpass" name="oldpass" value="@ViewBag.Oldpass" required />
+                        <label>Old Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="oldpass" name="oldpass" value="@ViewBag.Oldpass" required />
+                            <i class="fa fa-eye toggle-password" data-target="oldpass"></i>
+                        </div>
                     </div>
+
                     <div class="cpgroup">
-                        <label>New Pass</label>
-                        <input type="password" id="newpass" name="newpass" value="@ViewBag.Newpass" required />
+                        <label>New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="newpass" name="newpass" value="@ViewBag.Newpass" required />
+                            <i class="fa fa-eye toggle-password" data-target="newpass"></i>
+                        </div>
                     </div>
+
                     <div class="cpgroup">
-                        <label>Confirm New Pass</label>
-                        <input type="password" id="confnewpass" name="confnewpass" value="@ViewBag.Confnewpass" required />
+                        <label>Confirm New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="confnewpass" name="confnewpass" value="@ViewBag.Confnewpass" required />
+                            <i class="fa fa-eye toggle-password" data-target="confnewpass"></i>
+                        </div>
                     </div>
+
                     <div class="cpgroup">
                         <button type="submit">Submit Request</button>
                     </div>
@@ -119,3 +133,41 @@
         </div>
     </div>
 </div>
+
+<!-- JS for toggling password visibility -->
+<script>
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', function () {
+            const target = document.getElementById(this.getAttribute('data-target'));
+            const type = target.getAttribute('type') === 'password' ? 'text' : 'password';
+            target.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    });
+</script>
+
+<!-- Optional styling -->
+<style>
+    .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 35px;
+        }
+
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        color: #666;
+    }
+
+        .toggle-password:hover {
+            color: #333;
+        }
+</style>
