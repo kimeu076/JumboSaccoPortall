@@ -125,6 +125,9 @@ namespace JumboSaccoPortal.Models
             public string LoanType { get; set; }
             public string TotalGuaranteed { get; set; }
             public List<OnlineGuarantor> OnlineGuarantors { get; set; }
+            public string LoanTypeCode { get; set; }
+
+            public string DocumentsFolder { get; set; }
         }
 
         public class OnlineGuarantor
@@ -164,7 +167,11 @@ namespace JumboSaccoPortal.Models
         }
 
 
-
+        public class LoanCharges
+        {
+            public decimal Appraisal { get; set; }
+            public decimal Insurance { get; set; }
+        }
         public class LoanCalculatorTypes
         {
             public List<LoanType> LoanTypes { get; set; }

@@ -1,10 +1,11 @@
-﻿using System.Configuration;
-using System.Net.Http;
-using System.Text;
+﻿using JumboSaccoPortal.ProxyReference;
 using System;
+using System.Configuration;
+using System.Diagnostics;
 using System.Net;
-using JumboSaccoPortal.ProxyReference;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace JumboSaccoPortal.Models
 {
@@ -105,7 +106,65 @@ namespace JumboSaccoPortal.Models
                 throw new Exception("Something went wrong. Please try again later.");
             }
         }
+        public string LoanCalculatorLoanCharges(string loanProductType, decimal loanAmount)
+        {
+            try
+            {
+                Debug.WriteLine("==============================================");
+                Debug.WriteLine("LOAN CHARGES - PROXY START");
+                Debug.WriteLine("==============================================");
 
+                Debug.WriteLine("Loan Product Type: " + loanProductType);
+                Debug.WriteLine("Loan Amount: " + loanAmount);
+
+                Debug.WriteLine("----------------------------------------------");
+                Debug.WriteLine("Calling _client.LoanChargesCalculator...");
+                Debug.WriteLine("----------------------------------------------");
+
+                string response = _client.LoanChargesCalculator(
+                    loanProductType,
+                    loanAmount
+                );
+
+                Debug.WriteLine("----------------------------------------------");
+                Debug.WriteLine("WEB SERVICE CALL SUCCESSFUL");
+                Debug.WriteLine("Response:");
+                Debug.WriteLine(response);
+                Debug.WriteLine("----------------------------------------------");
+
+                Debug.WriteLine("LOAN CHARGES - PROXY END");
+                Debug.WriteLine("==============================================");
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("==============================================");
+                Debug.WriteLine("LOAN CHARGES - PROXY ERROR");
+                Debug.WriteLine("==============================================");
+
+                Debug.WriteLine("Exception Type:");
+                Debug.WriteLine(ex.GetType().FullName);
+
+                Debug.WriteLine("Exception Message:");
+                Debug.WriteLine(ex.Message);
+
+                Debug.WriteLine("Exception Details:");
+                Debug.WriteLine(ex.ToString());
+
+                if (ex.InnerException != null)
+                {
+                    Debug.WriteLine("----------------------------------------------");
+                    Debug.WriteLine("INNER EXCEPTION:");
+                    Debug.WriteLine(ex.InnerException.ToString());
+                }
+
+                Debug.WriteLine("==============================================");
+
+                // IMPORTANT: preserve the original exception
+                throw;
+            }
+        }
 
 
         //Statements
@@ -321,6 +380,23 @@ namespace JumboSaccoPortal.Models
                 //throw new Exception(ex.Message);
             }
         }
+        public string ModifyLoanApplication(
+    int loanapp,
+    string loantype,
+    decimal requestedamount)
+        {
+            try
+            {
+                return _client.ModifyLoanApplication(
+                    loanapp,
+                    loantype,
+                    requestedamount);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong. Please try again later.");
+            }
+        }
         public string GetMemberGuarantorships(string memberid)
         {
             try
@@ -359,11 +435,31 @@ namespace JumboSaccoPortal.Models
         {
             try
             {
-                return _client.CompleteGuarantorshipApproval(guarantorshipid, memberid, otp);
+                System.Diagnostics.Debug.WriteLine("===== CompleteGuarantorshipApproval =====");
+                System.Diagnostics.Debug.WriteLine("Guarantorship ID: " + guarantorshipid);
+                System.Diagnostics.Debug.WriteLine("Member ID/No: " + memberid);
+                System.Diagnostics.Debug.WriteLine("OTP: " + otp);
+
+                string response = _client.CompleteGuarantorshipApproval(
+                    guarantorshipid,
+                    memberid,
+                    otp
+                );
+
+                System.Diagnostics.Debug.WriteLine("BC Response: " + response);
+
+                return response;
             }
             catch (Exception ex)
             {
-                throw new Exception("Something went wrong. Please try again later.");
+                System.Diagnostics.Debug.WriteLine(
+                    "CompleteGuarantorshipApproval ERROR:"
+                );
+
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+
+                // TEMPORARY: preserve the real error while debugging
+                throw;
             }
         }
         public string RejectGuarantorship(int guarantorshipid, string memberid, string comment)

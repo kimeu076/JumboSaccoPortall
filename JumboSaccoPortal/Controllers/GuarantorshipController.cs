@@ -101,16 +101,48 @@ namespace JumboSaccoPortal.Controllers
             {
                 string navresponse = client.StartGuarantorshipApproval(guarantorshipId, membernumber, amountToGuarantee);
 
-                
+
                 if (navresponse == "TRUE")
                 {
-                    return Json(new { success = true, message = "Please provide the OTP sent to your mobile phone for confirmation of the guarantorship request." });
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Please provide the OTP sent to your mobile phone for confirmation of the guarantorship request."
+                    });
                 }
-                else
+
+                if (navresponse == "INSUFFICIENTABILITY")
                 {
-                    //return Json(new { success = false, message = "An error occurred: " + navresponse });
-                    return Json(new { success = false, message = "Something went wrong. Please try again later" });
+                    return Json(new
+                    {
+                        success = false,
+                        message = "You do not have sufficient guarantee ability for the amount entered."
+                    });
                 }
+
+                if (navresponse == "ALREADYDONE")
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "This guarantorship request has already been processed."
+                    });
+                }
+
+                if (navresponse == "INVALIDAMOUNT")
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Please enter a valid amount to guarantee."
+                    });
+                }
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Something went wrong. Please try again later."
+                });
             }
         }
 
@@ -119,28 +151,84 @@ namespace JumboSaccoPortal.Controllers
         {
             if (Session["memberno"] == null)
             {
-                return RedirectToAction("Index", "Login");
+                return Json(new
+                {
+                    success = false,
+                    message = "Your session has expired. Please log in again."
+                });
             }
+
             var membernumber = Session["memberno"] as string;
-            using (var client = new ProxyClient())
+
+            try
             {
-                string navresponse = client.CompleteGuarantorshipApproval(guarantorshipId, membernumber, otp);
+                System.Diagnostics.Debug.WriteLine(
+                    "===== FINALIZE GUARANTORSHIP ====="
+                );
 
-                if (navresponse == "TRUE")
-                {
-                    TempData["SuccessMessage"] = "Guarantorship request accepted successfully.";
-                    return Json(new { success = true, message = "Guarantorship request accepted successfully." });
-                }
+                System.Diagnostics.Debug.WriteLine(
+                    "Guarantorship ID: " + guarantorshipId
+                );
 
-                else if (navresponse == "WRONGOTP")
+                System.Diagnostics.Debug.WriteLine(
+                    "Member No: " + membernumber
+                );
+
+                System.Diagnostics.Debug.WriteLine(
+                    "OTP: " + otp
+                );
+
+                using (var client = new ProxyClient())
                 {
-                    return Json(new { success = false, message = "The OTP provided is wrong. Kindly provide the correct OTP." });
+                    string navresponse = client.CompleteGuarantorshipApproval(
+                        guarantorshipId,
+                        membernumber,
+                        otp
+                    );
+
+                    System.Diagnostics.Debug.WriteLine(
+                        "Proxy response: " + navresponse
+                    );
+
+                    if (navresponse == "TRUE")
+                    {
+                        TempData["SuccessMessage"] =
+                            "Guarantorship request accepted successfully.";
+
+                        return Json(new
+                        {
+                            success = true,
+                            message = "Guarantorship request accepted successfully."
+                        });
+                    }
+
+                    if (navresponse == "WRONGOTP")
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "The OTP provided is wrong. Kindly provide the correct OTP."
+                        });
+                    }
+
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Something went wrong. Response: " + navresponse
+                    });
                 }
-                else
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "FINALIZE ERROR: " + ex.ToString()
+                );
+
+                return Json(new
                 {
-                    //return Json(new { success = false, message = "An error occurred: " + navresponse });
-                    return Json(new { success = false, message = "Something went wrong. Please try again later" });
-                }
+                    success = false,
+                    message = "OTP verification failed: " + ex.Message
+                });
             }
         }
     }

@@ -144,6 +144,21 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="LoanChargesCalculator">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="loanProductType" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="loanAmount" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoanChargesCalculatorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoanChargesCalculatorResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="NextOfkinDetails">
         <s:complexType>
           <s:sequence>
@@ -336,6 +351,22 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="ModifyLoanApplication">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="loanapp" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="loantype" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="requestedamount" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ModifyLoanApplicationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ModifyLoanApplicationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetMemberGuarantorships">
         <s:complexType>
           <s:sequence>
@@ -488,6 +519,12 @@
   <wsdl:message name="LoanTypesCalculatorSoapOut">
     <wsdl:part name="parameters" element="tns:LoanTypesCalculatorResponse" />
   </wsdl:message>
+  <wsdl:message name="LoanChargesCalculatorSoapIn">
+    <wsdl:part name="parameters" element="tns:LoanChargesCalculator" />
+  </wsdl:message>
+  <wsdl:message name="LoanChargesCalculatorSoapOut">
+    <wsdl:part name="parameters" element="tns:LoanChargesCalculatorResponse" />
+  </wsdl:message>
   <wsdl:message name="NextOfkinDetailsSoapIn">
     <wsdl:part name="parameters" element="tns:NextOfkinDetails" />
   </wsdl:message>
@@ -566,6 +603,12 @@
   <wsdl:message name="StartLoanApplicationsSoapOut">
     <wsdl:part name="parameters" element="tns:StartLoanApplicationsResponse" />
   </wsdl:message>
+  <wsdl:message name="ModifyLoanApplicationSoapIn">
+    <wsdl:part name="parameters" element="tns:ModifyLoanApplication" />
+  </wsdl:message>
+  <wsdl:message name="ModifyLoanApplicationSoapOut">
+    <wsdl:part name="parameters" element="tns:ModifyLoanApplicationResponse" />
+  </wsdl:message>
   <wsdl:message name="GetMemberGuarantorshipsSoapIn">
     <wsdl:part name="parameters" element="tns:GetMemberGuarantorships" />
   </wsdl:message>
@@ -643,6 +686,10 @@
       <wsdl:input message="tns:LoanTypesCalculatorSoapIn" />
       <wsdl:output message="tns:LoanTypesCalculatorSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="LoanChargesCalculator">
+      <wsdl:input message="tns:LoanChargesCalculatorSoapIn" />
+      <wsdl:output message="tns:LoanChargesCalculatorSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="NextOfkinDetails">
       <wsdl:input message="tns:NextOfkinDetailsSoapIn" />
       <wsdl:output message="tns:NextOfkinDetailsSoapOut" />
@@ -694,6 +741,10 @@
     <wsdl:operation name="StartLoanApplications">
       <wsdl:input message="tns:StartLoanApplicationsSoapIn" />
       <wsdl:output message="tns:StartLoanApplicationsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ModifyLoanApplication">
+      <wsdl:input message="tns:ModifyLoanApplicationSoapIn" />
+      <wsdl:output message="tns:ModifyLoanApplicationSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMemberGuarantorships">
       <wsdl:input message="tns:GetMemberGuarantorshipsSoapIn" />
@@ -812,6 +863,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="LoanChargesCalculator">
+      <soap:operation soapAction="http://tempuri.org/LoanChargesCalculator" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="NextOfkinDetails">
       <soap:operation soapAction="http://tempuri.org/NextOfkinDetails" style="document" />
       <wsdl:input>
@@ -922,6 +982,15 @@
     </wsdl:operation>
     <wsdl:operation name="StartLoanApplications">
       <soap:operation soapAction="http://tempuri.org/StartLoanApplications" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyLoanApplication">
+      <soap:operation soapAction="http://tempuri.org/ModifyLoanApplication" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1076,6 +1145,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="LoanChargesCalculator">
+      <soap12:operation soapAction="http://tempuri.org/LoanChargesCalculator" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="NextOfkinDetails">
       <soap12:operation soapAction="http://tempuri.org/NextOfkinDetails" style="document" />
       <wsdl:input>
@@ -1186,6 +1264,15 @@
     </wsdl:operation>
     <wsdl:operation name="StartLoanApplications">
       <soap12:operation soapAction="http://tempuri.org/StartLoanApplications" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyLoanApplication">
+      <soap12:operation soapAction="http://tempuri.org/ModifyLoanApplication" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

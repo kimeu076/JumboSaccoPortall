@@ -36,7 +36,186 @@
         <p><strong>Last Updated Date: </strong>@Model.LastUpdateDate</p>
         <p><strong>Total Amount Guaranteed So Far: </strong>@Model.TotalGuaranteed</p>
     </div>
+    @if (Model.Status == "New")
+    {
+        <div class="section-view">
+            <h3>Modify Loan Application</h3>
 
+            <p class="text-muted">
+                You can change the loan type and requested amount.
+                Documents are optional. Only documents you upload will be replaced.
+            </p>
+
+            @using (Html.BeginForm(
+                "ModifyLoanApplication",
+                "Loans",
+                FormMethod.Post,
+                new
+                {
+                    enctype = "multipart/form-data",
+                    id = "modifyLoanApplicationForm"
+                }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.Hidden(
+                    "loanId",
+                    Model.LoanAppID)
+
+                <!-- Loan Type -->
+                <div class="form-group">
+                    <label for="loanType">
+                        <strong>Loan Type:</strong>
+                    </label>
+
+                    <select id="loanType"
+                            name="loanType"
+                            class="form-control"
+                            required>
+
+                        <option value="">
+                            -- Select Loan Type --
+                        </option>
+
+                        @if (ViewBag.LoanTypes != null)
+                        {
+                            foreach (var loanType in ViewBag.LoanTypes)
+                            {
+                                <option value="@loanType.LoanCode"
+                                        @(loanType.LoanCode == Model.LoanTypeCode ? "selected" : "")>
+
+                                    @loanType.LoanDescription
+
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <!-- Requested Amount -->
+                <div class="form-group">
+                    <label for="requestedAmount">
+                        <strong>Requested Amount:</strong>
+                    </label>
+
+                    <input type="number"
+                           id="requestedAmount"
+                           name="requestedAmount"
+                           class="form-control"
+                           value="@Model.RequestedAmount"
+                           min="1"
+                           step="0.01"
+                           required />
+
+                    <small class="text-muted">
+                        Enter the amount you are requesting.
+                    </small>
+                </div>
+
+                <hr />
+
+                <h4>Update Documents</h4>
+
+                <p class="text-muted">
+                    Leave a document blank if you do not want to change it.
+                </p>
+
+                <!-- Payslip 1 -->
+                <div class="form-group">
+                    <label for="Payslip1">
+                        <strong>First Payslip</strong>
+                    </label>
+
+                    <input type="file"
+                           id="Payslip1"
+                           name="Payslip1"
+                           class="form-control"
+                           accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+
+                <!-- Payslip 2 -->
+                <div class="form-group">
+                    <label for="Payslip2">
+                        <strong>Second Payslip</strong>
+                    </label>
+
+                    <input type="file"
+                           id="Payslip2"
+                           name="Payslip2"
+                           class="form-control"
+                           accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+
+                <!-- Payslip 3 -->
+                <div class="form-group">
+                    <label for="Payslip3">
+                        <strong>Third Payslip</strong>
+                    </label>
+
+                    <input type="file"
+                           id="Payslip3"
+                           name="Payslip3"
+                           class="form-control"
+                           accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+
+                <!-- ID Copy -->
+                <div class="form-group">
+                    <label for="IDCopy">
+                        <strong>ID Copy</strong>
+                    </label>
+
+                    <input type="file"
+                           id="IDCopy"
+                           name="IDCopy"
+                           class="form-control"
+                           accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+
+                <!-- KRA PIN -->
+                <div class="form-group">
+                    <label for="KRAPin">
+                        <strong>KRA PIN</strong>
+                    </label>
+
+                    <input type="file"
+                           id="KRAPin"
+                           name="KRAPin"
+                           class="form-control"
+                           accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+
+                <!-- Collateral -->
+                <div class="form-group">
+                    <label for="CollateralCopy">
+                        <strong>Collateral Document</strong>
+                    </label>
+
+                    <input type="file"
+                           id="CollateralCopy"
+                           name="CollateralCopy"
+                           class="form-control"
+                           accept=".pdf,.jpg,.jpeg,.png" />
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            id="modifyLoanBtn">
+
+                        Modify Loan Application
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            onclick="window.location.reload();">
+
+                        Cancel
+                    </button>
+                </div>
+            }
+        </div>
+    }
     <!-- Add Guarantor Section -->
     <div class="section-view">
         <h3>Add Guarantor</h3>
@@ -78,11 +257,11 @@
                 <label for="collateralId" class="mb-2"><strong>Select Collateral:</strong></label>
                 <select id="collateralId" name="collateralId" class="form-control" required>
                     <option value="">-- Select Collateral --</option>
-                 @*  foreach (var item in Model.AvailableCollaterals)
-                    {
-                        <option value="@item.CollateralID" data-value="@item.Value">@item.CollateralName</option>
-                    }
-                     *@
+                    @*  foreach (var item in Model.AvailableCollaterals)
+                        {
+                            <option value="@item.CollateralID" data-value="@item.Value">@item.CollateralName</option>
+                        }
+                    *@
                 </select>
             </div>
 

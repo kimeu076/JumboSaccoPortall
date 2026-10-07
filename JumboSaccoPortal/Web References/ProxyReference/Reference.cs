@@ -49,6 +49,8 @@ namespace JumboSaccoPortal.ProxyReference {
         
         private System.Threading.SendOrPostCallback LoanTypesCalculatorOperationCompleted;
         
+        private System.Threading.SendOrPostCallback LoanChargesCalculatorOperationCompleted;
+        
         private System.Threading.SendOrPostCallback NextOfkinDetailsOperationCompleted;
         
         private System.Threading.SendOrPostCallback MemberLoginOperationCompleted;
@@ -74,6 +76,8 @@ namespace JumboSaccoPortal.ProxyReference {
         private System.Threading.SendOrPostCallback AddGuarantorOperationCompleted;
         
         private System.Threading.SendOrPostCallback StartLoanApplicationsOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback ModifyLoanApplicationOperationCompleted;
         
         private System.Threading.SendOrPostCallback GetMemberGuarantorshipsOperationCompleted;
         
@@ -156,6 +160,9 @@ namespace JumboSaccoPortal.ProxyReference {
         public event LoanTypesCalculatorCompletedEventHandler LoanTypesCalculatorCompleted;
         
         /// <remarks/>
+        public event LoanChargesCalculatorCompletedEventHandler LoanChargesCalculatorCompleted;
+        
+        /// <remarks/>
         public event NextOfkinDetailsCompletedEventHandler NextOfkinDetailsCompleted;
         
         /// <remarks/>
@@ -193,6 +200,9 @@ namespace JumboSaccoPortal.ProxyReference {
         
         /// <remarks/>
         public event StartLoanApplicationsCompletedEventHandler StartLoanApplicationsCompleted;
+        
+        /// <remarks/>
+        public event ModifyLoanApplicationCompletedEventHandler ModifyLoanApplicationCompleted;
         
         /// <remarks/>
         public event GetMemberGuarantorshipsCompletedEventHandler GetMemberGuarantorshipsCompleted;
@@ -503,6 +513,37 @@ namespace JumboSaccoPortal.ProxyReference {
             if ((this.LoanTypesCalculatorCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.LoanTypesCalculatorCompleted(this, new LoanTypesCalculatorCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/LoanChargesCalculator", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string LoanChargesCalculator(string loanProductType, decimal loanAmount) {
+            object[] results = this.Invoke("LoanChargesCalculator", new object[] {
+                        loanProductType,
+                        loanAmount});
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void LoanChargesCalculatorAsync(string loanProductType, decimal loanAmount) {
+            this.LoanChargesCalculatorAsync(loanProductType, loanAmount, null);
+        }
+        
+        /// <remarks/>
+        public void LoanChargesCalculatorAsync(string loanProductType, decimal loanAmount, object userState) {
+            if ((this.LoanChargesCalculatorOperationCompleted == null)) {
+                this.LoanChargesCalculatorOperationCompleted = new System.Threading.SendOrPostCallback(this.OnLoanChargesCalculatorOperationCompleted);
+            }
+            this.InvokeAsync("LoanChargesCalculator", new object[] {
+                        loanProductType,
+                        loanAmount}, this.LoanChargesCalculatorOperationCompleted, userState);
+        }
+        
+        private void OnLoanChargesCalculatorOperationCompleted(object arg) {
+            if ((this.LoanChargesCalculatorCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.LoanChargesCalculatorCompleted(this, new LoanChargesCalculatorCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -900,6 +941,39 @@ namespace JumboSaccoPortal.ProxyReference {
             if ((this.StartLoanApplicationsCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.StartLoanApplicationsCompleted(this, new StartLoanApplicationsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/ModifyLoanApplication", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string ModifyLoanApplication(int loanapp, string loantype, decimal requestedamount) {
+            object[] results = this.Invoke("ModifyLoanApplication", new object[] {
+                        loanapp,
+                        loantype,
+                        requestedamount});
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void ModifyLoanApplicationAsync(int loanapp, string loantype, decimal requestedamount) {
+            this.ModifyLoanApplicationAsync(loanapp, loantype, requestedamount, null);
+        }
+        
+        /// <remarks/>
+        public void ModifyLoanApplicationAsync(int loanapp, string loantype, decimal requestedamount, object userState) {
+            if ((this.ModifyLoanApplicationOperationCompleted == null)) {
+                this.ModifyLoanApplicationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnModifyLoanApplicationOperationCompleted);
+            }
+            this.InvokeAsync("ModifyLoanApplication", new object[] {
+                        loanapp,
+                        loantype,
+                        requestedamount}, this.ModifyLoanApplicationOperationCompleted, userState);
+        }
+        
+        private void OnModifyLoanApplicationOperationCompleted(object arg) {
+            if ((this.ModifyLoanApplicationCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.ModifyLoanApplicationCompleted(this, new ModifyLoanApplicationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -1370,6 +1444,32 @@ namespace JumboSaccoPortal.ProxyReference {
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    public delegate void LoanChargesCalculatorCompletedEventHandler(object sender, LoanChargesCalculatorCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class LoanChargesCalculatorCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal LoanChargesCalculatorCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
     public delegate void NextOfkinDetailsCompletedEventHandler(object sender, NextOfkinDetailsCompletedEventArgs e);
     
     /// <remarks/>
@@ -1693,6 +1793,32 @@ namespace JumboSaccoPortal.ProxyReference {
         private object[] results;
         
         internal StartLoanApplicationsCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    public delegate void ModifyLoanApplicationCompletedEventHandler(object sender, ModifyLoanApplicationCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class ModifyLoanApplicationCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal ModifyLoanApplicationCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
                 base(exception, cancelled, userState) {
             this.results = results;
         }

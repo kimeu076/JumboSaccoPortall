@@ -105,7 +105,10 @@
         <h2>Optional Documents</h2>
         <div class="cpgroup">
             <label for="CollateralCopy">Collateral Document Copy (PDF/Image):</label>
-            <input type="file" id="CollateralCopy" name="CollateralCopy" class="form-control-file" accept=".pdf,.jpg,.jpeg,.png" required disabled />
+            <input type="file" id="CollateralCopy" name="CollateralCopy"
+                   class="form-control-file"
+                   accept=".pdf,.jpg,.jpeg,.png"
+                   disabled />
         </div>
 
         <div class="cpgroup">
@@ -217,6 +220,11 @@
                     currentMaxInstallments = 0;
                 }
 
+                // Calculate and update max eligibility based on multiplier
+                // Calculate maximum eligibility based on share capital.
+                // TEMPORARY RULE:
+                // If member has 0 share capital/deposits, allow up to Kshs 10,000.
+                // Otherwise, use the normal share capital × loan multiplier calculation.
                 // Calculate and update max eligibility based on multiplier
                 if (!isNaN(multiplier) && memberShareCapital > 0) {
                     currentCalculatedMaxLoanEligibility = memberShareCapital * multiplier;
