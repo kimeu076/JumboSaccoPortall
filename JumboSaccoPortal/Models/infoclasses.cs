@@ -245,4 +245,42 @@ namespace JumboSaccoPortal.Models
             public string MemberMaximumAbility { get; set; }
         }
     }
+    public class MemberRegistrationModel
+    {
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string PayrollNo { get; set; }
+        public string Address { get; set; }
+        public string PostalCode { get; set; }
+        public string Town { get; set; }
+        public string CountryRegionCode { get; set; }
+        public string County { get; set; }
+        public string MobilePhoneNo { get; set; }
+        public string SecondaryMobileNo { get; set; }
+        public string Email { get; set; }
+        public string DateOfBirth { get; set; }
+        public string IDNo { get; set; }
+        public string PassportNo { get; set; }
+        public string KRAPIN { get; set; }
+        public string Gender { get; set; }
+        public string MaritalStatus { get; set; }
+        public string HowDidYouKnow { get; set; }
+        public string RecruitedBy { get; set; }
+        public string RecruiterName { get; set; }
+        public string ApplicationCategory { get; set; }
+        public string EmployerCode { get; set; }
+        public string Workstation { get; set; }
+        public string Department { get; set; }
+       
+    }
+
+    public class LookupItem
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("code")]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string Name { get; set; }
+    }
 }

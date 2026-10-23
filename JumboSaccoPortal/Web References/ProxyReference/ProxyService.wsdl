@@ -173,6 +173,64 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="MemberApplication">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="firstName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="middleName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lastName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="payrollNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="address" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="postalCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="town" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="countryRegionCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="county" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mobilePhoneNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="secondaryMobileNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dateOfBirth" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="idNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="passportNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="kraPin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="gender" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="maritalStatus" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="howDidYouKnow" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="recruitedBy" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="recruiterName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="applicationCategory" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="employerCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="workstation" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="department" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MemberApplicationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MemberApplicationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EmployerList">
+        <s:complexType />
+      </s:element>
+      <s:element name="EmployerListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="EmployerListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PostCodeList">
+        <s:complexType />
+      </s:element>
+      <s:element name="PostCodeListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PostCodeListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="MemberLogin">
         <s:complexType>
           <s:sequence>
@@ -531,6 +589,24 @@
   <wsdl:message name="NextOfkinDetailsSoapOut">
     <wsdl:part name="parameters" element="tns:NextOfkinDetailsResponse" />
   </wsdl:message>
+  <wsdl:message name="MemberApplicationSoapIn">
+    <wsdl:part name="parameters" element="tns:MemberApplication" />
+  </wsdl:message>
+  <wsdl:message name="MemberApplicationSoapOut">
+    <wsdl:part name="parameters" element="tns:MemberApplicationResponse" />
+  </wsdl:message>
+  <wsdl:message name="EmployerListSoapIn">
+    <wsdl:part name="parameters" element="tns:EmployerList" />
+  </wsdl:message>
+  <wsdl:message name="EmployerListSoapOut">
+    <wsdl:part name="parameters" element="tns:EmployerListResponse" />
+  </wsdl:message>
+  <wsdl:message name="PostCodeListSoapIn">
+    <wsdl:part name="parameters" element="tns:PostCodeList" />
+  </wsdl:message>
+  <wsdl:message name="PostCodeListSoapOut">
+    <wsdl:part name="parameters" element="tns:PostCodeListResponse" />
+  </wsdl:message>
   <wsdl:message name="MemberLoginSoapIn">
     <wsdl:part name="parameters" element="tns:MemberLogin" />
   </wsdl:message>
@@ -693,6 +769,18 @@
     <wsdl:operation name="NextOfkinDetails">
       <wsdl:input message="tns:NextOfkinDetailsSoapIn" />
       <wsdl:output message="tns:NextOfkinDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MemberApplication">
+      <wsdl:input message="tns:MemberApplicationSoapIn" />
+      <wsdl:output message="tns:MemberApplicationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="EmployerList">
+      <wsdl:input message="tns:EmployerListSoapIn" />
+      <wsdl:output message="tns:EmployerListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PostCodeList">
+      <wsdl:input message="tns:PostCodeListSoapIn" />
+      <wsdl:output message="tns:PostCodeListSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="MemberLogin">
       <wsdl:input message="tns:MemberLoginSoapIn" />
@@ -874,6 +962,33 @@
     </wsdl:operation>
     <wsdl:operation name="NextOfkinDetails">
       <soap:operation soapAction="http://tempuri.org/NextOfkinDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberApplication">
+      <soap:operation soapAction="http://tempuri.org/MemberApplication" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EmployerList">
+      <soap:operation soapAction="http://tempuri.org/EmployerList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PostCodeList">
+      <soap:operation soapAction="http://tempuri.org/PostCodeList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1156,6 +1271,33 @@
     </wsdl:operation>
     <wsdl:operation name="NextOfkinDetails">
       <soap12:operation soapAction="http://tempuri.org/NextOfkinDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MemberApplication">
+      <soap12:operation soapAction="http://tempuri.org/MemberApplication" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EmployerList">
+      <soap12:operation soapAction="http://tempuri.org/EmployerList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PostCodeList">
+      <soap12:operation soapAction="http://tempuri.org/PostCodeList" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

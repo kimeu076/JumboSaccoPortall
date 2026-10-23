@@ -1,0 +1,500 @@
+@using JumboSaccoPortal.Models
+@model MemberRegistrationModel
+@{
+    Layout = null;
+    var employers = ViewBag.Employers as List<LookupItem> ?? new List<LookupItem>();
+    var postCodes = ViewBag.PostCodes as List<LookupItem> ?? new List<LookupItem>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member Registration - Jumbo Sacco</title>
+    <link rel="icon" type="image/x-icon" href="~/Content/images/logobg.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
+    <style>
+        :root {
+            --primary: #0b6b3a;
+            --primary-dark: #084d2a;
+            --bg: #f3f6f4;
+            --card: #ffffff;
+            --text: #1f2933;
+            --muted: #6b7785;
+            --border: #d5dde3;
+            --error: #c62828;
+            --error-bg: #fdecea;
+            --success: #1b7f3b;
+            --success-bg: #e8f5ec;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 36px 20px 90px;
+            text-align: center;
+            color: #fff;
+        }
+
+            .hero img {
+                height: 70px;
+                background: #fff;
+                padding: 8px 14px;
+                border-radius: 12px;
+                margin-bottom: 14px;
+            }
+
+            .hero h1 {
+                margin: 0 0 6px;
+                font-size: 28px;
+                font-weight: 700;
+            }
+
+            .hero p {
+                margin: 0;
+                opacity: .85;
+                font-size: 15px;
+            }
+
+        .wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin: -60px auto 40px;
+            padding: 0 16px;
+            flex: 1;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15,40,30,.12);
+            padding: 32px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            font-size: 14px;
+            border-left: 4px solid;
+        }
+
+        .alert-error {
+            background: var(--error-bg);
+            color: var(--error);
+            border-color: var(--error);
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg);
+        }
+
+        .step {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .form-group label {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--muted);
+                margin-bottom: 6px;
+            }
+
+        .req {
+            color: var(--error);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 11px 12px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text);
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+            .form-input:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(11,107,58,.15);
+            }
+
+        .captcha-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            background: var(--bg);
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+            .captcha-box img {
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: #fff;
+                height: 50px;
+            }
+
+            .captcha-box a {
+                color: var(--primary);
+                font-size: 14px;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+            .captcha-box input {
+                max-width: 200px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+
+        .actions {
+            margin-top: 26px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            color: #fff;
+            background: var(--primary);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+            .btn-submit:hover {
+                background: var(--primary-dark);
+            }
+
+            .btn-submit:disabled {
+                background: #8aa89a;
+                cursor: not-allowed;
+            }
+
+        .login-link {
+            text-align: center;
+            font-size: 14px;
+            color: var(--muted);
+            margin: 18px 0 0;
+        }
+
+            .login-link a {
+                color: var(--primary);
+                font-weight: 500;
+                text-decoration: none;
+            }
+
+        footer {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            padding: 20px 16px;
+        }
+
+            footer a {
+                color: var(--primary);
+                text-decoration: none;
+            }
+
+        @@media (max-width: 760px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @@media (max-width: 520px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 22px 18px;
+            }
+
+            .hero h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <img src="~/Content/images/generallogo.png" alt="Jumbo Sacco" />
+        <h1>Become a Member</h1>
+        <p>Fill in the form below to start your membership application</p>
+    </header>
+
+    <div class="wrapper">
+        <div class="card">
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-error">@TempData["ErrorMessage"]</div>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            @using (Html.BeginForm("RegisterSubmit", "Registration", FormMethod.Post, new { id = "regForm" }))
+            {
+                <div class="section">
+                    <h2 class="section-title"><span class="step">1</span> Personal Details</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="FirstName">First Name <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-input", maxlength = 20, required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="MiddleName">Middle Name</label>
+                            @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-input", maxlength = 20 })
+                        </div>
+                        <div class="form-group">
+                            <label for="LastName">Last Name <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-input", maxlength = 20, required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="IDNo">ID Number <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.IDNo, new { @class = "form-input", maxlength = 50, required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="PassportNo">Passport Number</label>
+                            @Html.TextBoxFor(m => m.PassportNo, new { @class = "form-input", maxlength = 50 })
+                        </div>
+                        <div class="form-group">
+                            <label for="KRAPIN">KRA PIN <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.KRAPIN, new { @class = "form-input", maxlength = 20, required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="DateOfBirth">Date of Birth <span class="req">*</span></label>
+                            <input type="date" id="DateOfBirth" name="DateOfBirth" class="form-input"
+                                   value="@Model.DateOfBirth" max="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="Gender">Gender <span class="req">*</span></label>
+                            @Html.DropDownListFor(m => m.Gender, new SelectList(new[] { "Male", "Female" }), "-- Select --", new { @class = "form-input", required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="MaritalStatus">Marital Status <span class="req">*</span></label>
+                            @Html.DropDownListFor(m => m.MaritalStatus, new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" }), "-- Select --", new { @class = "form-input", required = "required" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title"><span class="step">2</span> Contact Details</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="MobilePhoneNo">Mobile Phone No. <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.MobilePhoneNo, new { @class = "form-input", maxlength = 50, required = "required", placeholder = "e.g. 0712345678" })
+                        </div>
+                        <div class="form-group">
+                            <label for="SecondaryMobileNo">Secondary Mobile No.</label>
+                            @Html.TextBoxFor(m => m.SecondaryMobileNo, new { @class = "form-input", maxlength = 20 })
+                        </div>
+                        <div class="form-group">
+                            <label for="Email">E-Mail <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-input", type = "email", maxlength = 50, required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="Address">Postal Address (P.O. Box) <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.Address, new { @class = "form-input", maxlength = 50, required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="PostalCode">Postal Code <span class="req">*</span></label>
+                            <select id="PostalCode" name="PostalCode" class="form-input" required>
+                                <option value="">-- Select --</option>
+                                @foreach (var p in postCodes)
+                                {
+                                    <option value="@p.Code" data-city="@p.Name" @(Model.PostalCode == p.Code ? "selected" : "")>@p.Code - @p.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Town">Town</label>
+                            @Html.TextBoxFor(m => m.Town, new { @class = "form-input", maxlength = 30 })
+                        </div>
+                        <div class="form-group">
+                            <label for="CountryRegionCode">Country Code</label>
+                            @Html.TextBoxFor(m => m.CountryRegionCode, new { @class = "form-input", maxlength = 10, placeholder = "e.g. KE" })
+                        </div>
+                        <div class="form-group">
+                            <label for="County">County</label>
+                            @Html.TextBoxFor(m => m.County, new { @class = "form-input", maxlength = 30 })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title"><span class="step">3</span> Employment Details</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="EmployerCode">Employer <span class="req">*</span></label>
+                            @Html.DropDownListFor(m => m.EmployerCode, new SelectList(employers, "Code", "Name", Model.EmployerCode), "-- Select --", new { @class = "form-input", required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="PayrollNo">Payroll No. <span class="req">*</span></label>
+                            @Html.TextBoxFor(m => m.PayrollNo, new { @class = "form-input", maxlength = 20, required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="Workstation">Work Station</label>
+                            @Html.TextBoxFor(m => m.Workstation, new { @class = "form-input", maxlength = 30 })
+                        </div>
+                        <div class="form-group">
+                            <label for="Department">Department</label>
+                            @Html.TextBoxFor(m => m.Department, new { @class = "form-input", maxlength = 30 })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title"><span class="step">4</span> Membership Details</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="ApplicationCategory">Application Category <span class="req">*</span></label>
+                            @Html.DropDownListFor(m => m.ApplicationCategory,
+                                new SelectList(new[]
+                                {
+                                    new { Value = "New Application",       Text = "New Application" },
+                                    new { Value = "Account Reactivation",  Text = "Account Reactivation" }
+                                }, "Value", "Text", Model.ApplicationCategory),
+                                "-- Select --", new { @class = "form-input", required = "required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="HowDidYouKnow">How did you hear about us? <span class="req">*</span></label>
+                            @Html.DropDownListFor(m => m.HowDidYouKnow,
+                                new SelectList(new[]
+                                {
+                                    new { Value = "Newspaper",            Text = "Newspaper" },
+                                    new { Value = "Radio",                Text = "Radio" },
+                                    new { Value = "Television Adverst",   Text = "Television Advert" },
+                                    new { Value = "Website",              Text = "Website" },
+                                    new { Value = "Facebook",             Text = "Facebook" },
+                                    new { Value = "Tweeter",              Text = "Twitter" },
+                                    new { Value = "Another Member",       Text = "Another Member" },
+                                    new { Value = "Sales Representative", Text = "Sales Representative" },
+                                    new { Value = "Staff",                Text = "Staff" },
+                                    new { Value = "Others",               Text = "Others" }
+                                }, "Value", "Text", Model.HowDidYouKnow),
+                                "-- Select --", new { @class = "form-input", required = "required" })
+                        </div>
+                        <div class="form-group" id="recruiterFields" style="display:none;">
+                            <label for="RecruitedBy">Recruiter Member No.</label>
+                            @Html.TextBoxFor(m => m.RecruitedBy, new { @class = "form-input", maxlength = 30 })
+                        </div>
+                        <div class="form-group" id="recruiterNameField" style="display:none;">
+                            <label for="RecruiterName">Recruiter Name</label>
+                            @Html.TextBoxFor(m => m.RecruiterName, new { @class = "form-input", maxlength = 50 })
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="actions">
+                    <button type="submit" id="submitBtn" class="btn-submit">Submit Application</button>
+                    <p class="login-link">Already a member? <a href="@Url.Action("Index", "Login")">Log in</a></p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year Jumbo Savings and Credit Co-Operative Society Limited. Powered by <a href="https://www.surestep.co.ke">Surestep</a></p>
+    </footer>
+
+    <script>
+        (function () {
+            var how = document.getElementById("HowDidYouKnow");
+            var r1 = document.getElementById("recruiterFields");
+            var r2 = document.getElementById("recruiterNameField");
+
+            function toggleRecruiter() {
+                var show = how.value === "Another Member";
+                r1.style.display = show ? "" : "none";
+                r2.style.display = show ? "" : "none";
+                if (!show) {
+                    document.getElementById("RecruitedBy").value = "";
+                    document.getElementById("RecruiterName").value = "";
+                }
+            }
+            how.addEventListener("change", toggleRecruiter);
+            toggleRecruiter();
+
+            // Postal code fills Town
+            var pc = document.getElementById("PostalCode");
+            pc.addEventListener("change", function () {
+                var opt = pc.options[pc.selectedIndex];
+                var city = opt ? opt.getAttribute("data-city") : "";
+                if (city) { document.getElementById("Town").value = city; }
+            });
+
+
+
+            document.getElementById("regForm").addEventListener("submit", function () {
+                var btn = document.getElementById("submitBtn");
+                btn.disabled = true;
+                btn.textContent = "Submitting...";
+            });
+        })();
+    </script>
+</body>
+</html>

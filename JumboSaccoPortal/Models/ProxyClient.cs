@@ -311,6 +311,53 @@ namespace JumboSaccoPortal.Models
                 throw new Exception("Something went wrong. Please try again later.");
             }
         }
+        public string MemberApplication(
+            string firstName, string middleName, string lastName, string payrollNo,
+            string address, string postalCode, string town, string countryRegionCode,
+            string county, string mobilePhoneNo, string secondaryMobileNo, string email,
+            DateTime dateOfBirth, string idNo, string passportNo, string kraPin,
+            string gender, string maritalStatus, string howDidYouKnow,
+            string recruitedBy, string recruiterName, string applicationCategory,
+            string employerCode, string workstation, string department)
+        {
+            try
+            {
+                return _client.MemberApplication(
+                    firstName, middleName, lastName, payrollNo, address, postalCode,
+                    town, countryRegionCode, county, mobilePhoneNo, secondaryMobileNo,
+                    email, dateOfBirth, idNo, passportNo, kraPin, gender, maritalStatus,
+                    howDidYouKnow, recruitedBy, recruiterName, applicationCategory,
+                    employerCode, workstation, department);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public string EmployerList()
+        {
+            try
+            {
+                return _client.EmployerList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong. Please try again later.");
+            }
+        }
+
+        public string PostCodeList()
+        {
+            try
+            {
+                return _client.PostCodeList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong. Please try again later.");
+            }
+        }
 
         public string OnlineLoanApplications(string username)
         {

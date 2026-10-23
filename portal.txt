@@ -1,0 +1,2560 @@
+OBJECT Codeunit 51516120 PORTALIntegration
+{
+  OBJECT-PROPERTIES
+  {
+    Date=07-10-26;
+    Time=[ 1:08:35 PM];
+    Modified=Yes;
+    Version List=PortalCloudPesa;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+
+
+            //MESSAGE(FORMAT(fnChangePassword('cemmmanuell@gmail.com', '','1234' )));
+            //MESSAGE(FORMAT(fnUpdatePassword('MN06076', '0732759','1234','Start Key' )));
+            //MESSAGE(Fnloanssetup());
+            //MESSAGE(FORMAT(Fnlogin('22637155','123456789')));
+
+            //MESSAGE(FnloanCalc(500000,72,'OKOA'));
+            //MESSAGE(fnUpdatePassword('MN05027','0087968','1234',''));
+            //fndividentstatement1('MN06747','dividends');
+            //MESSAGE(GnNextOfkin('012'));
+            //MESSAGE(Fnloanssetup());
+            //FnGetMemberLoanApplications('00434');
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      i@1024 : Integer;
+      RSchedule@1023 : Record 51516375;
+      Lperiod@1022 : Integer;
+      LastPayDate@1021 : Date;
+      objMember@1000000000 : Record 51516364;
+      objLoans@1032 : Record 51516371;
+      Vendor@1000000001 : Record 23;
+      VendorLedgEntry@1000000002 : Record 51516365;
+      FILESPATH@1000000003 : TextConst 'ENU=E:\report\';
+      objLoanRegister@1000000004 : Record 51516371;
+      objAtmapplication@1000000005 : Record 51516464;
+      objRegMember@1000000009 : Record 51516360;
+      objNextKin@1000000010 : Record 51516366;
+      GenSetup@1000000011 : Record 51516398;
+      FreeShares@1000000012 : Decimal;
+      glamount@1000000013 : Decimal;
+      LoansGuaranteeDetails@1000000014 : Record 51516372;
+      objStandingOrders@1000000015 : Record 51516449;
+      freq@1000000016 : DateFormula;
+      dur@1000000017 : DateFormula;
+      phoneNumber@1000000018 : Code[20];
+      SMSMessages@1000000019 : Record 51516471;
+      iEntryNo@1000000020 : Integer;
+      FAccNo@1000000021 : Text[250];
+      sms@1000000022 : Text[250];
+      objLoanApplication@1000000023 : Record 51516562;
+      ClientName@1000000024 : Code[20];
+      Loansetup@1000 : Record 51516381;
+      feedback@1001 : Record 51516910;
+      LoansPurpose@1002 : Record 51516378;
+      ObjLoansregister@1003 : Record 51516371;
+      LPrincipal@1004 : Decimal;
+      LInterest@1005 : Decimal;
+      Amount@1006 : Decimal;
+      LBalance@1007 : Decimal;
+      LoansRec@1008 : Record 51516371;
+      TotalMRepay@1009 : Decimal;
+      InterestRate@1010 : Decimal;
+      Date@1011 : Date;
+      FormNo@1012 : Code[40];
+      PortaLuPS@1013 : Record 51516913;
+      Loanperiod@1015 : Integer;
+      Questinnaires@1016 : Record 51516912;
+      LastFieldNo@1111 : Integer;
+      FooterPrinted@1110 : Boolean;
+      Cust@1109 : Record 51516364;
+      StartDate@1108 : Date;
+      DateFilter@1107 : Text[100];
+      FromDate@1106 : Date;
+      ToDate@1105 : Date;
+      FromDateS@1104 : Text[100];
+      ToDateS@1103 : Text[100];
+      DivTotal@1102 : Decimal;
+      CDeposits@1100 : Decimal;
+      CustDiv@1099 : Record 51516364;
+      DivProg@1098 : Record 51516393;
+      CDiv@1097 : Decimal;
+      BDate@1096 : Date;
+      CustR@1095 : Record 51516364;
+      CapDiv@1094 : Decimal;
+      DivCapTotal@1093 : Decimal;
+      RunningPeriod@1092 : Code[10];
+      LineNo@1091 : Integer;
+      Gnjlline@1090 : Record 81;
+      PostingDate@1089 : Date;
+      "W/Tax"@1088 : Decimal;
+      CommDiv@1087 : Decimal;
+      DivInTotal@1086 : Decimal;
+      WTaxInTotal@1085 : Decimal;
+      CapTotal@1084 : Decimal;
+      Period@1083 : Code[20];
+      WTaxShareCap@1072 : Decimal;
+      ENtry@1018 : Integer;
+      Online@1019 : Record 51516489;
+      MemberApplication@1014 : Record 51516360;
+      NoSeriesMgt@1017 : Codeunit 396;
+      SalesSetup@1020 : Record 51516399;
+      Divreg@1025 : Record 51516357;
+      PRAmount@1026 : Decimal;
+      SFactory@1027 : Codeunit 51516007;
+      OnlineLoanApplications@1028 : Record 51516970;
+      OnlineLoanGuarantors@1029 : Record 51516971;
+      Users@1030 : Record 2000000120;
+      LoanGuarantors@1031 : Record 51516372;
+      ArrearsTotal@1033 : Decimal;
+      LoanCollateral@1034 : Record 51516374;
+      CollateralValueTotal@1035 : Decimal;
+      CommittedCollateralValueTotal@1036 : Decimal;
+      Member@1037 : Record 51516364;
+
+    PROCEDURE fnUpdatePassword@1000000000(MemberNo@1000000000 : Code[50];idNo@1000000002 : Code[10];NewPassword@1000000001 : Text;smsport@1000 : Text) emailAddress : Text;
+    VAR
+      EncryptionManagement@1002 : Codeunit 1266;
+      OutStream@1001 : OutStream;
+    BEGIN
+      sms:= smsport+NewPassword;
+
+      objMember.RESET;
+      objMember.SETRANGE(objMember."Personal No",MemberNo);
+      objMember.SETRANGE(objMember."ID No.",idNo);
+      IF objMember.FIND('-') THEN BEGIN
+         emailAddress:=objMember."E-Mail";
+         phoneNumber:= objMember."Mobile Phone No";
+         FAccNo := objMember."FOSA Account No.";
+        objMember.Password:=NewPassword;
+        objMember."Password Reset Date":=CURRENTDATETIME;
+        objMember.MODIFY;
+        FnSMSMessage(FAccNo,phoneNumber,sms);
+        END
+        ELSE BEGIN
+      objMember.RESET;
+      objMember.SETRANGE(objMember."Personal No",MemberNo);
+      objMember.SETRANGE(objMember."ID No.",idNo);
+      IF objMember.FIND('-') THEN BEGIN
+       emailAddress:=objMember."E-Mail";
+          phoneNumber:= objMember."Mobile Phone No";
+         FAccNo := objMember."FOSA Account No.";
+        objMember.Password:=NewPassword;
+        objMember."Password Reset Date":=CURRENTDATETIME;
+        objMember.MODIFY;
+         FnSMSMessage(FAccNo,phoneNumber,sms);
+        END
+        ELSE BEGIN
+          objMember.RESET;
+      objMember.SETRANGE(objMember."Personal No",MemberNo);
+      objMember.SETRANGE(objMember."ID No.",idNo);
+      IF objMember.FIND('-') THEN BEGIN
+       emailAddress:=objMember."E-Mail";
+          phoneNumber:= objMember."Mobile Phone No";
+         FAccNo := objMember."FOSA Account No.";
+        objMember.Password:=NewPassword;
+        objMember."Password Reset Date":=CURRENTDATETIME;
+        objMember.MODIFY;
+         FnSMSMessage(FAccNo,phoneNumber,sms);
+        END
+        END
+      END;
+        EXIT(emailAddress);
+
+
+
+
+
+      // sms:=smsport+NewPassword;
+      // objMember.RESET;
+      //  objMember.SETRANGE(objMember."No.",MemberNo);
+      // objMember.SETRANGE(objMember."ID No.",idNo);
+      // IF objMember.FIND('-') THEN BEGIN
+      // phoneNumber:= objMember."Mobile Phone No";
+      // FAccNo := objMember."No.";
+      // Online.RESET;
+      // Online.SETRANGE("User Name", MemberNo);
+      // IF Online.FIND('-') THEN BEGIN
+      // Online."User Name":=objMember."No.";
+      // Online.MobileNumber:=objMember."Mobile Phone No";
+      // Online.IdNumber:=idNo;
+      // Online.Password:=NewPassword;
+      // // NewPassword := EncryptionManagement.Encrypt(NewPassword);
+      // //Online.Password.CREATEOUTSTREAM(OutStream);
+      // //OutStream.WRITE(NewPassword);
+      // Online.MODIFY;
+      // FnSMSMessage(FAccNo,phoneNumber,sms);
+      // emailAddress:=TRUE;
+      //  END
+      // ELSE BEGIN
+      // Online.INIT;
+      // Online."User Name":=objMember."No.";
+      // Online.MobileNumber:=objMember."Mobile Phone No";
+      // Online.Email:=objMember."E-Mail";
+      // Online."Date Created":=TODAY;
+      // Online.IdNumber:=idNo;
+      // Online.Password:=NewPassword;
+      // // NewPassword := EncryptionManagement.Encrypt(NewPassword);
+      // // Online.Password.CREATEOUTSTREAM(OutStream);
+      // // OutStream.WRITE(NewPassword);
+      // Online.INSERT;
+      // //  ;
+      // //  ;
+      //
+      // FnSMSMessage(FAccNo,phoneNumber,sms);
+      // emailAddress:=TRUE;
+      // END;
+      //
+      // END;
+
+
+
+
+
+      // objMember.RESET;
+      // objMember.SETRANGE(objMember."No.",MemberNo);
+      // objMember.SETRANGE(objMember."ID No.",idNo);
+      // IF objMember.FIND('-') THEN BEGIN
+      //
+      //   phoneNumber:= objMember."Mobile Phone No";
+      //   FAccNo := objMember."No.";
+      //  objMember.Password:=NewPassword;
+      //
+      //  objMember.MODIFY;
+      //  FnSMSMessage(FAccNo,phoneNumber,sms);
+      //  ;
+      //  END
+      //  ELSE BEGIN
+      // objMember.RESET;
+      // objMember.SETRANGE(objMember."Old Account No.",MemberNo);
+      // objMember.SETRANGE(objMember."ID No.",idNo);
+      // IF objMember.FIND('-') THEN BEGIN
+      //
+      //    phoneNumber:= objMember."Mobile Phone No";
+      //   FAccNo := objMember."FOSA Account No.";
+      //  objMember.Password:=NewPassword;
+      //  objMember.MODIFY;
+      //  FnSMSMessage(FAccNo,phoneNumber,sms);
+      //  emailAddress:=TRUE;
+      //  END
+      //  ELSE BEGIN
+      //    objMember.RESET;
+      // objMember.SETRANGE(objMember."Personal No",MemberNo);
+      // objMember.SETRANGE(objMember."ID No.",idNo);
+      // IF objMember.FIND('-') THEN BEGIN
+      //
+      //    phoneNumber:= objMember."Mobile Phone No";
+      //   FAccNo := objMember."FOSA Account No.";
+      //  objMember.Password:=NewPassword;
+      //  objMember.MODIFY;
+      //  FnSMSMessage(FAccNo,phoneNumber,sms);
+      //  emailAddress:=TRUE;
+      //  END
+      //  END
+      // END;
+      //  EXIT(emailAddress);
+    END;
+
+    PROCEDURE MiniStatement@1000000001(MemberNo@1000000000 : Text[100]) MiniStmt : Text;
+    VAR
+      minimunCount@1000000002 : Integer;
+      amount@1000000003 : Decimal;
+    BEGIN
+        BEGIN
+        MiniStmt :='';
+          objMember.RESET;
+         objMember.SETRANGE("No."  ,MemberNo);
+
+        IF objMember .FIND('-') THEN BEGIN
+
+           minimunCount:=1;
+           //Vendor.CALCFIELDS(Vendor.Balance);
+           VendorLedgEntry.SETCURRENTKEY(VendorLedgEntry."Entry No.");
+           VendorLedgEntry.ASCENDING(FALSE);
+           VendorLedgEntry.SETRANGE(VendorLedgEntry."Customer No.",MemberNo);
+           VendorLedgEntry.SETRANGE(VendorLedgEntry.Reversed,FALSE);
+          IF VendorLedgEntry.FINDSET THEN BEGIN
+              MiniStmt:='';
+              REPEAT
+                amount:=VendorLedgEntry.Amount;
+                IF amount<1 THEN   amount:= amount*-1;
+                    MiniStmt :=MiniStmt + FORMAT(VendorLedgEntry."Posting Date") +':::'+ COPYSTR(FORMAT(VendorLedgEntry."Transaction Type"),1,25) +':::' +
+                    FORMAT(amount)+'::::';
+                    minimunCount:= minimunCount +1;
+                    IF minimunCount > 15 THEN BEGIN
+                    EXIT(MiniStmt);
+                    END
+                UNTIL VendorLedgEntry.NEXT =0;
+                END;
+
+        END;
+
+        END;
+        EXIT(MiniStmt);
+    END;
+
+    PROCEDURE fnMemberStatement@1000000002(MemberNo@1000000000 : Code[50];filter@1000 : Text;VAR BigText@1011 : BigText) exitString : Text;
+    VAR
+      Filename@1000000002 : Text[100];
+      Convert@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      Path@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      _File@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileAccess@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileAccess";
+      FileMode@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      MemoryStream@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      FileStream@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      Outputstream@1009 : OutStream;
+    BEGIN
+
+        objMember.RESET;
+        objMember.SETRANGE(objMember."No.",MemberNo);
+
+
+      IF objMember.FIND('-') THEN BEGIN
+        objMember.SETFILTER("Date Filter", filter);
+      Filename:=Path.GetTempPath()+Path.GetRandomFileName();
+      REPORT.SAVEASPDF(51516878,Filename, objMember);
+
+       FileMode:=4;
+       FileAccess:=1;
+
+       FileStream:=_File.Open(Filename,FileMode,FileAccess);
+
+       MemoryStream:=MemoryStream.MemoryStream();
+
+       MemoryStream.SetLength(FileStream.Length);
+       FileStream.Read(MemoryStream.GetBuffer(),0,FileStream.Length);
+
+       BigText.ADDTEXT((Convert.ToBase64String(MemoryStream.GetBuffer())));
+       MESSAGE(FORMAT(BigText));
+      // exitString:=BigText;
+      //MESSAGE(exitString);
+      MemoryStream.Close();
+      MemoryStream.Dispose();
+      FileStream.Close();
+      FileStream.Dispose();
+      _File.Delete(Filename);
+
+      END;
+    END;
+
+    PROCEDURE fnFosaStatement@1000000003("Account No"@1000000000 : Code[50];path@1000000001 : Text[100]);
+    VAR
+      Filename@1000000002 : Text[100];
+    BEGIN
+
+      {Filename := FILESPATH+path;
+      IF EXISTS(Filename) THEN
+
+        ERASE(Filename);}
+        Vendor.RESET;
+        Vendor.SETRANGE(Vendor."No.","Account No");
+
+      IF Vendor.FIND('-') THEN BEGIN
+        //REPORT.SAVEASPDF(23,Filename,Vendor);
+        PAGE.RUN(26,Vendor);
+      END;
+    END;
+
+    PROCEDURE fndividentstatement1@1000000004(No@1000000000 : Code[50];Path@1000000001 : Text[100]);
+    VAR
+      filename@1000000002 : Text;
+      "Member No"@1000000003 : Code[50];
+    BEGIN
+      filename := FILESPATH+Path+'.pdf';
+      IF EXISTS(filename) THEN
+
+        ERASE(filename);
+        Divreg.RESET;
+      Divreg.SETRANGE(Divreg."Member No",No);
+      IF Divreg.FIND('-') THEN BEGIN
+         REPORT.SAVEASPDF(51516519,filename,Divreg);
+       // REPORT.RUN(51516519,TRUE,FALSE,Divreg);
+      END;
+      //  objMember.RESET;
+      //  objMember.SETRANGE(objMember."No.",No);
+      //
+      // IF objMember.FIND('-') THEN BEGIN
+      //  REPORT.SAVEASPDF(51516519,filename,objMember);
+      //
+      // END;
+    END;
+
+    PROCEDURE fndividentstatement@20(MemberNo@1000000000 : Code[50];filter@1000 : Text;VAR BigText@1011 : BigText) exitString : Text;
+    VAR
+      Filename@1000000002 : Text[100];
+      Convert@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      Path@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      _File@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileAccess@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileAccess";
+      FileMode@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      MemoryStream@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      FileStream@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      Outputstream@1009 : OutStream;
+    BEGIN
+
+
+        Divreg.RESET;
+      Divreg.SETRANGE(Divreg."Member No",MemberNo);
+
+
+      IF Divreg.FIND('-') THEN BEGIN
+       // objMember.SETFILTER("Date Filter", filter);
+      Filename:=Path.GetTempPath()+Path.GetRandomFileName();
+      REPORT.SAVEASPDF(51516519,Filename, Divreg);
+
+       FileMode:=4;
+       FileAccess:=1;
+
+       FileStream:=_File.Open(Filename,FileMode,FileAccess);
+
+       MemoryStream:=MemoryStream.MemoryStream();
+
+       MemoryStream.SetLength(FileStream.Length);
+       FileStream.Read(MemoryStream.GetBuffer(),0,FileStream.Length);
+
+       BigText.ADDTEXT((Convert.ToBase64String(MemoryStream.GetBuffer())));
+       MESSAGE(FORMAT(BigText));
+      // exitString:=BigText;
+      //MESSAGE(exitString);
+      MemoryStream.Close();
+      MemoryStream.Dispose();
+      FileStream.Close();
+      FileStream.Dispose();
+      _File.Delete(Filename);
+
+      END;
+    END;
+
+    PROCEDURE fnLoanGuranteed@1000000005(MemberNo@1010 : Code[50];VAR BigText@1009 : BigText);
+    VAR
+      Filename@1008 : Text[100];
+      Convert@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      Path@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      _File@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileAccess@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileAccess";
+      FileMode@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      MemoryStream@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      FileStream@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      Outputstream@1000 : OutStream;
+    BEGIN
+      objMember.RESET;
+       objMember.SETRANGE(objMember."No.",MemberNo);
+
+
+      IF  objMember.FIND('-') THEN BEGIN
+      //  objMember.SETFILTER("Date Filter", filter);
+      Filename:=Path.GetTempPath()+Path.GetRandomFileName();
+      REPORT.SAVEASPDF(51516503,Filename, objMember);
+
+       FileMode:=4;
+       FileAccess:=1;
+
+       FileStream:=_File.Open(Filename,FileMode,FileAccess);
+
+       MemoryStream:=MemoryStream.MemoryStream();
+
+       MemoryStream.SetLength(FileStream.Length);
+       FileStream.Read(MemoryStream.GetBuffer(),0,FileStream.Length);
+
+       BigText.ADDTEXT((Convert.ToBase64String(MemoryStream.GetBuffer())));
+       MESSAGE(FORMAT(BigText));
+      // exitString:=BigText;
+      //MESSAGE(exitString);
+      MemoryStream.Close();
+      MemoryStream.Dispose();
+      FileStream.Close();
+      FileStream.Dispose();
+      _File.Delete(Filename);
+
+      END;
+    END;
+
+    PROCEDURE fnLoanRepaymentShedule@1000000006("Loan No"@1000000000 : Code[50];path@1000000001 : Text[100]);
+    VAR
+      "Member No"@1000000002 : Code[100];
+      filename@1000000003 : Text[250];
+    BEGIN
+      filename := FILESPATH+path;
+      IF EXISTS(filename) THEN
+
+        ERASE(filename);
+        objLoanRegister.RESET;
+        objLoanRegister.SETRANGE(objLoanRegister."Loan  No.","Loan No");
+
+      IF objLoanRegister.FIND('-') THEN BEGIN
+        REPORT.SAVEASPDF(51516477,filename,objLoanRegister);
+        MESSAGE(FILESPATH);
+      END;
+    END;
+
+    PROCEDURE fnLoanGurantorsReport@1000000007(MemberNo@1010 : Code[50];VAR BigText@1009 : BigText);
+    VAR
+      Filename@1008 : Text[100];
+      Convert@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      Path@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      _File@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileAccess@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileAccess";
+      FileMode@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      MemoryStream@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      FileStream@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      Outputstream@1000 : OutStream;
+    BEGIN
+      objMember.RESET;
+       objMember.SETRANGE(objMember."No.",MemberNo);
+
+
+      IF LoansGuaranteeDetails.FIND('-') THEN BEGIN
+      //  objMember.SETFILTER("Date Filter", filter);
+      Filename:=Path.GetTempPath()+Path.GetRandomFileName();
+      REPORT.SAVEASPDF(51516504,Filename, objMember);
+       FileMode:=4;
+       FileAccess:=1;
+
+       FileStream:=_File.Open(Filename,FileMode,FileAccess);
+
+       MemoryStream:=MemoryStream.MemoryStream();
+
+       MemoryStream.SetLength(FileStream.Length);
+       FileStream.Read(MemoryStream.GetBuffer(),0,FileStream.Length);
+
+       BigText.ADDTEXT((Convert.ToBase64String(MemoryStream.GetBuffer())));
+       MESSAGE(FORMAT(BigText));
+      // exitString:=BigText;
+      //MESSAGE(exitString);
+      MemoryStream.Close();
+      MemoryStream.Dispose();
+      FileStream.Close();
+      FileStream.Dispose();
+      _File.Delete(Filename);
+
+      END;
+    END;
+
+    PROCEDURE fnAtmApplications@1000000008(Account@1000000000 : Code[100]);
+    BEGIN
+      // objAtmapplication.INIT;
+      // objAtmapplication.Name:=Account;
+      // objAtmapplication."Maximun Allocation %":=TODAY;
+      // objAtmapplication."Total Allocation":=objAtmapplication."Total Allocation"::"0";
+      // objAtmapplication."Date Created":=objAtmapplication."Date Created"::"0";
+      // objAtmapplication.VALIDATE(objAtmapplication.Name);
+      // objAtmapplication.INSERT;
+    END;
+
+    PROCEDURE fnAtmBlocking@1000000024(Account@1000000000 : Code[100];ReasonForBlock@1000000001 : Text[250]);
+    BEGIN
+      // objAtmapplication.RESET;
+      // objAtmapplication.SETRANGE(objAtmapplication.Name,Account);
+      // IF objAtmapplication.FIND('-') THEN BEGIN
+      // objAtmapplication."Date Created":=objAtmapplication."Date Created"::"2";
+      // objAtmapplication."Document No":=ReasonForBlock;
+      // objAtmapplication.MODIFY;
+      // END;
+    END;
+
+    PROCEDURE fnChangePassword@1000000009(memberNumber@1000000000 : Code[100];currentPass@1000000001 : Text;newPass@1000000002 : Text) updated : Boolean;
+    VAR
+      EncryptionManagement@1002 : Codeunit 1266;
+      InStream@1001 : InStream;
+      PasswordText@1000 : Text;
+      OutStream@1003 : OutStream;
+      DecryptPassword@1004 : Text;
+    BEGIN
+      sms:= 'You have successfully updated your password';
+      updated:=FALSE;
+      objMember.RESET;
+      objMember.SETRANGE(objMember."No.", memberNumber);
+      objMember.SETRANGE(objMember.Password, currentPass);
+      IF objMember.FIND('-') THEN
+        objMember.Password :=newPass;
+        phoneNumber:= objMember."Mobile Phone No";
+         FAccNo := objMember."FOSA Account No.";
+      updated := objMember.MODIFY;
+      MESSAGE('Successful password change');
+      //FnSMSMessage(FAccNo,phoneNumber,sms);
+      // FnSMSMessage(FAccNo,phoneNumber,sms);
+      EXIT(updated);
+
+
+
+      // updated:=FALSE;
+      // objMember.RESET;
+      // objMember.SETRANGE(objMember."No.", memberNumber);
+      // objMember.SETRANGE(objMember.Password, currentPass);
+      // IF objMember.FIND('-') THEN
+      //  objMember.Password :=newPass;
+      //  phoneNumber:= objMember."Phone No.";
+      //   FAccNo := objMember."FOSA Account No.";
+      // updated := objMember.MODIFY;
+      // MESSAGE('Successful pass change');
+      // FnSMSMessage(FAccNo,phoneNumber,sms);
+      // EXIT(updated);
+      // Online.RESET;
+      // Online.SETRANGE(Online."User Name", memberNumber);
+      // Online.SETRANGE(online.Password, currentPass);
+      // IF Online.FIND('-') THEN
+      //  Online.Password :=newPass;
+      //  Online.MODIFY;
+      // MESSAGE('Successful pass change');
+      // FnSMSMessage(FAccNo,phoneNumber,sms);
+
+
+      // Online.RESET;
+      // Online.SETRANGE("User Name", memberNumber);
+      // IF Online.FIND('-') THEN BEGIN
+      // Online.CALCFIELDS(Online.Password);
+      // Online.Password.CREATEINSTREAM(InStream);
+      // InStream.READ(PasswordText);
+      // IF EncryptionManagement.IsEncryptionPossible THEN
+      // DecryptPassword:=DECRYPT(PasswordText);
+      //
+      // IF DecryptPassword=currentPass THEN BEGIN
+      // Online."User Name":=Online."User Name";
+      //  IF EncryptionManagement.IsEncryptionPossible THEN
+      // newPass := EncryptionManagement.Encrypt(newPass);
+      // Online.Password.CREATEOUTSTREAM(OutStream);
+      // OutStream.WRITE(newPass);
+      // Online.MODIFY;
+      updated:=TRUE;
+      // END
+      // ELSE BEGIN
+      // ERROR('Previous password is not correct');
+      //  END;
+    END;
+
+    PROCEDURE fnTotalRepaidGraph@1000000010(Mno@1000000000 : Code[10];year@1000000001 : Code[10]) total : Decimal;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", Mno);
+      IF objMember.FIND('-') THEN BEGIN
+
+      objMember.SETFILTER("Date Filter",'0101'+year+'..1231'+year);
+      //objMember.CALCFIELDS("Current Shares");
+      total:=objMember."Total Repayments";
+      MESSAGE ('current repaid is %1', total);
+      END;
+    END;
+
+    PROCEDURE fnCurrentShareGraph@1000000013(Mno@1000000000 : Code[10];year@1000000001 : Code[10]) total : Decimal;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", Mno);
+      IF objMember.FIND('-') THEN BEGIN
+
+      objMember.SETFILTER("Date Filter",'0101'+year+'..1231'+year);
+      objMember.CALCFIELDS("Current Shares");
+      total:=objMember."Current Shares";
+      MESSAGE ('current shares is %1', total);
+      END;
+    END;
+
+    PROCEDURE fnTotalDepositsGraph@1000000016(Mno@1000000000 : Code[10];year@1000000001 : Code[10]) total : Decimal;
+    BEGIN
+      // objMember.RESET;
+      // objMember.SETRANGE("No.", Mno);
+      // IF objMember.FIND('-') THEN BEGIN
+      //
+      // objMember.SETFILTER("Date Filter",'0101'+year+'..1231'+year);
+      // objMember.CALCFIELDS("Share Cap");
+      // total:=objMember."Share Cap";
+      // MESSAGE ('current deposits is %1', total);
+      // END;
+    END;
+
+    PROCEDURE FnRegisterKin@1000000011("Full Names"@1000000000 : Text;Relationship@1000000001 : Text;"ID Number"@1000000002 : Code[10];"Phone Contact"@1000000003 : Code[10];Address@1000000004 : Text;Idnomemberapp@1000000005 : Code[10]);
+    BEGIN
+      BEGIN
+            objRegMember.RESET;
+            objNextKin.RESET;
+            objNextKin.INIT();
+            objRegMember.SETRANGE("ID No.",Idnomemberapp);
+            IF objRegMember.FIND('-') THEN BEGIN
+              objNextKin."Account No":=objRegMember."No.";
+            objNextKin.Name:="Full Names";
+            objNextKin.Relationship:=Relationship;
+            objNextKin."ID No.":="ID Number";
+            objNextKin.Telephone:="Phone Contact";
+            objNextKin.Address:=Address;
+            objNextKin.INSERT(TRUE);
+            END;
+          END;
+    END;
+
+    PROCEDURE FnMemberApply@1000000015("First Name"@1000000000 : Code[30];"Mid Name"@1000000001 : Code[30];"Last Name"@1000000002 : Code[30];"PO Box"@1000000003 : Text;Residence@1000000004 : Code[30];"Postal Code"@1000000005 : Text;Town@1000000006 : Code[30];"Phone Number"@1000000007 : Code[30];Email@1000000008 : Text;"ID Number"@1000000009 : Code[30];"Branch Code"@1000000010 : Code[30];"Branch Name"@1000000011 : Code[30];"Account Number"@1000000012 : Code[30];Gender@1000000013 : Option;"Marital Status"@1000000014 : Option;"Account Category"@1000000015 : Option;"Application Category"@1000000016 : Option;"Customer Group"@1000000017 : Code[30];"Employer Name"@1000000018 : Code[30];"Date of Birth"@1000000019 : Date) num : Text;
+    BEGIN
+      BEGIN
+
+            objRegMember.RESET;
+            objRegMember.SETRANGE("ID No.","ID Number");
+            IF objRegMember.FIND('-') THEN BEGIN
+              MESSAGE('already registered');
+            END
+              ELSE  BEGIN
+            objRegMember.INIT;
+            objRegMember.Name:="First Name"+' '+"Mid Name"+' '+"Last Name";
+            objRegMember.Address:="PO Box";
+            objRegMember."Address 2":=Residence;
+            objRegMember."Postal Code":="Postal Code";
+            objRegMember.Town:=Town;
+            objRegMember."Mobile Phone No":="Phone Number";
+            objRegMember."E-Mail (Personal)":=Email;
+            objRegMember."Date of Birth":= "Date of Birth";
+            objRegMember."ID No.":="ID Number";
+            objRegMember."Bank Code":="Branch Code";
+            objRegMember."Bank Name":="Branch Name";
+            objRegMember."Bank Account No":= "Account Number";
+            objRegMember.Gender:=Gender;
+            objRegMember."Created By":=USERID;
+            objRegMember."Global Dimension 1 Code":='BOSA';
+            objRegMember."Date of Registration":=TODAY;
+            objRegMember.Status:=objRegMember.Status::Open;
+            objRegMember."Application Category":="Application Category";
+            objRegMember."Account Category":="Account Category";
+            objRegMember."Marital Status":="Marital Status";
+            objRegMember."Employer Name":="Employer Name";
+            objRegMember."Customer Posting Group":="Customer Group";
+            objRegMember.INSERT(TRUE);
+            END;
+
+
+            //FnRegisterKin('','','','','');
+          END;
+    END;
+
+    LOCAL PROCEDURE FnFreeShares@1000000012("Member No"@1000000000 : Text) Shares : Text;
+    BEGIN
+      BEGIN
+            BEGIN
+            GenSetup.GET();
+            FreeShares:=0;
+            glamount:=0;
+
+              objMember.RESET;
+              objMember.SETRANGE(objMember."No.","Member No");
+              IF objMember.FIND('-') THEN BEGIN
+                objMember.CALCFIELDS("Current Shares");
+                LoansGuaranteeDetails.RESET;
+                LoansGuaranteeDetails.SETRANGE(LoansGuaranteeDetails."Member No",objMember."No.");
+                LoansGuaranteeDetails.SETRANGE(LoansGuaranteeDetails.Substituted,FALSE);
+                  IF LoansGuaranteeDetails.FIND('-') THEN BEGIN
+                    REPEAT
+                        glamount:=glamount+LoansGuaranteeDetails."Amont Guaranteed";
+                        //MESSAGE('Member No %1 Account no %2',Members."No.",glamount);
+                        UNTIL LoansGuaranteeDetails.NEXT =0;
+                  END;
+                 FreeShares:=(objMember."Current Shares"*GenSetup."Contactual Shares (%)")-glamount;
+                  Shares:= FORMAT(FreeShares,0,'<Precision,2:2><Integer><Decimals>');
+              END;
+              END;
+          END;
+    END;
+
+    PROCEDURE FnStandingOrders@1000000014(BosaAcNo@1000000000 : Code[30];SourceAcc@1000000001 : Code[50];frequency@1000000002 : Text;Duration@1000000003 : Text;DestAccNo@1000000004 : Code[30];StartDate@1000000005 : Date;Amount@1000000007 : Decimal;DestAccType@1000000008 : Option);
+    BEGIN
+      objStandingOrders.INIT();
+      objStandingOrders."BOSA Account No.":=BosaAcNo;
+      objStandingOrders."Source Account No.":=SourceAcc;
+      objStandingOrders.VALIDATE(objStandingOrders."Source Account No.");
+      IF FORMAT(freq) ='' THEN
+        EVALUATE(freq, frequency);
+      objStandingOrders.Frequency:= freq;
+      IF FORMAT(dur) ='' THEN
+        EVALUATE(dur, Duration);
+      objStandingOrders.Duration:=dur;
+      objStandingOrders."Destination Account No." :=DestAccNo;
+      objStandingOrders.VALIDATE(objStandingOrders."Destination Account No.");
+      objStandingOrders."Destination Account Type":= DestAccType;
+      objStandingOrders.Amount:= Amount;
+      objStandingOrders."Effective/Start Date" :=StartDate;
+      objStandingOrders.VALIDATE(objStandingOrders.Duration);
+      objStandingOrders.Status:=objStandingOrders.Status::Open;
+      objStandingOrders.INSERT(TRUE);
+      objMember.RESET;
+      objMember.SETRANGE(objMember."No.", BosaAcNo);
+      IF objMember.FIND('-') THEN BEGIN
+        phoneNumber:=objMember."Phone No.";
+        sms:='You have created a standing order of amount : ' +FORMAT(Amount)+' from Account '+SourceAcc+' start date: '
+              + FORMAT(StartDate)+'. Thanks for using SURESTEP SACCO Portal.';
+        FnSMSMessage(SourceAcc,phoneNumber,sms);
+        //MESSAGE('All Cool');
+        END
+    END;
+
+    PROCEDURE FnUpdateMonthlyContrib@1000000017("Member No"@1000000000 : Code[30];"Updated Fig"@1000000001 : Decimal);
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE(objMember."No.", "Member No");
+
+      IF objMember.FIND('-') THEN BEGIN
+       phoneNumber:= objMember."Phone No.";
+        FAccNo := objMember."FOSA Account No.";
+        objMember."Monthly Contribution":="Updated Fig";
+        objMember.MODIFY;
+        sms := 'You have adjusted your monthly contributions to: '+FORMAT("Updated Fig")+' account number '+FAccNo+
+              '. Thank you for using SURESTEP Sacco Portal';
+        FnSMSMessage(FAccNo,phoneNumber,sms);
+
+      //MESSAGE('Updated');
+      END
+    END;
+
+    PROCEDURE FnSMSMessage@1000000038(accfrom@1000000001 : Text[30];phone@1000000002 : Text[20];message@1000000003 : Text[250]);
+    BEGIN
+
+          SMSMessages.RESET;
+          IF SMSMessages.FIND('+') THEN BEGIN
+          iEntryNo:=SMSMessages."Entry No";
+          iEntryNo:=iEntryNo+1;
+          END
+          ELSE BEGIN
+          iEntryNo:=1;
+          END;
+          SMSMessages.INIT;
+          SMSMessages."Entry No":=iEntryNo;
+          //SMSMessages."Batch No":=documentNo;
+          //SMSMessages."Document No":=documentNo;
+          SMSMessages."Account No":=accfrom;
+          SMSMessages."Date Entered":=TODAY;
+          SMSMessages."Time Entered":=TIME;
+          SMSMessages.Source:='WEBPORTAL';
+          SMSMessages."Entered By":=USERID;
+          SMSMessages."Sent To Server":=SMSMessages."Sent To Server"::No;
+          SMSMessages."SMS Message":=message;
+          SMSMessages."Telephone No":=phone;
+          IF SMSMessages."Telephone No"<>'' THEN
+          SMSMessages.INSERT;
+    END;
+
+    PROCEDURE FnLoanApplication@1000000018(Member@1000000000 : Code[30];LoanProductType@1000000002 : Code[10];AmountApplied@1000000003 : Decimal;LoanPurpose@1000000004 : Code[30];RepaymentFrequency@1000000007 : Integer;LoanConsolidation@1000000009 : Boolean;LoanBridging@1000000010 : Boolean;LoanRefinancing@1000000011 : Boolean) Result : Boolean;
+    BEGIN
+      // objMember.RESET;
+      // objMember.SETRANGE(objMember."No.", Member);
+      // IF objMember.FIND('-') THEN BEGIN
+      //
+      //   objLoanApplication.RESET;
+      //   objLoanApplication.INIT;
+      //
+      //   objLoanApplication.Type:=objLoanApplication.Type::"Loan Form";
+      //    objLoanApplication.INSERT(TRUE);
+      //   objLoanApplication."Account No":=Member;
+      //   objLoanApplication.VALIDATE(objLoanApplication."Account No");
+      //   objLoanApplication.VALIDATE(No);
+      //
+      //   objLoanApplication."Loan Type" :=LoanProductType;
+      //
+      //   objLoanApplication."Captured by":=USERID;
+      //   objLoanApplication.Amount:=AmountApplied;
+      //   objLoanApplication."Purpose of loan":=LoanPurpose;
+      //   objLoanApplication."Repayment Period":=RepaymentFrequency;
+      //   MESSAGE(objAtmapplication."Form No");
+      //   objLoanApplication.VALIDATE("Loan Product Type");
+      //   objLoanApplication."Loan Bridging":=LoanBridging;
+      //   objLoanApplication."Loan Consolidation":=LoanConsolidation;
+      //   objLoanApplication."Loan Refinancing":=LoanRefinancing;
+      //   objLoanApplication.VALIDATE("Repayment Period");
+      //   //objLoanApplication.VALIDATE("Loan Bridging");
+      //   //objLoanApplication.VALIDATE("Loan Consolidation");
+      //  // objLoanApplication.VALIDATE("Loan Refinancing");
+      //   objLoanApplication.Submited:=TRUE;
+      //   // objLoanApplication.INSERT(TRUE);
+      //  objLoanApplication.MODIFY;
+      //
+      //
+      // END;
+      //
+      // //***********insert******************//
+      // objLoanApplication.RESET;
+      // objLoanApplication.SETRANGE(objLoanApplication."Account No", Member);
+      // objLoanApplication.SETRANGE(objLoanApplication.Type,objLoanApplication.Type::"Loan Form");
+      // //objLoanApplication.SETCURRENTKEY("Capture Date");
+      // IF objLoanApplication.FINDLAST THEN
+      //   FormNo:=objLoanApplication.No;
+      //   objLoanApplication.SETRANGE(objLoanApplication.No,FormNo);
+      //   IF objLoanApplication.FIND('-') THEN
+      //     BEGIN
+      //       objLoanRegister.INIT;
+      //   MESSAGE(FormNo);
+      //        objLoanRegister.INSERT(TRUE);
+      //       objLoanRegister.Source:=objLoanRegister.Source::BOSA;
+      //       //objLoanRegister.Installments:=RepaymentFrequency;
+      //       MESSAGE(FORMAT(RepaymentFrequency));
+      //       objLoanRegister."Captured By":=USERID;
+      //       objLoanRegister."Select From Forms":=FormNo;
+      //
+      //      MESSAGE(objLoanRegister."Loan  No.");
+      //       objLoanRegister.VALIDATE("Select From Forms");
+      //      // objLoanRegister."Original Loan":=TRUE;
+      //        objLoanRegister.VALIDATE("Requested Amount");
+      //       objLoanRegister."Loan Status":=objLoanRegister."Loan Status"::Application;
+      //      objLoanRegister.MODIFY;
+      //       MESSAGE('here');
+      //        Result:=TRUE;
+      //        phoneNumber:=objMember."Phone No.";
+      //        ClientName := objMember."FOSA Account No.";
+      //        sms:='We have received your '+LoanProductType+' loan application of  amount : ' +FORMAT(AmountApplied)+
+      //        '. We are processing your loan, you will hear from us soon. Thanks for using KENTOURS SACCO  Portal.';
+      //        FnSMSMessage(ClientName,phoneNumber,sms);
+      //        PortaLuPS.INIT;
+      //       // PortaLuPS.INSERT(TRUE);
+      //       objLoanRegister.RESET;
+      //       objLoanRegister.SETRANGE("Client Code", Member);
+      //       objLoanRegister.SETCURRENTKEY("Application Date");
+      //       objLoanRegister.ASCENDING(TRUE);
+      //       IF objLoanRegister.FINDLAST
+      //         THEN
+      //
+      //          PortaLuPS.LaonNo:=objLoanRegister."Loan  No.";
+      //        PortaLuPS.RequestedAmount:=AmountApplied;
+      //        PortaLuPS.INSERT;
+      //        //MESSAGE('All Cool');
+      //      //MESSAGE('Am just cool');
+      // END;
+    END;
+
+    PROCEDURE FnDepositsStatement@1000000023("Account No"@1000000000 : Code[30];path@1000000001 : Text[100]);
+    VAR
+      Filename@1000000002 : Text[100];
+    BEGIN
+      Filename := FILESPATH+path;
+      MESSAGE(FILESPATH);
+      IF EXISTS(Filename) THEN
+
+        ERASE(Filename);
+        objMember.RESET;
+        objMember.SETRANGE(objMember."No.","Account No");
+
+      IF objMember.FIND('-') THEN BEGIN
+        REPORT.SAVEASPDF(51516354,Filename,objMember);
+      END;
+    END;
+
+    PROCEDURE FnLoanStatement@1000000028(MemberNo@1010 : Code[50];VAR BigText@1009 : BigText);
+    VAR
+      Filename@1008 : Text[100];
+      Convert@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      Path@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      _File@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileAccess@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileAccess";
+      FileMode@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      MemoryStream@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      FileStream@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      Outputstream@1000 : OutStream;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE(objMember."No.",MemberNo);
+
+
+      IF objMember.FIND('-') THEN BEGIN
+      //  objMember.SETFILTER("Date Filter", filter);
+      Filename:=Path.GetTempPath()+Path.GetRandomFileName();
+      REPORT.SAVEASPDF(51516531,Filename, objMember);
+
+       FileMode:=4;
+       FileAccess:=1;
+
+       FileStream:=_File.Open(Filename,FileMode,FileAccess);
+
+       MemoryStream:=MemoryStream.MemoryStream();
+
+       MemoryStream.SetLength(FileStream.Length);
+       FileStream.Read(MemoryStream.GetBuffer(),0,FileStream.Length);
+
+       BigText.ADDTEXT((Convert.ToBase64String(MemoryStream.GetBuffer())));
+       MESSAGE(FORMAT(BigText));
+      // exitString:=BigText;
+      //MESSAGE(exitString);
+      MemoryStream.Close();
+      MemoryStream.Dispose();
+      FileStream.Close();
+      FileStream.Dispose();
+      _File.Delete(Filename);
+
+      END;
+    END;
+
+    PROCEDURE FnLoanRepaymentSchedule@51(loannumber@1000 : Code[20];VAR BigText@1010 : BigText);
+    VAR
+      Filename@1009 : Text[100];
+      Convert@1008 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      Path@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      _File@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileAccess@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileAccess";
+      FileMode@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      MemoryStream@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      FileStream@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      Outputstream@1001 : OutStream;
+    BEGIN
+      objLoanRegister.RESET;
+      objLoanRegister.SETRANGE(objLoanRegister."Loan  No.",loannumber);
+
+      IF objLoanRegister.FIND('-') THEN BEGIN
+        Filename:=Path.GetTempPath()+Path.GetRandomFileName();
+        REPORT.SAVEASPDF(51516477,Filename,objLoanRegister);
+
+       FileMode:=4;
+       FileAccess:=1;
+
+       FileStream:=_File.Open(Filename,FileMode,FileAccess);
+
+       MemoryStream:=MemoryStream.MemoryStream();
+
+       MemoryStream.SetLength(FileStream.Length);
+       FileStream.Read(MemoryStream.GetBuffer(),0,FileStream.Length);
+
+       BigText.ADDTEXT((Convert.ToBase64String(MemoryStream.GetBuffer())));
+       MESSAGE(FORMAT(BigText));
+      // exitString:=BigText;
+      //MESSAGE(exitString);
+      MemoryStream.Close();
+      MemoryStream.Dispose();
+      FileStream.Close();
+      FileStream.Dispose();
+      _File.Delete(Filename);
+      END;
+    END;
+
+    [Internal]
+    PROCEDURE Fnlogin@1(username@1000 : Code[20];password@1001 : Text) status : Boolean;
+    VAR
+      EncryptionManagement@1004 : Codeunit 1266;
+      InStream@1003 : InStream;
+      PasswordText@1002 : Text;
+      DecrypText@1005 : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE(objMember."No.", username);
+      objMember.SETRANGE(Password, password);
+      IF objMember.FIND('-') THEN  BEGIN
+        status:=TRUE;
+        END ELSE
+        status:=FALSE;
+      //  objMember.RESET;
+      //  objMember.SETRANGE(objMember."ID No.", username);
+      //  objMember.SETRANGE(Password, password);
+      //  IF objMember.FIND('-') THEN  BEGIN
+      //  status:=TRUE;
+      //  END
+      //  ELSE
+      //  status:=FALSE;
+      // Online.RESET;
+      // Online.SETRANGE("User Name", username);
+      // // Online.SETRANGE("User Type", 'USER');
+      // IF Online.FIND('-') THEN BEGIN
+      //
+      // Online.CALCFIELDS(Password);
+      // Online.Password.CREATEINSTREAM(InStream);
+      // InStream.READ(PasswordText);
+      // IF EncryptionManagement.IsEncryptionPossible THEN
+      // DecrypText:= DECRYPT(PasswordText);
+      // //EXIT(PasswordText);
+      // MESSAGE(DecrypText);
+      // IF DecrypText=password THEN
+      //  status:=TRUE
+      // ELSE
+      // status:=TRUE;
+      // END;
+    END;
+
+    PROCEDURE FnmemberInfo@21(MemberNo@1000 : Code[20]) info : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE(objMember."No.", MemberNo);
+      IF objMember.FIND('-') THEN BEGIN
+        info:=objMember."No."+'.'+':'+objMember.Name+'.'+':'+objMember."E-Mail"+'.'+':'+objMember."Employer Code"+'.'+':'+FORMAT(objMember."Account Category")+'.'+':'+objMember."Mobile Phone No"
+        +'.'+':'+objMember."Bank  Name"+'.'+':'+objMember."Bank Account No."+'.:'+objMember."ID No."+'.:'+objMember."Bank Code" + '.:' + FORMAT(objMember."Date of Birth") +'.:' + FORMAT(objMember.Gender) + '.:' +
+        objMember."Personal No" + '.:.:.:';
+      END
+      ELSE
+      objMember.RESET;
+      objMember.SETRANGE (objMember."ID No.", MemberNo);
+      IF objMember.FIND('-') THEN BEGIN
+        info:=objMember."No."+'.'+':'+objMember.Name+'.'+':'+objMember."E-Mail"+'.'+':'+objMember."Employer Code"+'.'+':'+FORMAT(objMember."Account Category")+'.'+':'+objMember."Mobile Phone No"
+        +'.'+':'+objMember."Bank  Name"+'.'+':'+objMember."Bank Account No."+'.'+':'+objMember."ID No."+'.'+':'+objMember."Bank Branch Code";
+
+        END;
+    END;
+
+    PROCEDURE fnAccountInfo@29(Memberno@1000 : Code[20]) info : Text;
+    BEGIN
+      {objMember.RESET;
+      objMember.SETRANGE(objMember."No.", Memberno);
+
+      IF objMember.FIND('-') THEN BEGIN
+        objMember.CALCFIELDS("Shares Retained", "Total Committed Shares", "Outstanding Balance", "Outstanding Interest");
+        objMember.CALCFIELDS("Current Shares","Share Capital B Class", "School Fee","Un-allocated Funds");
+        objMember.CALCFIELDS("Dividend Amount", "Current Savings", "Special Product", "Holiday Savings", "Housing Savings");
+      //objMember.CALCFIELDS("Demand Savings", "Insurance Fund", Stocks);
+      //objMember.CALCFIELDS("Share Cap", "Dividend Amount", "Un-allocated Funds");
+        info:=FORMAT(ROUND(objMember."Current Savings",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Shares Retained",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Current Shares",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."School Fee",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Dividend Amount",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Current Shares"-SFactory.FnGetMemberLiability(objMember."No."),0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Dividend Amount",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Un-allocated Funds",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Outstanding Balance",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Special Product",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Housing Savings",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Holiday Savings",0.01,'>')) + ':' +
+        FORMAT(ROUND((objMember."Current Shares" + objMember."School Fee" + objMember."Holiday Savings" + objMember."Special Product"), 0.01, '>')) + ':' +
+        FORMAT(ROUND(objMember."Outstanding Interest",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Current Shares"-SFactory.FnGetMemberLiability(objMember."No."),0.01,'>'));
+
+        END ELSE
+        objMember.RESET;
+      objMember.SETRANGE(objMember."ID No.", Memberno);
+
+      IF objMember.FIND('-') THEN BEGIN
+        objMember.CALCFIELDS("Shares Retained", "Total Committed Shares");
+        objMember.CALCFIELDS("Current Shares","Share Capital B Class", "School Fee","Un-allocated Funds");
+        objMember.CALCFIELDS("Dividend Amount");
+      //objMember.CALCFIELDS("Demand Savings", "Insurance Fund", Stocks);
+      //objMember.CALCFIELDS("Share Cap", "Dividend Amount", "Un-allocated Funds");
+        info:=FORMAT(ROUND(objMember."Current Savings",0.01,'>'))+':'+FORMAT(ROUND(objMember."Shares Retained",0.01,'>'))+':'+
+        FORMAT(ROUND(objMember."Current Shares",0.01,'>'))+':'+FORMAT(ROUND(objMember."School Fee",0.01,'>'))+':'
+        +FORMAT(ROUND(objMember."Dividend Amount",0.01,'>'))
+        +':'+FORMAT(ROUND(objMember."Current Shares"-objMember."Total Committed Shares",0.01,'>'))+':'
+        +FORMAT(ROUND(objMember."Dividend Amount",0.01,'>'))+':'+FORMAT(ROUND(objMember."Un-allocated Funds",0.01,'>'))+':'
+        +FORMAT(ROUND(objMember."Outstanding Balance",0.01,'>'));
+        END;}
+
+      //fnAccountInfo(Memberno : Code[20]) info : Text
+      BEGIN
+        objMember.RESET;
+        objMember.SETRANGE(objMember."No.", Memberno);
+
+        IF objMember.FIND('-') THEN BEGIN
+          objMember.CALCFIELDS(
+            "Shares Retained", "Total Committed Shares",
+            "Outstanding Balance", "Outstanding Interest",
+            "Current Shares","Share Capital B Class",
+            "School Fee","Un-allocated Funds",
+            "Dividend Amount", "Current Savings",
+            "Special Product", "Holiday Savings",
+            "Housing Savings", "Outstanding Insurance Fee", "Outstanding Appraisal Fee");
+
+          // Calculate arrears from Loan Register
+          ObjLoansregister.RESET;
+          ObjLoansregister.SETRANGE("Client Code", objMember."No.");
+          ObjLoansregister.CALCSUMS(Arrears);
+          ArrearsTotal := ObjLoansregister.Arrears;
+
+              //  Calculate collateral totals
+              LoanCollateral.RESET;
+              LoanCollateral.SETRANGE("Member No", Memberno);
+              LoanCollateral.CALCSUMS(Value, "Comitted Collateral Value");
+              CollateralValueTotal := LoanCollateral.Value;
+              CommittedCollateralValueTotal := LoanCollateral."Comitted Collateral Value";
+
+          info :=
+            FORMAT(ROUND(objMember."Current Savings",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Shares Retained",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Current Shares",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."School Fee",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Dividend Amount",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Current Shares" - SFactory.FnGetMemberLiability(objMember."No."),0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Dividend Amount",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Un-allocated Funds",0.01,'>')) + ':' +
+            // Outstanding Total = Principal + Interest + Insurance + Appraisal + Arrears
+            FORMAT(ROUND(
+              (objMember."Outstanding Balance"
+               + objMember."Outstanding Interest"
+               + objMember."Outstanding Insurance Fee"
+               + objMember."Outstanding Appraisal Fee"
+               + ArrearsTotal), 0.01, '>')) + ':' +
+            FORMAT(ROUND(objMember."Special Product",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Housing Savings",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Holiday Savings",0.01,'>')) + ':' +
+            FORMAT(ROUND((objMember."Current Shares" + objMember."School Fee" +
+                          objMember."Holiday Savings" + objMember."Special Product"), 0.01, '>')) + ':' +
+            FORMAT(ROUND(objMember."Outstanding Interest",0.01,'>')) + ':' +
+            FORMAT(ROUND(objMember."Current Shares" - SFactory.FnGetMemberLiability(objMember."No."),0.01,'>')) + ':' +
+            FORMAT(ROUND(CollateralValueTotal, 0.01, '>')) + ':' +
+            FORMAT(ROUND(CommittedCollateralValueTotal, 0.01, '>'));
+
+        END ELSE BEGIN
+          objMember.RESET;
+          objMember.SETRANGE(objMember."ID No.", Memberno);
+
+          IF objMember.FIND('-') THEN BEGIN
+            objMember.CALCFIELDS(
+              "Shares Retained", "Total Committed Shares",
+              "Outstanding Balance", "Outstanding Interest",
+              "Current Shares","Share Capital B Class",
+              "School Fee","Un-allocated Funds",
+              "Dividend Amount", "Outstanding Insurance Fee", "Outstanding Appraisal Fee", "Current Savings");
+
+            // Calculate arrears from Loan Register
+            ObjLoansregister.RESET;
+            ObjLoansregister.SETRANGE("Client Code", objMember."No.");
+            ObjLoansregister.CALCSUMS(Arrears);
+            ArrearsTotal := ObjLoansregister.Arrears;
+
+                  //  Calculate collateral totals
+                  LoanCollateral.RESET;
+                  LoanCollateral.SETRANGE("Member No", Memberno);
+                  LoanCollateral.CALCSUMS(Value, "Comitted Collateral Value");
+                  CollateralValueTotal := LoanCollateral.Value;
+                  CommittedCollateralValueTotal := LoanCollateral."Comitted Collateral Value";
+
+            info :=
+              FORMAT(ROUND(objMember."Current Savings",0.01,'>')) + ':' +
+              FORMAT(ROUND(objMember."Shares Retained",0.01,'>')) + ':' +
+              FORMAT(ROUND(objMember."Current Shares",0.01,'>')) + ':' +
+              FORMAT(ROUND(objMember."School Fee",0.01,'>')) + ':' +
+              FORMAT(ROUND(objMember."Dividend Amount",0.01,'>')) + ':' +
+              FORMAT(ROUND(objMember."Current Shares" - objMember."Total Committed Shares",0.01,'>')) + ':' +
+              FORMAT(ROUND(objMember."Dividend Amount",0.01,'>')) + ':' +
+              FORMAT(ROUND(objMember."Un-allocated Funds",0.01,'>')) + ':' +
+              // Outstanding Total = Principal + Interest + Insurance + Appraisal + Arrears
+              FORMAT(ROUND(
+                (objMember."Outstanding Balance"
+                 + objMember."Outstanding Interest"
+                 + objMember."Outstanding Insurance Fee"
+                 + objMember."Outstanding Appraisal Fee"
+                       + ArrearsTotal), 0.01, '>')) + ':' +
+                    //  Add Collateral Totals
+                    FORMAT(ROUND(CollateralValueTotal, 0.01, '>')) + ':' +
+                    FORMAT(ROUND(CommittedCollateralValueTotal, 0.01, '>'));
+          END;
+        END;
+      END;
+    END;
+
+    PROCEDURE fnloaninfo@47(Memberno@1000 : Code[20]) info : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE(objMember."No.", Memberno);
+      IF objMember.FIND('-') THEN BEGIN
+        objMember.CALCFIELDS("Outstanding Balance");
+        objMember.CALCFIELDS("Outstanding Interest");
+         info:=FORMAT(objMember."Outstanding Balance")+':'+FORMAT(objMember."Outstanding Interest");
+        END ELSE
+        objMember.RESET;
+      objMember.SETRANGE(objMember."ID No.", Memberno);
+      IF objMember.FIND('-') THEN BEGIN
+        objMember.CALCFIELDS("Outstanding Balance");
+        objMember.CALCFIELDS("Outstanding Interest");
+         info:=FORMAT(objMember."Outstanding Balance")+':'+FORMAT(objMember."Outstanding Interest");
+        END;
+    END;
+
+    PROCEDURE fnLoans@57(MemberNo@1000 : Code[20]) loans : Text;
+    BEGIN
+      objLoanRegister.RESET;
+      objLoanRegister.SETRANGE("Client Code", MemberNo);
+      objLoanRegister.SETFILTER("Loan Product Type Name",'');
+      objLoanRegister.SETCURRENTKEY("Outstanding Balance");
+        objLoanRegister.ASCENDING(FALSE);
+      IF objLoanRegister.FIND('-') THEN BEGIN
+
+
+        REPEAT
+           LastPayDate := objLoanRegister."Issued Date";
+              RSchedule.RESET;
+              RSchedule.SETRANGE("Loan No.",objLoanRegister."Loan  No.");
+              RSchedule.SETFILTER(RSchedule."Repayment Date",'.. %1',TODAY);
+              IF RSchedule.FINDFIRST THEN BEGIN
+                 Lperiod:=RSchedule.COUNT;
+                 i:=objLoanRegister.Installments-Lperiod;
+                END;
+
+          objLoanRegister.CALCFIELDS(objLoanRegister."Oustanding Interest",objLoanRegister."Outstanding Penalty",objLoanRegister."Outstanding Insurance Fee",objLoanRegister."Outstanding Appraisal Fee");
+          IF objLoanRegister."Outstanding Balance" > 0 THEN
+          loans:=loans+objLoanRegister."Loan Product Type Name"+':'+ FORMAT(objLoanRegister."Outstanding Balance"+objLoanRegister."Oustanding Interest"+objLoanRegister."Outstanding Penalty"
+          +objLoanRegister."Outstanding Insurance Fee"+objLoanRegister."Outstanding Appraisal Fee")+':'+FORMAT(objLoanRegister."Loan Status")+':'+FORMAT(objLoanRegister.Installments)+':'
+          +FORMAT(i)+':'+FORMAT(objLoanRegister."Balance BF")+':'+FORMAT(objLoanRegister."Requested Amount")+'::';
+
+          UNTIL
+          objLoanRegister.NEXT=0;
+
+        END;
+    END;
+
+    PROCEDURE FnloanCalc@24(LoanAmount@1000 : Decimal;RepayPeriod@1001 : Integer;LoanCode@1002 : Code[30]) text : Text;
+    BEGIN
+       {Loansetup.RESET;
+             Loansetup.SETRANGE(Code, LoanCode);
+             IF Loansetup.FIND('-') THEN BEGIN
+              //....................Amortized......................................................//
+             IF  Loansetup."Repayment Method"= Loansetup."Repayment Method"::Amortised THEN BEGIN
+               Date:=TODAY;
+                PRAmount:=LoanAmount;
+                text:=text+FORMAT(Date)+'!!'+FORMAT(ROUND( LPrincipal))+'!!'+FORMAT(ROUND( LInterest))+'!!'+FORMAT(ROUND(TotalMRepay))+'!!'+FORMAT(ROUND(LoanAmount)) +'!!'+FORMAT(ROUND(PRAmount))+'??';
+              Date:=CALCDATE('+1M', Date);
+               REPEAT
+                 InterestRate:=Loansetup."Interest rate";
+                 TotalMRepay:=ROUND((InterestRate/12/100) / (1 - POWER((1 + (InterestRate/12/100)),- RepayPeriod)) * LoanAmount,0.05,'>');
+                  LInterest:=ROUND(LoanAmount / 100 / 12 * InterestRate,0.05,'>');
+                  LPrincipal:=TotalMRepay-LInterest;
+              PRAmount:=LoanAmount;
+                LoanAmount:=LoanAmount-LPrincipal;
+             RepayPeriod:= RepayPeriod-1;
+
+              text:=text+FORMAT(Date)+'!!'+FORMAT(ROUND( LPrincipal))+'!!'+FORMAT(ROUND( LInterest))+'!!'+FORMAT(ROUND(TotalMRepay))+'!!'+FORMAT(ROUND(LoanAmount)) +'!!'+FORMAT(ROUND(PRAmount))+'??';
+              Date:=CALCDATE('+1M', Date);
+              UNTIL RepayPeriod=0;
+              END;
+              ///.......................end of Amortized..............................................//
+
+
+              //......................Reducing Balance...............................................//
+             IF  Loansetup."Repayment Method"= Loansetup."Repayment Method"::"Reducing Balance" THEN BEGIN
+                     Date:=TODAY;
+                      PRAmount:=LoanAmount;
+                      text:=text+FORMAT(Date)+'!!'+FORMAT(ROUND( LPrincipal))+'!!'+FORMAT(ROUND( LInterest))+'!!'+FORMAT(ROUND(TotalMRepay))+'!!'+FORMAT(ROUND(LoanAmount)) +'!!'+FORMAT(ROUND(PRAmount))+'??';
+                    Date:=CALCDATE('+1M', Date);
+                     REPEAT
+                       InterestRate:=Loansetup."Interest rate";
+                       LPrincipal:=ROUND(LoanAmount/RepayPeriod,0.05,'>');
+                     LInterest:=ROUND((InterestRate/12/100)*LoanAmount,0.05,'>');
+                    TotalMRepay:=LPrincipal+LInterest;
+                    PRAmount:=LoanAmount;
+                      LoanAmount:=LoanAmount-LPrincipal;
+                   RepayPeriod:= RepayPeriod-1;
+
+                    text:=text+FORMAT(Date)+'!!'+FORMAT(ROUND( LPrincipal))+'!!'+FORMAT(ROUND( LInterest))+'!!'+FORMAT(ROUND(TotalMRepay))+'!!'+FORMAT(ROUND(LoanAmount)) +'!!'+FORMAT(ROUND(PRAmount))+'??';
+                    Date:=CALCDATE('+1M', Date);
+                    UNTIL RepayPeriod=0;
+                    END;
+                    //....................end of Reducing Balance.......................................////
+
+                    //...........................Constant...............................................////
+                    IF  Loansetup."Repayment Method"= Loansetup."Repayment Method"::Constants THEN BEGIN
+                    LoansRec.TESTFIELD(LoansRec.Repayment);
+                    IF LBalance < LoansRec.Repayment THEN
+                    LPrincipal:=LBalance
+                    ELSE
+                    LPrincipal:=LoansRec.Repayment;
+                    LInterest:=LoansRec.Interest;
+                    END;
+
+              //.......................Straight Line......................................................///
+
+              IF  Loansetup."Repayment Method"= Loansetup."Repayment Method"::"Straight Line" THEN BEGIN
+
+              {LoansRec.TESTFIELD(LoansRec.Interest);
+              LoansRec.TESTFIELD(LoansRec.Installments);
+              LPrincipal:=LoanAmount/RepayPeriod;
+              LInterest:=(Loansetup."Interest rate"/12/100)*LoanAmount;///RepayPeriod}
+                    Date:=TODAY;
+                    PRAmount:=LoanAmount;
+                    text:=text+FORMAT(Date)+'!!'+FORMAT(ROUND( LPrincipal))+'!!'+FORMAT(ROUND( LInterest))+'!!'+FORMAT(ROUND(TotalMRepay))+'!!'+FORMAT(ROUND(LoanAmount)) +'!!'+FORMAT(ROUND(PRAmount))+'??';
+                    Date:=CALCDATE('+1M', Date);
+                     REPEAT
+                       InterestRate:=Loansetup."Interest rate";
+                       LPrincipal:=ROUND(LoanAmount/RepayPeriod,0.05,'>');
+                     LInterest:=ROUND((InterestRate/12/100)*LoanAmount,0.05,'>');
+                    TotalMRepay:=LPrincipal+LInterest;
+                    PRAmount:=LoanAmount;
+                      LoanAmount:=LoanAmount-LPrincipal;
+                   RepayPeriod:= RepayPeriod-1;
+
+                    text:=text+FORMAT(Date)+'!!'+FORMAT(ROUND( LPrincipal))+'!!'+FORMAT(ROUND( LInterest))+'!!'+FORMAT(ROUND(TotalMRepay))+'!!'+FORMAT(ROUND(LoanAmount)) +'!!'+FORMAT(ROUND(PRAmount))+'??';
+                    Date:=CALCDATE('+1M', Date);
+                    UNTIL RepayPeriod=0;
+              END;
+
+
+
+
+
+           END;
+       }
+    END;
+
+    PROCEDURE Fnloanssetup@25() loanType : Text;
+    BEGIN
+      Loansetup.RESET;
+      Loansetup.SETRANGE("Loan Calculator",TRUE);
+      IF Loansetup.FIND('-') THEN BEGIN
+        loanType:='';
+        REPEAT
+          loanType:=FORMAT(Loansetup.Code)+':'+Loansetup."Product Description" +':::'+loanType;
+        UNTIL Loansetup.NEXT=0;
+      END;
+    END;
+
+    PROCEDURE FnGetInstallment@49(LoanCode@1000 : Code[30]) loanType : Text;
+    BEGIN
+      Loansetup.RESET;
+      Loansetup.SETRANGE(Code,LoanCode);
+      IF Loansetup.FIND('-') THEN BEGIN
+      loanType:=FORMAT(Loansetup."No of Installment");
+      END;
+    END;
+
+    PROCEDURE fnLoanDetails@40(Loancode@1000 : Code[20]) loandetail : Text;
+    BEGIN
+      Loansetup.RESET;
+      //Loansetup.SETRANGE(Code, Loancode);
+      IF Loansetup.FIND('-') THEN BEGIN
+        REPEAT
+        loandetail:=loandetail+Loansetup."Product Description"+'!!'+ FORMAT(Loansetup."Repayment Method")+'!!'+FORMAT(Loansetup."Max. Loan Amount")+'!!'+FORMAT(Loansetup."Instalment Period")+'!!'+FORMAT(Loansetup."Interest rate")+'!!'
+        +FORMAT(Loansetup."Repayment Frequency")+'??';
+        UNTIL Loansetup.NEXT=0;
+      END;
+    END;
+
+    PROCEDURE fnFeedback@2(No@1000 : Code[20];Comment@1001 : Text[200]);
+    BEGIN
+      //
+    END;
+
+    PROCEDURE fnLoansPurposes@3() LoanType : Text;
+    BEGIN
+      LoansPurpose.RESET;
+      BEGIN
+      LoanType:='';
+      REPEAT
+      LoanType:=FORMAT(LoansPurpose.Code)+':'+LoansPurpose.Description+':::'+LoanType;
+        UNTIL LoansPurpose.NEXT=0;
+      END;
+    END;
+
+    PROCEDURE fnReplys@4(No@1000 : Code[20]) text : Text;
+    BEGIN
+      // feedback.RESET;
+      // feedback.SETRANGE(No, No);
+      // feedback.SETCURRENTKEY(Entry);
+      // feedback.ASCENDING(FALSE);
+      // IF feedback.FIND('-') THEN BEGIN
+      //   REPEAT
+      //      IF(feedback.Reply ='') THEN BEGIN
+      //
+      //  END ELSE
+      //     text:=text+FORMAT(feedback.DatePosted)+'!!'+feedback.Portalfeedback+'!!'+ feedback.Reply+'??';
+      // UNTIL feedback.NEXT=0;
+      // END;
+    END;
+
+    PROCEDURE FnLoanfo@17(MemberNo@1000 : Code[20]) dividend : Text;
+    BEGIN
+      DivProg.RESET;
+      DivProg.SETRANGE("Member No",MemberNo);
+      IF DivProg.FIND('-') THEN BEGIN
+        REPEAT
+          IF DivProg."Gross Dividends" < 1 THEN DivProg."Gross Dividends":=-1*DivProg."Gross Dividends";
+           IF DivProg."Net Dividends" < 1 THEN DivProg."Net Dividends":=-1*DivProg."Net Dividends";
+           IF DivProg."Witholding Tax" < 1 THEN DivProg."Witholding Tax":=-1*DivProg."Witholding Tax";
+           IF DivProg."Qualifying Shares" < 1 THEN DivProg."Qualifying Shares":=-1*DivProg."Qualifying Shares";
+           IF DivProg.Shares < 1 THEN DivProg.Shares:=-1*DivProg.Shares;
+          dividend:=dividend+FORMAT(DivProg.Date)+':::'+FORMAT( DivProg."Gross Dividends")+':::'+FORMAT(DivProg."Witholding Tax")+':::'+FORMAT(DivProg."Net Dividends")+':::'+FORMAT(DivProg."Qualifying Shares")+':::'
+          +FORMAT(DivProg.Shares)+'::::';
+          UNTIL DivProg.NEXT=0;
+          END;
+    END;
+
+    PROCEDURE fnGetAtms@15(Idnumber@1000 : Code[20]) return : Text;
+    BEGIN
+      // Vendor.RESET;
+      // objAtmapplication.SETRANGE("ID No.", Idnumber);
+      // IF objAtmapplication.FIND('-') THEN BEGIN
+      //  REPEAT
+      //    return:=objAtmapplication."No."+':::'+return;
+      //    UNTIL
+      //    objAtmapplication.NEXT=0;
+      //    END;
+    END;
+
+    PROCEDURE fnInserBiodata@5(FirstName@1000 : Text;MiddleName@1001 : Text;LastName@1002 : Text;Gender@1003 : Integer;NextOfKInR@1004 : Boolean;IdNumber@1005 : Code[50];shares@1007 : Decimal;NextofkinID@1008 : Code[50];NextofkinRelationship@1009 : Text;NextofkinPhone@1010 : Code[50];Nextofkinemail@1011 : Text;NextofkinDob@1012 : Date);
+    VAR
+      NextOfKin@1006 : Record 51516361;
+    BEGIN
+      IF(NextOfKInR<>TRUE) THEN BEGIN
+      MemberApplication.INIT;
+      MemberApplication."No.":=NoSeriesMgt.GetNextNo('MEMBERSHIP',0D,TRUE);
+      //MemberApplication.VALIDATE("No.");
+
+      MemberApplication."First Name":=FirstName;
+      MemberApplication."Middle Name":=MiddleName;
+      MemberApplication."Last Name":=LastName;
+      MemberApplication.Name:=FirstName+' '+MiddleName+' '+LastName;
+      MemberApplication.VALIDATE(Name);
+
+      MemberApplication.Gender:=Gender;
+      MemberApplication."ID No.":=IdNumber;
+      //MemberApplication.MODIFY;
+      MemberApplication.INSERT;
+      END
+      ELSE BEGIN
+
+      MemberApplication.RESET;
+      MemberApplication.SETRANGE("ID No.", IdNumber);
+      IF MemberApplication.FIND('-') THEN BEGIN
+      NextOfKin.INIT;
+      NextOfKin."Account No":=MemberApplication."No.";
+      NextOfKin.Name:=FirstName;
+      NextOfKin."ID No.":=NextofkinID;
+      NextOfKin."%Allocation":=shares;
+      NextOfKin.Relationship:=NextofkinRelationship;
+      NextOfKin.Telephone:=NextofkinPhone;
+      NextOfKin.Email:=Nextofkinemail;
+      NextOfKin."Date of Birth":=NextofkinDob;
+      NextOfKin.INSERT;
+      END;
+      END;
+    END;
+
+    PROCEDURE fnInsertCommunicationDetails@6(email@1000 : Text;phone@1001 : Text;telePhone@1002 : Text;NextofKin@1003 : Boolean;IdNumber@1004 : Code[50]);
+    BEGIN
+      MemberApplication.RESET;
+      MemberApplication.SETRANGE("ID No.", IdNumber);
+      IF MemberApplication.FIND('-') THEN BEGIN
+        IF MemberApplication.GET(MemberApplication."No.") THEN
+        //MemberApplication."No.":=MemberApplication."No.";
+        MemberApplication."E-Mail (Personal)":=email;
+        MemberApplication."Phone No.":=phone;
+        MemberApplication."Mobile Phone No":=telePhone;
+        MemberApplication.MODIFY;
+        END;
+    END;
+
+    PROCEDURE fnInsertWitness@7();
+    BEGIN
+    END;
+
+    PROCEDURE fnInsertNxtofKin@8();
+    BEGIN
+    END;
+
+    PROCEDURE fnInsertBankDetails@9(BankCode@1000 : Code[60];BankBranch@1002 : Code[60];BankAccountNo@1003 : Code[60];idnumber@1001 : Code[40]);
+    BEGIN
+      MemberApplication.RESET;
+      MemberApplication.SETRANGE("ID No.", idnumber);
+      IF MemberApplication.FIND('-') THEN BEGIN
+        MemberApplication."Bank Code":=BankCode;
+        MemberApplication.VALIDATE("Bank Code");
+        MemberApplication."Branch code":=BankBranch;
+        MemberApplication."Bank Account No":=BankAccountNo;
+        MemberApplication.MODIFY;
+        END;
+    END;
+
+    PROCEDURE fnInsertHistory@10(IdNo@1000 : Text;MaritalStatus@1001 : Option;Dob@1002 : Date;Nextofkin@1003 : Boolean;AccountIdnumber@1004 : Integer;krapin@1005 : Code[100]);
+    BEGIN
+      MemberApplication.RESET;
+      MemberApplication.SETRANGE("ID No.", IdNo);
+      IF MemberApplication.FIND('-') THEN BEGIN
+        MemberApplication."ID No.":=IdNo;
+        MemberApplication."Marital Status":=MaritalStatus;
+        MemberApplication."Date of Birth":=Dob;
+        MemberApplication."KRA PIN":=krapin;
+        MemberApplication.VALIDATE("Date of Birth");
+        MemberApplication.MODIFY;
+        END;
+    END;
+
+    PROCEDURE fnInsertAddress@11(Town@1000 : Text;County@1001 : Text;PostalCode@1002 : Text;Address@1003 : Text;Employer@1004 : Boolean;AccountIdNumber@1005 : Code[60];EmployerName@1006 : Code[80];PayrollNumber@1007 : Code[60]);
+    BEGIN
+      IF Employer<>TRUE THEN  BEGIN
+      MemberApplication.RESET;
+      MemberApplication.SETRANGE("ID No.", AccountIdNumber);
+       IF MemberApplication.FIND('-') THEN BEGIN
+         MemberApplication.Town:=Town;
+         MemberApplication.County:=County;
+         MemberApplication."Postal Code":=PostalCode;
+         MemberApplication.VALIDATE("Postal Code");
+         MemberApplication.Address:=Address;
+
+         MemberApplication.MODIFY;
+         END;
+         END
+
+      ELSE BEGIN
+       MemberApplication.RESET;
+      MemberApplication.SETRANGE("ID No.", AccountIdNumber);
+       IF MemberApplication.FIND('-') THEN BEGIN
+         MemberApplication."Employer Code":=EmployerName;
+         MemberApplication.VALIDATE("Employer Code");
+         MemberApplication."Payroll No":=PayrollNumber;
+         MemberApplication."Address 2":=Address;
+         MemberApplication."Postal Code 2":=PostalCode;
+         MemberApplication.MODIFY;
+      END;
+      END;
+    END;
+
+    LOCAL PROCEDURE fnInsertPosts@12(title@1000 : Text;Descritption@1001 : Text;Entry@1002 : Integer);
+    VAR
+      Posts@1003 : Record 51516973;
+    BEGIN
+      Posts.INIT;
+      Posts.Title:=title;
+      Posts.Description:=Descritption;
+      Posts.DateEntered:=TODAY;
+      Posts.INSERT;
+
+      IF Entry<>-1 THEN
+        Posts.Entry:=Entry;
+        Posts.Title:=title;
+       Posts.Description:=Descritption;
+       Posts.DateModified:=TODAY;
+        Posts.MODIFY;
+    END;
+
+    LOCAL PROCEDURE fnInsertEmploymentdetails@13();
+    BEGIN
+    END;
+
+    PROCEDURE fnApplicationForm@19(MemberNo@1000000000 : Code[50];filter@1000 : Text;VAR BigText@1011 : BigText) exitString : Text;
+    VAR
+      Filename@1000000002 : Text[100];
+      Convert@1001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Convert";
+      Path@1002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.Path";
+      _File@1003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File";
+      FileAccess@1004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileAccess";
+      FileMode@1005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileMode";
+      MemoryStream@1006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+      FileStream@1007 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream";
+      Outputstream@1009 : OutStream;
+    BEGIN
+
+       MemberApplication.RESET;
+       MemberApplication.SETRANGE("ID No.",MemberNo);
+
+
+      IF MemberApplication.FIND('-') THEN BEGIN
+       // objMember.SETFILTER("Date Filter", filter);
+      Filename:=Path.GetTempPath()+Path.GetRandomFileName();
+      REPORT.SAVEASPDF(51516507,Filename, MemberApplication);
+
+       FileMode:=4;
+       FileAccess:=1;
+
+       FileStream:=_File.Open(Filename,FileMode,FileAccess);
+
+       MemoryStream:=MemoryStream.MemoryStream();
+
+       MemoryStream.SetLength(FileStream.Length);
+       FileStream.Read(MemoryStream.GetBuffer(),0,FileStream.Length);
+
+       BigText.ADDTEXT((Convert.ToBase64String(MemoryStream.GetBuffer())));
+       MESSAGE(FORMAT(BigText));
+      // exitString:=BigText;
+      //MESSAGE(exitString);
+      MemoryStream.Close();
+      MemoryStream.Dispose();
+      FileStream.Close();
+      FileStream.Dispose();
+      _File.Delete(Filename);
+
+      END;
+    END;
+
+    PROCEDURE GnNextOfkin@14(MemberNumber@1000 : Code[20]) return : Text;
+    VAR
+      MemberRegister@1001 : Record 51516364;
+    BEGIN
+      return :='::::';
+
+      MemberRegister.RESET;
+      MemberRegister.SETRANGE("Personal No",MemberNumber);
+      IF MemberRegister.FIND('-') THEN BEGIN
+
+      objNextKin.RESET;
+      objNextKin.SETRANGE("Account No", MemberRegister."No.");
+      IF objNextKin.FIND('-') THEN BEGIN
+        REPEAT
+        return:=return+ objNextKin.Name+':::'+objNextKin.Relationship+':::'+'.'+objNextKin.Address+':::'+'.'+FORMAT(objNextKin."%Allocation")+'.'+':::'+FORMAT(objNextKin."Entry No")+'::::';
+          UNTIL objNextKin.NEXT=0;
+          END;
+      END;
+    END;
+
+    PROCEDURE fninsertchangeRequest@16(No@1000 : Code[80];email@1001 : Text;phone@1002 : Code[40];idnumber@1003 : Code[50];mobile@1004 : Code[40];name@1005 : Text;Change@1006 : Boolean;RequstNO@1008 : Code[60]);
+    VAR
+      ChangeReuqest@1007 : Record 51516552;
+    BEGIN
+      IF Change=FALSE THEN BEGIN
+         ChangeReuqest.INIT;
+        ChangeReuqest.No:=NoSeriesMgt.GetNextNo('CHANGEREQ',0D,TRUE);
+        ChangeReuqest.VALIDATE(No);
+         ChangeReuqest.Type:=ChangeReuqest.Type::"Backoffice Change";
+         ChangeReuqest."Account No":=No;
+         ChangeReuqest."Capture Date":=TODAY;
+         ChangeReuqest.VALIDATE("Account No");
+         ChangeReuqest."Name(New Value)":=name;
+         ChangeReuqest."Phone No.(New)":=phone;
+         ChangeReuqest."ID No(New Value)":=idnumber;
+         ChangeReuqest."Mobile No(New Value)":=mobile;
+         ChangeReuqest."Email(New Value)":=email;
+         ChangeReuqest.INSERT;
+         END;
+
+      IF Change=TRUE THEN BEGIN
+        ChangeReuqest.RESET;
+        ChangeReuqest.SETRANGE(No, RequstNO);
+        IF ChangeReuqest.FIND('-') THEN BEGIN
+          ChangeReuqest."Email(New Value)":=email;
+          ChangeReuqest."Name(New Value)":=name;
+          ChangeReuqest."ID No(New Value)":=idnumber;
+          ChangeReuqest."Phone No.(New)":=phone;
+          ChangeReuqest."Mobile No(New Value)":=mobile;
+          ChangeReuqest.MODIFY;
+          END;
+          END;
+
+    END;
+
+    PROCEDURE fnInsertChangrequestNOKModify@18(ReqNo@1000 : Integer;Modify@1001 : Boolean;Name@1002 : Text;RelationShip@1003 : Text;email@1004 : Text;idnumber@1005 : Code[100];"%Allocation"@1006 : Decimal;MemberNo@1007 : Code[100];Dob@1008 : Date;Addnew@1011 : Boolean;NokNO@1012 : Integer);
+    VAR
+      NokChangeRequest@1009 : Record 51516940;
+      NokLines@1010 : Record 51516464;
+      NokKinDetails@1013 : Record 51516366;
+    BEGIN
+      IF Addnew=TRUE THEN BEGIN
+
+      IF Modify =FALSE THEN BEGIN
+      NokChangeRequest.INIT;
+      NokChangeRequest."Document No":=NoSeriesMgt.GetNextNo('NOKC',0D,TRUE);
+      NokChangeRequest."Member No":=MemberNo;
+      NokChangeRequest.VALIDATE("Member No");
+      NokChangeRequest."Captured On":=TODAY;
+      NokChangeRequest.INSERT;
+
+
+      NokLines."Add New":=TRUE;
+      NokLines."Document No":=NokChangeRequest."Document No";
+      NokLines."Account No":=MemberNo;
+      NokLines."%Allocation(New)":="%Allocation";
+      NokLines.Name:=Name;
+      NokLines."Email(New)":=email;
+      NokLines."Relationship(New)":=RelationShip;
+      NokLines."ID No.(New)":=idnumber;
+      NokLines.INSERT;
+      END
+      ELSE BEGIN
+      // NokChangeRequest.SETRANGE("Document No", ReqNo);
+      //  IF NokChangeRequest.FIND('-') THEN BEGIN
+      // //NokChangeRequest."Document No":=NoSeriesMgt.GetNextNo('NOKC',0D,TRUE);
+      //
+      //
+      // //NokLines."Add New":=TRUE;
+      // NokLines."Document No":=NokChangeRequest."Document No";
+      // NokLines."Account No":=MemberNo;
+      // NokLines."%Allocation(New)":="%Allocation";
+      // NokLines.Name:=Name;
+      // NokLines."Email(New)":=email;
+      // NokLines."Relationship(New)":=RelationShip;
+      // NokLines."ID No.(New)":=idnumber;
+      // NokLines.MODIFY;
+      END;
+      //END;
+      END
+      ELSE  BEGIN
+        IF Modify =FALSE THEN BEGIN
+      NokChangeRequest.INIT;
+      NokChangeRequest."Document No":=NoSeriesMgt.GetNextNo('NOKC',0D,TRUE);
+      NokChangeRequest."Member No":=MemberNo;
+      NokChangeRequest.VALIDATE("Member No");
+      NokChangeRequest."Captured On":=TODAY;
+      NokChangeRequest.INSERT;
+      NokKinDetails.RESET;
+      NokKinDetails.SETRANGE("Entry No", NokNO);
+      IF NokKinDetails.FIND('-') THEN BEGIN
+
+        NokLines.Name:=Name;
+        NokLines.Relationship:=NokKinDetails.Relationship;
+        NokLines."%Allocation":=NokKinDetails."%Allocation";
+        NokLines.Address:=NokKinDetails.Address;
+        NokLines.Email:=NokKinDetails.Email;
+        NokLines.Beneficiary:=NokKinDetails.Beneficiary;
+        NokLines."ID No.":=NokKinDetails."ID No.";
+      //NokLines."Add New":=TRUE;
+      NokLines."Document No":=NokChangeRequest."Document No";
+      NokLines."Account No":=MemberNo;
+      NokLines."%Allocation(New)":="%Allocation";
+      NokLines.Name:=Name;
+      NokLines."Email(New)":=email;
+      NokLines."Relationship(New)":=RelationShip;
+      NokLines."ID No.(New)":=idnumber;
+      NokLines.INSERT;
+      END;
+      END
+      ELSE BEGIN
+
+      NokLines.RESET;
+      NokLines.SETRANGE("Entry No", ReqNo);
+      IF NokLines.FIND('-') THEN BEGIN
+      //NokLines."Add New":=TRUE;
+      //NokLines."Document No":=NokChangeRequest."Document No";
+      NokLines."Account No":=MemberNo;
+      NokLines."%Allocation(New)":="%Allocation";
+      NokLines.Name:=Name;
+      NokLines."Email(New)":=email;
+      NokLines."Relationship(New)":=RelationShip;
+      NokLines."ID No.(New)":=idnumber;
+      NokLines.MODIFY;
+      END;
+      END;
+      END;
+    END;
+
+    [Internal]
+    PROCEDURE FnAdminlogin@33(username@1000 : Code[100];password@1001 : Text) status : Boolean;
+    VAR
+      EncryptionManagement@1004 : Codeunit 1266;
+      InStream@1003 : InStream;
+      PasswordText@1002 : Text;
+      DecrypText@1005 : Text;
+    BEGIN
+
+      // Online.RESET;
+      // Online.SETRANGE("User Name", username);
+      // Online.SETRANGE("User Type", 'ADMIN');
+      // IF Online.FIND('-') THEN BEGIN
+      //
+      // Online.CALCFIELDS(Password);
+      // Online.Password.CREATEINSTREAM(InStream);
+      // InStream.READ(PasswordText);
+      // IF EncryptionManagement.IsEncryptionPossible THEN
+      // DecrypText:= DECRYPT(PasswordText);
+      // //EXIT(PasswordText);
+      // MESSAGE(DecrypText);
+      // IF DecrypText=password THEN
+      //  status:=TRUE
+      // ELSE
+      // status:=TRUE;
+      // END;
+    END;
+
+    PROCEDURE FnMemberLoans@54(membernumber@1000 : Code[20]) result : Text;
+    BEGIN
+      objLoanRegister.RESET;
+      objLoanRegister.SETRANGE("Client Code", membernumber);
+      IF objLoanRegister.FIND('-') THEN BEGIN
+        REPEAT
+        objLoanRegister.CALCFIELDS(objLoanRegister."Outstanding Balance");
+          IF (objLoanRegister."Outstanding Balance" > 0) THEN
+            result += objLoanRegister."Loan  No." + '|';
+        UNTIL objLoanRegister.NEXT = 0;
+
+        EXIT(result);
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnGetMemberLoanInfo@87(MemberNo@1000 : Code[20]) loans : Text;
+    BEGIN
+      objLoanRegister.RESET;
+      objLoanRegister.SETRANGE("Client Code", MemberNo);
+      //objLoanRegister.SETFILTER("Loan Product Type Name",'');
+      //objLoanRegister.SETCURRENTKEY("Outstanding Balance");
+      objLoanRegister.ASCENDING(FALSE);
+      IF objLoanRegister.FIND('-') THEN BEGIN
+        loans := '{"Loans":[';
+
+        REPEAT
+           LastPayDate := objLoanRegister."Issued Date";
+              RSchedule.RESET;
+              RSchedule.SETRANGE("Loan No.",objLoanRegister."Loan  No.");
+              RSchedule.SETFILTER(RSchedule."Repayment Date",'.. %1',TODAY);
+              IF RSchedule.FINDFIRST THEN BEGIN
+                 Lperiod:=RSchedule.COUNT;
+                 i:=objLoanRegister.Installments-Lperiod;
+                END;
+
+          objLoanRegister.CALCFIELDS(objLoanRegister."Outstanding Balance",objLoanRegister."Oustanding Interest",objLoanRegister."Outstanding Penalty",objLoanRegister."Outstanding Insurance Fee",objLoanRegister."Outstanding Appraisal Fee");
+          IF objLoanRegister."Outstanding Balance" > 0 THEN
+
+            loans += '{"LoanCode":"' + objLoanRegister."Loan  No." + '",' +
+                     '"OutstandingBalance":"' + FORMAT(objLoanRegister."Outstanding Balance"+objLoanRegister."Oustanding Interest"+objLoanRegister."Outstanding Penalty"
+          +objLoanRegister."Outstanding Insurance Fee"+objLoanRegister."Outstanding Appraisal Fee") + '",' +
+                     '"LoanProductCode":"' + objLoanRegister."Loan Product Type" + '",' +
+                     '"LoanProductName":"' + objLoanRegister."Loan Product Type Name" + '",' +
+                     '"LoanSASRAStatus":"' + FORMAT(objLoanRegister."Loans Category-SASRA") + '",' +
+                     '"LoanStatus":"' + FORMAT(objLoanRegister."Loan Status") + '",' +
+                     '"Installments":"' + FORMAT(objLoanRegister.Installments) + '",' +
+                     '"RemainingInstallments":"' + FORMAT(i) + '",' +
+                     '"RequestedAmount":"' + FORMAT(objLoanRegister."Requested Amount") + '"},';
+          UNTIL
+          objLoanRegister.NEXT=0;
+          loans += ']}';
+          EXIT(loans);
+        END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnGetLoanSetup@22() loansetups : Text;
+    BEGIN
+      Loansetup.RESET;
+      Loansetup.SETRANGE("Loan Calculator",TRUE);
+      IF Loansetup.FIND('-') THEN BEGIN
+        loansetups:='{"LoanTypes":[';
+        REPEAT
+          loansetups += '{"LoanCode":"' + FORMAT(Loansetup.Code) + '",' +
+                        '"LoanDescription":"' + Loansetup."Product Description" + '",' +
+                        '"LoanInterest":"' + FORMAT(Loansetup."Interest rate") + '",' +
+                        '"LoanInstallments":"' + FORMAT(Loansetup."Instalment Period") + '",' +
+                        '"LoanMultiplier":' + FORMAT(Loansetup."Deposits Multiplier") + ',' +
+                        '"LoanRepaymentMethod":"' + FORMAT(Loansetup."Repayment Method") + '"},';
+        UNTIL Loansetup.NEXT=0;
+        loansetups += ']}';
+      END;
+    END;
+
+    PROCEDURE FnGetLoanCharges@44(LoanProductType@1000 : Code[20];LoanAmount@1001 : Decimal) charges : Text;
+    VAR
+      Appraisal@1002 : Decimal;
+      Insurance@1003 : Decimal;
+      ObjProductCharge@1004 : Record 51516383;
+      AppraisalText@1005 : Text;
+      InsuranceText@1006 : Text;
+    BEGIN
+      BEGIN
+
+          Appraisal :=
+              SFactory.FnGetChargeFee(
+                  LoanProductType,
+                  LoanAmount,
+                  'LAP'
+              );
+
+          Insurance :=
+              SFactory.FnGetChargeFee(
+                  LoanProductType,
+                  LoanAmount,
+                  'CRB'
+              );
+
+          AppraisalText := FORMAT(Appraisal);
+          InsuranceText := FORMAT(Insurance);
+
+          AppraisalText := DELCHR(AppraisalText, '=', ',');
+          InsuranceText := DELCHR(InsuranceText, '=', ',');
+
+          charges :=
+              '{"Appraisal":' +
+              AppraisalText +
+              ',"Insurance":' +
+              InsuranceText +
+              '}';
+
+      END;
+    END;
+
+    PROCEDURE FnMemberLogin@23(membernumber@1000 : Code[20]) : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", membernumber);
+      IF objMember.FIND('-') THEN BEGIN
+        IF objMember."Telex No." <> '1' THEN
+          EXIT('NOTACTIVE');
+        EXIT(objMember.Password);
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnSendLoginOTP@28(membernumber@1000 : Code[20]) : Text;
+    VAR
+      RanNo@1001 : Code[20];
+      sms@1002 : Text[250];
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", membernumber);
+      IF objMember.FIND('-') THEN BEGIN
+        IF objMember."Telex No." <> '1' THEN
+          EXIT('NOTACTIVE');
+        RanNo := FORMAT(10000 + RANDOM(90000));
+        objMember."Address 2" := RanNo;
+        objMember.MODIFY;
+        sms := 'Your login OTP is: ' + RanNo + '. Please do not share your code with anyone. Thank you. JUMBO SACCO.';
+        FnSMSMessage(objMember."No.",objMember."Mobile Phone No",sms);
+        EXIT('TRUE');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnConfirmOTP@35(membernumber@1000 : Code[20];otp@1001 : Code[20]) : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", membernumber);
+      IF objMember.FIND('-') THEN BEGIN
+        IF objMember."Address 2" = otp THEN BEGIN
+          objMember."Address 2" := '';
+          objMember.MODIFY;
+          EXIT(objMember."No." + '|TRUE');
+        END;
+        EXIT('WRONGOTP');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnResetPortalPasswrd@50(membernumber@1000 : Code[20]) : Text;
+    VAR
+      RanNo@1002 : Code[20];
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", membernumber);
+      //objMember.SETRANGE("Personal No", payrollnumber);
+      IF objMember.FINDFIRST THEN BEGIN
+        RanNo := FORMAT(10000 + RANDOM(90000));
+        objMember."Address 2" := RanNo;
+        objMember.MODIFY;
+        sms := 'You Portal Password Reset OTP is: ' + RanNo + '. Please do not share you code with anyone. Thank you. JUMBO SACCO.';
+        FnSMSMessage(objMember."No.",objMember."Mobile Phone No",sms);
+        EXIT('TRUE');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnConfrimResetOTP@53(membernumber@1000 : Code[20];otp@1001 : Code[20]) : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", membernumber);
+      IF objMember.FIND('-') THEN BEGIN
+        IF objMember."Address 2" = otp THEN BEGIN
+          objMember."Address 2" := '';
+          objMember.MODIFY;
+          EXIT(objMember."No." + '|TRUE');
+        END;
+        EXIT('WRONGOTP');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnPortalUpdatePassword@58(membernumber@1000 : Code[20];password@1001 : Text[250]) : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", membernumber);
+      IF objMember.FIND('-') THEN BEGIN
+        objMember.Password := password;
+        objMember."Telex No." := '1';
+        objMember."Password Reset Date" := CREATEDATETIME(TODAY, TIME);
+        objMember.MODIFY;
+        EXIT(objMember."No." + '|TRUE');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnGetNextofKin@81(membernumber@1000 : Code[10]) results : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.",membernumber);
+      IF objMember.FIND('-') THEN BEGIN
+        objNextKin.RESET;
+        objNextKin.SETRANGE("Account No", objMember."No.");
+        IF objNextKin.FIND('-') THEN BEGIN
+          results := '{"NextofKins":[';
+          REPEAT
+            results += '{"KinName":"' + objNextKin.Name + '", ' +
+                       '"KinRelationship":"' + objNextKin.Relationship+'",' +
+                       '"Address":"' + objNextKin.Address + '",' +
+                       '"Allocation":"' + FORMAT(objNextKin."%Allocation") + '",' +
+                       '"EntryNumber":"' + FORMAT(objNextKin."Entry No")+'"},';
+          UNTIL objNextKin.NEXT=0;
+          results += ']}';
+          END;
+      END;
+    END;
+
+    PROCEDURE FnGetMemberLoanApplications@26(memberid@1000 : Code[10]) loanapps : Text;
+    BEGIN
+      OnlineLoanApplications.RESET;
+      OnlineLoanApplications.SETRANGE("Member ID", memberid);
+
+      IF OnlineLoanApplications.FIND('-') THEN BEGIN
+        loanapps := '{"OnlineLoansApps":[';
+
+        REPEAT
+          loanapps += '{"LoanAppID":"' + FORMAT(OnlineLoanApplications."Loan App ID") + '",' +
+                      '"RequestedAmount":"' + FORMAT(OnlineLoanApplications."Requested Amount") + '",' +
+                      '"Status":"' + FORMAT(OnlineLoanApplications.Status) + '",' +
+                      '"RequestDate":"'+ FORMAT(OnlineLoanApplications."Requested Date") + '",' +
+                      '"LastUpdateDate":"' + FORMAT(OnlineLoanApplications."Last Update Time") + '",' +
+                      '"LoanType":"' + FORMAT(OnlineLoanApplications."Loan Type Name") + '"},';
+
+        UNTIL OnlineLoanApplications.NEXT = 0;
+
+        loanapps += '],}';
+        //MESSAGE(loanapps);
+        EXIT(loanapps);
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnStartLoanApplication@27(memberid@1000 : Code[10];loantype@1001 : Code[50];amount@1002 : Decimal;foldername@1003 : Text[100]) : Text;
+    BEGIN
+      OnlineLoanApplications.RESET;
+      OnlineLoanApplications.SETRANGE("Member ID", memberid);
+      OnlineLoanApplications.SETRANGE(Status, OnlineLoanApplications.Status::New);
+
+      IF OnlineLoanApplications.FIND('-') THEN
+        EXIT('PENDINGAPP');
+
+      Loansetup.RESET;
+      Loansetup.SETRANGE(Code, loantype);
+      IF Loansetup.FIND('-') THEN BEGIN
+        objMember.RESET;
+        objMember.SETRANGE("No.", memberid);
+        IF objMember.FIND('-') THEN BEGIN
+          OnlineLoanApplications.INIT;
+          OnlineLoanApplications."Loan Type" := Loansetup.Code;
+          OnlineLoanApplications."Requested Amount" := amount;
+          OnlineLoanApplications.Status := OnlineLoanApplications.Status::New;
+          OnlineLoanApplications."Member ID" := objMember."No.";
+          OnlineLoanApplications."Member Name" := objMember.Name;
+          OnlineLoanApplications."Requested Date" := CREATEDATETIME(TODAY,TIME);
+          OnlineLoanApplications."Last Update Time" := CREATEDATETIME(TODAY,TIME);
+          OnlineLoanApplications."Loan Type Name" := Loansetup."Product Description";
+          OnlineLoanApplications."Documents Folder Name" := foldername;
+          OnlineLoanApplications.INSERT();
+          EXIT('TRUE');
+        END;
+        EXIT('MEMBERNOTFOUND');
+      END;
+      EXIT('NOLOANTYPE');
+    END;
+
+    PROCEDURE FnRequestGuarantorshio@30(loanid@1000 : Integer;guarantorid@1001 : Code[10]) : Text;
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE("Loan Application ID", loanid);
+      OnlineLoanGuarantors.SETRANGE("Guarantor Id", guarantorid);
+      OnlineLoanGuarantors.SETFILTER(Status, '<>%1', OnlineLoanGuarantors.Status::Removed);
+      IF OnlineLoanGuarantors.FIND('-') THEN
+        EXIT('EXISTING');
+
+
+      OnlineLoanApplications.RESET;
+      OnlineLoanApplications.SETRANGE("Loan App ID", loanid);
+      IF OnlineLoanApplications.FIND('-') THEN BEGIN
+        objMember.RESET;
+        objMember.SETRANGE("No.", guarantorid);
+        IF objMember.FIND('-') THEN BEGIN
+          objMember.CALCFIELDS("Current Shares");
+          IF ((objMember."Current Shares" - SFactory.FnGetMemberLiability(objMember."No.")) <= 0 ) THEN
+            EXIT('BELOWSHARES');
+
+          OnlineLoanGuarantors.INIT;
+          OnlineLoanGuarantors."Loan Application ID" := OnlineLoanApplications."Loan App ID";
+          OnlineLoanGuarantors."Requester ID" := OnlineLoanApplications."Member ID";
+          OnlineLoanGuarantors."Guarantor Id" := objMember."No.";
+          OnlineLoanGuarantors."Guarantor Name" := objMember.Name;
+          OnlineLoanGuarantors.Status := OnlineLoanGuarantors.Status::New;
+          OnlineLoanGuarantors.RequestDate := CREATEDATETIME(TODAY,TIME);
+          OnlineLoanGuarantors.Comment := 'Awaiting Approval by Guarantor';
+          OnlineLoanGuarantors."Loan Amount" := OnlineLoanApplications."Requested Amount";
+          OnlineLoanGuarantors.INSERT;
+
+          EXIT('TRUE');
+        END;
+        EXIT('MEMBERNOTFOUND');
+      END;
+      EXIT('LOANNOTFOUND');
+    END;
+
+    PROCEDURE FnGetMemberGuarantorships@36(membernumber@1000 : Code[10]) guarantorships : Text;
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE("Guarantor Id", membernumber);
+      guarantorships := '{"Guarantorships":[' ;
+      IF OnlineLoanGuarantors.FINDSET THEN BEGIN
+        REPEAT
+          OnlineLoanApplications.RESET;
+          OnlineLoanApplications.SETRANGE("Loan App ID", OnlineLoanGuarantors."Loan Application ID");
+          //OnlineLoanApplications.SETRANGE(Status, OnlineLoanApplications.Status::Processing);
+          IF OnlineLoanApplications.FIND('-') THEN BEGIN
+          guarantorships += '{"GuarantorshipID":"' + FORMAT(OnlineLoanGuarantors.GuarantorshipID) + '",' +
+                            '"RequestorName":"' + OnlineLoanApplications."Member Name" + '",' +
+                            '"RequestedAmount":"' + FORMAT(OnlineLoanGuarantors."Loan Amount") + '",' +
+                            '"Status":"' + FORMAT(OnlineLoanGuarantors.Status) + '",' +
+                            '"GuaranteedAmount":"' + FORMAT(OnlineLoanGuarantors."Guarantorship Amount") + '",' +
+                            '"RequestedDate":"' + FORMAT(OnlineLoanGuarantors.RequestDate) + '"},';
+          END;
+        UNTIL OnlineLoanGuarantors.NEXT = 0;
+      END;
+      guarantorships += ']}';
+    END;
+
+    PROCEDURE FnSendApprovalOTP@75(guarantorshipid@1000 : Integer;memberid@1001 : Code[10];amount@1002 : Decimal) : Text;
+    VAR
+      RanNo@1003 : Code[6];
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE(GuarantorshipID, guarantorshipid);
+      OnlineLoanGuarantors.SETRANGE("Guarantor Id", memberid);
+      IF OnlineLoanGuarantors.FIND('-') THEN BEGIN
+        IF OnlineLoanGuarantors.Status <> OnlineLoanGuarantors.Status::New THEN
+          EXIT('ALREADYDONE');
+
+        OnlineLoanApplications.RESET;
+        OnlineLoanApplications.SETRANGE("Loan App ID", OnlineLoanGuarantors."Loan Application ID");
+        IF OnlineLoanApplications.FIND('-') THEN BEGIN
+
+          objMember.GET(memberid);
+          RanNo := FORMAT(10000 + RANDOM(90000));
+          sms := 'Your guarantorship OTP for ' + FORMAT(amount) + 'Ksh. for ' + OnlineLoanApplications."Member Name" +
+          ' Loan of ' + FORMAT(OnlineLoanApplications."Requested Amount") + 'Ksh is: ' + RanNo + '. Thank you. JUMBO SACCO.';
+          FnSMSMessage(objMember."No.",objMember."Mobile Phone No",sms);
+
+          OnlineLoanGuarantors."Guarantorship Amount" := amount;
+          OnlineLoanGuarantors.OTP := RanNo;
+          OnlineLoanGuarantors.Comment := 'Awaiting OTP approval by Guarantor';
+          OnlineLoanGuarantors.MODIFY;
+          EXIT('TRUE');
+        END;
+
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnApproveGuarantorship@31(guarantorshipid@1000 : Integer;memberid@1001 : Code[10];otp@1002 : Code[10]) : Text;
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE(GuarantorshipID, guarantorshipid);
+      OnlineLoanGuarantors.SETRANGE("Guarantor Id", memberid);
+      IF OnlineLoanGuarantors.FIND('-') THEN BEGIN
+        IF OnlineLoanGuarantors.OTP <> otp THEN
+          EXIT('WRONGOTP');
+
+        OnlineLoanGuarantors.ApprovalDate := CREATEDATETIME(TODAY,TIME);
+        OnlineLoanGuarantors.OTP := '';
+        OnlineLoanGuarantors.Status := OnlineLoanGuarantors.Status::Approved;
+        OnlineLoanGuarantors.Comment := 'Guarantorship approved on ' + FORMAT(TODAY) + ' at ' + FORMAT(TIME);
+        OnlineLoanGuarantors.MODIFY;
+
+        OnlineLoanApplications.RESET;
+        OnlineLoanApplications.SETRANGE("Loan App ID", OnlineLoanGuarantors."Loan Application ID");
+        IF OnlineLoanApplications.FIND('-') THEN BEGIN
+          OnlineLoanApplications."Amount Guaranteed" := GetTotalLoanAppGuarantorship(OnlineLoanGuarantors."Loan Application ID");
+          OnlineLoanApplications.MODIFY;
+
+          IF (OnlineLoanApplications."Amount Guaranteed" >= OnlineLoanApplications."Requested Amount") THEN BEGIN
+            AutoPostLoanApplication(OnlineLoanApplications."Loan App ID");
+          END;
+        END;
+
+        EXIT('TRUE');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnRejectGuarantorship@32(guarantorshipid@1000 : Integer;memberid@1001 : Code[10];comment@1002 : Text[200]) : Text;
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE(GuarantorshipID, guarantorshipid);
+      OnlineLoanGuarantors.SETRANGE("Guarantor Id", memberid);
+      IF OnlineLoanGuarantors.FIND('-') THEN BEGIN
+        OnlineLoanGuarantors.Status := OnlineLoanGuarantors.Status::Rejected;
+        OnlineLoanGuarantors.Comment := 'Member Comment: ' + comment;
+        OnlineLoanGuarantors.ApprovalDate := CREATEDATETIME(TODAY,TIME);
+        OnlineLoanGuarantors.MODIFY;
+        EXIT('TRUE');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnGetLoanApplicationInformation@42(loanid@1000 : Integer) loandetails : Text;
+    BEGIN
+      OnlineLoanApplications.RESET;
+      OnlineLoanApplications.SETRANGE("Loan App ID", loanid);
+
+      IF OnlineLoanApplications.FIND('-') THEN BEGIN
+        loandetails += '{"LoanAppID":"' + FORMAT(OnlineLoanApplications."Loan App ID") + '",' +
+                      '"RequestedAmount":"' + FORMAT(OnlineLoanApplications."Requested Amount") + '",' +
+                      '"Status":"' + FORMAT(OnlineLoanApplications.Status) + '",' +
+                      '"RequestDate":"' + FORMAT(OnlineLoanApplications."Requested Date") + '",' +
+                      '"LastUpdateDate":"' + FORMAT(OnlineLoanApplications."Last Update Time") + '",' +
+                      '"LoanType":"' + FORMAT(OnlineLoanApplications."Loan Type Name") + '",' +
+                      '"TotalGuaranteed":"' + FORMAT(GetTotalLoanAppGuarantorship(loanid)) + '",' +
+                      '"OnlineGuarantors":[';
+
+          OnlineLoanGuarantors.RESET;
+          OnlineLoanGuarantors.SETRANGE("Loan Application ID", OnlineLoanApplications."Loan App ID");
+          IF OnlineLoanGuarantors.FINDSET() THEN BEGIN
+            REPEAT
+              loandetails += '{"LoanAppID":"' + FORMAT(OnlineLoanGuarantors.GuarantorshipID) + '",' +
+                          '"GuarantorName":"' + OnlineLoanGuarantors."Guarantor Name" + '",' +
+                          '"LoanAmount":"' + FORMAT(OnlineLoanGuarantors."Loan Amount") + '",' +
+                          '"GuarantorshipStatus":"' + FORMAT(OnlineLoanGuarantors.Status) + '",' +
+                          '"ApprovedAmount":"' + FORMAT(OnlineLoanGuarantors."Guarantorship Amount") + '"},';
+            UNTIL OnlineLoanGuarantors.NEXT = 0;
+          END;
+
+
+        loandetails += ']}';
+        //MESSAGE(loanapps);
+        EXIT(loandetails);
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnRemoveGuarantorFromApplication@60(guarantorshipid@1001 : Integer) : Text;
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE(GuarantorshipID, guarantorshipid);
+      IF OnlineLoanGuarantors.FIND('-') THEN BEGIN
+        OnlineLoanGuarantors.Status := OnlineLoanGuarantors.Status::Removed;
+        OnlineLoanGuarantors.Comment := 'Guarantor removed by Loan Requestor at ' + FORMAT(CREATEDATETIME(TODAY,TIME));
+        OnlineLoanGuarantors.MODIFY;
+
+        OnlineLoanApplications.RESET;
+        OnlineLoanApplications.SETRANGE("Loan App ID", OnlineLoanGuarantors."Loan Application ID");
+        IF OnlineLoanApplications.FIND('-') THEN BEGIN
+          OnlineLoanApplications."Last Update Time" := CREATEDATETIME(TODAY,TIME);
+          OnlineLoanApplications.MODIFY;
+        END;
+        EXIT('TRUE');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnSearchForGuarantor@34(guarantoid@1000 : Code[10]) gdetails : Text;
+    BEGIN
+      objMember.RESET;
+      objMember.SETRANGE("No.", guarantoid);
+      IF objMember.FINDFIRST THEN BEGIN
+        gdetails := '{"GuarantorID":"' + guarantoid + '",' +
+                    '"GuarantorName":"' + objMember.Name + '"}';
+        EXIT(gdetails);
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    PROCEDURE FnCalculateMemberTotalEligibility@38(memberid@1000 : Code[10]) loaneligibility : Text;
+    VAR
+      loanliabilitytotal@1001 : Decimal;
+      totaldeposits@1002 : Decimal;
+    BEGIN
+
+      objMember.RESET;
+      objMember.SETRANGE("No.", memberid);
+      IF objMember.FIND('-') THEN BEGIN
+        loaneligibility := '{"MemberNumber":"' + memberid + '",' +
+                           '"MemberName":"' + objMember.Name + '",';
+        objMember.CALCFIELDS("Outstanding Balance", "Outstanding Interest", "Outstanding Appraisal Fee", "Outstanding Insurance Fee");
+        objMember.CALCFIELDS("Current Shares", "School Fee", "Special Product");
+
+        totaldeposits := objMember."Current Shares" + objMember."Special Product" + objMember."School Fee";
+
+        loanliabilitytotal := objMember."Outstanding Appraisal Fee" + objMember."Outstanding Balance" + objMember."Outstanding Insurance Fee" + objMember."Outstanding Interest";
+
+        loaneligibility += '"TotalDeposits":' + FORMAT(totaldeposits) + ',' +
+                           '"LoanLiability":' + FORMAT(loanliabilitytotal) + '}';
+      END;
+    END;
+
+    PROCEDURE FnGetGuarantorshipDetails@59(guarantorshipid@1000 : Integer) details : Text;
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE(GuarantorshipID, guarantorshipid);
+      IF OnlineLoanGuarantors.FIND('-') THEN BEGIN
+        OnlineLoanApplications.RESET;
+        OnlineLoanApplications.SETRANGE("Loan App ID", OnlineLoanGuarantors."Loan Application ID");
+        IF OnlineLoanApplications.FIND('-') THEN BEGIN
+          details := '{"GuarantorshipID":"' + FORMAT(OnlineLoanGuarantors.GuarantorshipID) + '",' +
+                     '"RequestorName":"' + FORMAT(OnlineLoanApplications."Member Name") + '",' +
+                     '"LoanAmount":"' + FORMAT(OnlineLoanApplications."Requested Amount") + '",' +
+                     '"Status":"' + FORMAT(OnlineLoanGuarantors.Status) + '",' +
+                     '"GuarantorshipAmount":"' + FORMAT(OnlineLoanGuarantors."Guarantorship Amount") + '",' +
+                     '"LoanRequestDate":"' + FORMAT(OnlineLoanApplications."Requested Date") + '",' +
+                     '"GuarantorshipRequestDate":"' + FORMAT(OnlineLoanGuarantors.RequestDate) + '",' +
+                     '"GuarantorshipAppovalDate":"' + FORMAT(OnlineLoanGuarantors.ApprovalDate) + '",' +
+                     '"TotalGuaranteed":"' + FORMAT(GetTotalLoanAppGuarantorship(OnlineLoanApplications."Loan App ID")) + '",' ;
+          objMember.GET(OnlineLoanGuarantors."Guarantor Id");
+          objMember.CALCFIELDS("Current Shares");
+          details += '"MemberMaximumAbility":"' + FORMAT(objMember."Current Shares" - SFactory.FnGetMemberLiability(objMember."No.")) + '"}';
+        END;
+      END
+    END;
+
+    LOCAL PROCEDURE GetTotalLoanAppGuarantorship@61(loanid@1000 : Integer) total : Decimal;
+    BEGIN
+
+      total := 0;
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE("Loan Application ID", loanid);
+      OnlineLoanGuarantors.SETRANGE(Status, OnlineLoanGuarantors.Status::Approved);
+      IF OnlineLoanGuarantors.FINDSET THEN BEGIN
+        REPEAT
+          total :=  total + OnlineLoanGuarantors."Guarantorship Amount";
+        UNTIL OnlineLoanGuarantors.NEXT =0;
+      END;
+    END;
+
+    LOCAL PROCEDURE AutoPostLoanApplication@37(loanappcode@1000 : Integer) : Text;
+    BEGIN
+      OnlineLoanApplications.RESET;
+      OnlineLoanApplications.SETRANGE("Loan App ID", loanappcode);
+      IF OnlineLoanApplications.FIND('-') THEN BEGIN
+
+        //Confirm Member Does not have existing loan with balance
+        {{LoansRec.RESET;
+        LoansRec.SETRANGE(LoansRec."BOSA No",OnlineLoanApplications."Member ID");
+        LoansRec.SETRANGE(LoansRec."Loan Product Type",OnlineLoanApplications."Loan Type");
+        IF LoansRec.FIND('-') THEN BEGIN
+          REPEAT
+            IF LoansRec."Loan Product Type"<>'GUR' THEN BEGIN
+              LoansRec.CALCFIELDS(LoansRec."Outstanding Balance",LoansRec."Top Up Amount");
+              IF (LoansRec."Outstanding Balance">1)THEN BEGIN
+                EXIT('HASEXISTINGLOAN');
+              END;
+            END;
+          UNTIL LoansRec.NEXT=0;
+        END;}}
+
+        //Start Posting Loan To loan Register
+        LoansRec.RESET;
+        LoansRec.INIT;
+        LoansRec.Source := LoansRec.Source::BOSA;
+        LoansRec."Mode of Disbursement" := LoansRec."Mode of Disbursement"::EFT;
+        LoansRec.Discard := LoansRec.Discard::"1";
+        LoansRec."BOSA No" := OnlineLoanApplications."Member ID";
+        LoansRec."Client Code" := OnlineLoanApplications."Member ID";
+        LoansRec."Requested Amount" := OnlineLoanApplications."Requested Amount";
+        LoansRec.VALIDATE("Client Code");
+
+        //Getting Loan Number
+        SalesSetup.GET;
+        SalesSetup.TESTFIELD(SalesSetup."BOSA Loans Nos");
+        NoSeriesMgt.InitSeries(SalesSetup."BOSA Loans Nos",LoansRec."No. Series",0D,LoansRec."Loan  No.",LoansRec."No. Series");
+
+        LoansRec."Application Date":=TODAY;
+        LoansRec.Advice:=TRUE;
+        LoansRec."Captured By":='PORTALADMIN';
+        Users.RESET;
+        Users.SETRANGE(Users."User Name",'PORTALADMIN');
+        IF Users.FIND('-') THEN BEGIN
+          LoansRec."Cashier Branch":=Users."Branch Code";
+        END;
+
+        LoansRec."Loan Product Type" := OnlineLoanApplications."Loan Type";
+        LoansRec.VALIDATE("Loan  No.");
+        LoansRec.VALIDATE("Loan Product Type");
+        LoansRec.INSERT();
+
+        AutoPostGuarantors(LoansRec."Loan  No.", OnlineLoanApplications."Loan App ID");
+        OnlineLoanApplications."Loan Register Code" := LoansRec."Loan  No.";
+        OnlineLoanApplications.Status := OnlineLoanApplications.Status::Processing;
+        OnlineLoanApplications."Last Update Time" := CREATEDATETIME(TODAY,TIME);
+        OnlineLoanApplications.MODIFY();
+        EXIT('DONE');
+      END;
+      EXIT('NOTFOUND');
+    END;
+
+    LOCAL PROCEDURE AutoPostGuarantors@43(loannumber@1000 : Code[20];loannumberapp@1001 : Integer);
+    VAR
+      SelfGuaranteeAmount@1002 : Decimal;
+    BEGIN
+      OnlineLoanGuarantors.RESET;
+      OnlineLoanGuarantors.SETRANGE("Loan Application ID", loannumberapp);
+      OnlineLoanGuarantors.SETRANGE(Status, OnlineLoanGuarantors.Status::Approved);
+      IF OnlineLoanGuarantors.FINDSET THEN BEGIN
+        REPEAT
+          objMember.GET(OnlineLoanGuarantors."Guarantor Id");
+
+          LoanGuarantors.INIT;
+          LoanGuarantors."Loan No" := loannumber;
+          LoanGuarantors."Staff/Payroll No." := objMember."Personal No";
+          LoanGuarantors."Member No" := objMember."No.";
+          objMember.CALCFIELDS(TLoansGuaranteed,"Current Savings");
+          LoanGuarantors."Shares *3":=(objMember."Current Savings");
+          LoanGuarantors."TotalLoan Guaranteed":=objMember.TLoansGuaranteed;
+          objMember.CALCFIELDS("Outstanding Balance","Current Shares","Total Committed Shares");
+          LoanGuarantors.Name:=objMember.Name;
+          LoanGuarantors."Staff/Payroll No." := objMember."Personal No";
+          LoanGuarantors."Loan Balance":=objMember."Outstanding Balance";
+          LoanGuarantors.Shares:=objMember."Current Shares"*1;
+          LoanGuarantors."Amont Guaranteed" := OnlineLoanGuarantors."Guarantorship Amount";
+          LoanGuarantors."TotalLoan Guaranteed":=objMember.TLoansGuaranteed;
+          LoanGuarantors."Free Shares":=(objMember."Current Shares"*3)-objMember.TLoansGuaranteed;
+          LoanGuarantors.UncommittedShares := objMember."Current Shares" - objMember."Total Committed Shares";
+          LoanGuarantors.INSERT();
+        UNTIL OnlineLoanGuarantors.NEXT = 0;
+      END;
+    END;
+
+    PROCEDURE PollPendingEMAILS@39() MessageDetails : Text;
+    VAR
+      memberno@1000 : Text[30];
+    BEGIN
+          BEGIN
+
+
+              SMSMessages.RESET;
+              SMSMessages.SETRANGE(SMSMessages."Email Sent", SMSMessages."Email Sent"::No);
+              SMSMessages.SETRANGE("Date Entered",TODAY);
+              //SMSMessages.SetRange(SMSMessages."Entry No",898758);
+              //SMSMessages.SetFilter(SMSMessages."Date Entered", '=%', TODAY);
+
+              IF SMSMessages.FIND('-') THEN BEGIN
+
+                  IF (SMSMessages."Telephone No" = '')
+                    OR (SMSMessages."Telephone No" = '+')
+                    OR (SMSMessages."SMS Message" = '')
+                    THEN BEGIN
+
+                      SMSMessages."Sent To Server" := SMSMessages."Email Sent"::Failed;
+
+                      SMSMessages.MODIFY;
+
+                  END ELSE BEGIN
+                     memberno := FnGetMemberNo(SMSMessages."Telephone No");
+                      Member.RESET;
+                      Member.SETRANGE("No.", memberno);
+                      IF Member.FIND('-') THEN BEGIN
+                          MessageDetails := '';
+
+                          MessageDetails += FORMAT(SMSMessages."Entry No") + '`' + Member."E-Mail" + '`' + FORMAT(SMSMessages."SMS Message") + '~';
+                          SMSMessages."Email Sent" := SMSMessages."Email Sent"::Yes;
+                          SMSMessages.MODIFY();
+                          EXIT(MessageDetails);
+                      END;
+                      SMSMessages."Email Sent" := SMSMessages."Email Sent"::Failed;
+                      //SMSMessages."Entry No." := 'FAILED';
+                      SMSMessages.MODIFY;
+
+                  END;
+              END;
+          END;
+    END;
+
+    PROCEDURE FnGetMemberNo@41(phoneNo@1000 : Code[100]) : Code[100];
+    BEGIN
+      BEGIN
+          Member.RESET;
+          Member.SETRANGE(Member."Mobile Phone No", phoneNo);
+          IF Member.FIND('-') THEN
+              EXIT(Member."No.");
+
+          Member.RESET;
+          Member.SETRANGE(Member."Phone No.", phoneNo);
+          IF Member.FIND('-') THEN
+              EXIT(Member."No.");
+
+          Member.RESET;
+          Member.SETRANGE(Member."Mobile Phone No", '0' + COPYSTR(phoneNo, 4, 15));
+          IF Member.FIND('-') THEN
+              EXIT(Member."No.");
+
+          Member.RESET;
+          Member.SETRANGE(Member."Phone No.", '0' + COPYSTR(phoneNo, 4, 15));
+          IF Member.FIND('-') THEN
+              EXIT(Member."No.");
+
+          Member.RESET;
+          Member.SETRANGE(Member."No.", phoneNo);
+          IF Member.FIND('-') THEN
+              EXIT(Member."No.");
+
+          EXIT('');
+      END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+

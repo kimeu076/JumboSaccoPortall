@@ -53,6 +53,12 @@ namespace JumboSaccoPortal.ProxyReference {
         
         private System.Threading.SendOrPostCallback NextOfkinDetailsOperationCompleted;
         
+        private System.Threading.SendOrPostCallback MemberApplicationOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback EmployerListOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback PostCodeListOperationCompleted;
+        
         private System.Threading.SendOrPostCallback MemberLoginOperationCompleted;
         
         private System.Threading.SendOrPostCallback ConfirmLoginOTPOperationCompleted;
@@ -164,6 +170,15 @@ namespace JumboSaccoPortal.ProxyReference {
         
         /// <remarks/>
         public event NextOfkinDetailsCompletedEventHandler NextOfkinDetailsCompleted;
+        
+        /// <remarks/>
+        public event MemberApplicationCompletedEventHandler MemberApplicationCompleted;
+        
+        /// <remarks/>
+        public event EmployerListCompletedEventHandler EmployerListCompleted;
+        
+        /// <remarks/>
+        public event PostCodeListCompletedEventHandler PostCodeListCompleted;
         
         /// <remarks/>
         public event MemberLoginCompletedEventHandler MemberLoginCompleted;
@@ -573,6 +588,213 @@ namespace JumboSaccoPortal.ProxyReference {
             if ((this.NextOfkinDetailsCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.NextOfkinDetailsCompleted(this, new NextOfkinDetailsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/MemberApplication", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string MemberApplication(
+                    string firstName, 
+                    string middleName, 
+                    string lastName, 
+                    string payrollNo, 
+                    string address, 
+                    string postalCode, 
+                    string town, 
+                    string countryRegionCode, 
+                    string county, 
+                    string mobilePhoneNo, 
+                    string secondaryMobileNo, 
+                    string email, 
+                    System.DateTime dateOfBirth, 
+                    string idNo, 
+                    string passportNo, 
+                    string kraPin, 
+                    string gender, 
+                    string maritalStatus, 
+                    string howDidYouKnow, 
+                    string recruitedBy, 
+                    string recruiterName, 
+                    string applicationCategory, 
+                    string employerCode, 
+                    string workstation, 
+                    string department) {
+            object[] results = this.Invoke("MemberApplication", new object[] {
+                        firstName,
+                        middleName,
+                        lastName,
+                        payrollNo,
+                        address,
+                        postalCode,
+                        town,
+                        countryRegionCode,
+                        county,
+                        mobilePhoneNo,
+                        secondaryMobileNo,
+                        email,
+                        dateOfBirth,
+                        idNo,
+                        passportNo,
+                        kraPin,
+                        gender,
+                        maritalStatus,
+                        howDidYouKnow,
+                        recruitedBy,
+                        recruiterName,
+                        applicationCategory,
+                        employerCode,
+                        workstation,
+                        department});
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void MemberApplicationAsync(
+                    string firstName, 
+                    string middleName, 
+                    string lastName, 
+                    string payrollNo, 
+                    string address, 
+                    string postalCode, 
+                    string town, 
+                    string countryRegionCode, 
+                    string county, 
+                    string mobilePhoneNo, 
+                    string secondaryMobileNo, 
+                    string email, 
+                    System.DateTime dateOfBirth, 
+                    string idNo, 
+                    string passportNo, 
+                    string kraPin, 
+                    string gender, 
+                    string maritalStatus, 
+                    string howDidYouKnow, 
+                    string recruitedBy, 
+                    string recruiterName, 
+                    string applicationCategory, 
+                    string employerCode, 
+                    string workstation, 
+                    string department) {
+            this.MemberApplicationAsync(firstName, middleName, lastName, payrollNo, address, postalCode, town, countryRegionCode, county, mobilePhoneNo, secondaryMobileNo, email, dateOfBirth, idNo, passportNo, kraPin, gender, maritalStatus, howDidYouKnow, recruitedBy, recruiterName, applicationCategory, employerCode, workstation, department, null);
+        }
+        
+        /// <remarks/>
+        public void MemberApplicationAsync(
+                    string firstName, 
+                    string middleName, 
+                    string lastName, 
+                    string payrollNo, 
+                    string address, 
+                    string postalCode, 
+                    string town, 
+                    string countryRegionCode, 
+                    string county, 
+                    string mobilePhoneNo, 
+                    string secondaryMobileNo, 
+                    string email, 
+                    System.DateTime dateOfBirth, 
+                    string idNo, 
+                    string passportNo, 
+                    string kraPin, 
+                    string gender, 
+                    string maritalStatus, 
+                    string howDidYouKnow, 
+                    string recruitedBy, 
+                    string recruiterName, 
+                    string applicationCategory, 
+                    string employerCode, 
+                    string workstation, 
+                    string department, 
+                    object userState) {
+            if ((this.MemberApplicationOperationCompleted == null)) {
+                this.MemberApplicationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnMemberApplicationOperationCompleted);
+            }
+            this.InvokeAsync("MemberApplication", new object[] {
+                        firstName,
+                        middleName,
+                        lastName,
+                        payrollNo,
+                        address,
+                        postalCode,
+                        town,
+                        countryRegionCode,
+                        county,
+                        mobilePhoneNo,
+                        secondaryMobileNo,
+                        email,
+                        dateOfBirth,
+                        idNo,
+                        passportNo,
+                        kraPin,
+                        gender,
+                        maritalStatus,
+                        howDidYouKnow,
+                        recruitedBy,
+                        recruiterName,
+                        applicationCategory,
+                        employerCode,
+                        workstation,
+                        department}, this.MemberApplicationOperationCompleted, userState);
+        }
+        
+        private void OnMemberApplicationOperationCompleted(object arg) {
+            if ((this.MemberApplicationCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.MemberApplicationCompleted(this, new MemberApplicationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/EmployerList", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string EmployerList() {
+            object[] results = this.Invoke("EmployerList", new object[0]);
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void EmployerListAsync() {
+            this.EmployerListAsync(null);
+        }
+        
+        /// <remarks/>
+        public void EmployerListAsync(object userState) {
+            if ((this.EmployerListOperationCompleted == null)) {
+                this.EmployerListOperationCompleted = new System.Threading.SendOrPostCallback(this.OnEmployerListOperationCompleted);
+            }
+            this.InvokeAsync("EmployerList", new object[0], this.EmployerListOperationCompleted, userState);
+        }
+        
+        private void OnEmployerListOperationCompleted(object arg) {
+            if ((this.EmployerListCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.EmployerListCompleted(this, new EmployerListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/PostCodeList", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public string PostCodeList() {
+            object[] results = this.Invoke("PostCodeList", new object[0]);
+            return ((string)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void PostCodeListAsync() {
+            this.PostCodeListAsync(null);
+        }
+        
+        /// <remarks/>
+        public void PostCodeListAsync(object userState) {
+            if ((this.PostCodeListOperationCompleted == null)) {
+                this.PostCodeListOperationCompleted = new System.Threading.SendOrPostCallback(this.OnPostCodeListOperationCompleted);
+            }
+            this.InvokeAsync("PostCodeList", new object[0], this.PostCodeListOperationCompleted, userState);
+        }
+        
+        private void OnPostCodeListOperationCompleted(object arg) {
+            if ((this.PostCodeListCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.PostCodeListCompleted(this, new PostCodeListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -1481,6 +1703,84 @@ namespace JumboSaccoPortal.ProxyReference {
         private object[] results;
         
         internal NextOfkinDetailsCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    public delegate void MemberApplicationCompletedEventHandler(object sender, MemberApplicationCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class MemberApplicationCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal MemberApplicationCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    public delegate void EmployerListCompletedEventHandler(object sender, EmployerListCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class EmployerListCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal EmployerListCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public string Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    public delegate void PostCodeListCompletedEventHandler(object sender, PostCodeListCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9037.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class PostCodeListCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal PostCodeListCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
                 base(exception, cancelled, userState) {
             this.results = results;
         }
