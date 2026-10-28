@@ -4,6 +4,9 @@ using System.Globalization;
 using System.Text.Json;
 using System.Web.Mvc;
 using JumboSaccoPortal.Models;
+using System.Configuration;
+using System.Net;
+using System.Net.Mail;
 
 namespace JumboSaccoPortal.Controllers
 {
@@ -81,6 +84,7 @@ namespace JumboSaccoPortal.Controllers
                     if (response != null && response.StartsWith("SUCCESS"))
                     {
                         string applicationNo = response.Replace("SUCCESS:", "").Trim();
+                        SendApplicationEmail(model, applicationNo);
                         TempData["SuccessMessage"] =
                             "Your application has been received. Application No: " + applicationNo;
                         return RedirectToAction("Index", "Login");
@@ -96,6 +100,76 @@ namespace JumboSaccoPortal.Controllers
                 var msg = ex.Message;
                 if (ex.InnerException != null) msg += " | " + ex.InnerException.Message;
                 return Fail("DEBUG: " + msg, model);
+            }
+        }
+        private void SendApplicationEmail(MemberRegistrationModel model, string applicationNo)
+        {
+            try
+            {
+                string smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
+                int smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+                bool enableSsl = bool.Parse(ConfigurationManager.AppSettings["SmtpEnableSsl"]);
+                string smtpUser = ConfigurationManager.AppSettings["SmtpUser"];
+                string smtpPass = ConfigurationManager.AppSettings["SmtpPass"];
+                string staffAddress = ConfigurationManager.AppSettings["SmtpTo"];
+
+                string fullName = (model.FirstName + " " + model.MiddleName + " " + model.LastName)
+                                  .Replace("  ", " ").Trim();
+
+                // 1. Confirmation to the applicant
+                string memberBody =
+                    "Dear " + fullName + ",\n\n" +
+                    "Thank you for applying to join Jumbo Savings and Credit Co-Operative Society Limited.\n\n" +
+                    "Your application has been received.\n" +
+                    "Application No: " + applicationNo + "\n\n" +
+                    "Our team will review your application and contact you shortly.\n\n" +
+                    "Regards,\nJumbo Sacco";
+
+                using (var memberMail = new MailMessage())
+                {
+                    memberMail.From = new MailAddress(smtpUser);
+                    memberMail.To.Add(model.Email);
+                    memberMail.Subject = "Membership Application Received - " + applicationNo;
+                    memberMail.Body = memberBody;
+
+                    using (var smtp = new SmtpClient(smtpHost, smtpPort))
+                    {
+                        smtp.Credentials = new NetworkCredential(smtpUser, smtpPass);
+                        smtp.EnableSsl = enableSsl;
+                        smtp.Send(memberMail);
+                    }
+                }
+
+                // 2. Notification to staff
+                string staffBody =
+                    "A new member application has been submitted from the portal.\n\n" +
+                    "Application No: " + applicationNo + "\n" +
+                    "Name: " + fullName + "\n" +
+                    "ID No: " + model.IDNo + "\n" +
+                    "Mobile: " + model.MobilePhoneNo + "\n" +
+                    "Email: " + model.Email + "\n" +
+                    "Employer Code: " + model.EmployerCode + "\n" +
+                    "Payroll No: " + model.PayrollNo;
+
+                using (var staffMail = new MailMessage())
+                {
+                    staffMail.From = new MailAddress(smtpUser);
+                    staffMail.To.Add(staffAddress);
+                    staffMail.Subject = "New Member Application - " + applicationNo + " - PORTAL";
+                    staffMail.Body = staffBody;
+
+                    using (var smtp = new SmtpClient(smtpHost, smtpPort))
+                    {
+                        smtp.Credentials = new NetworkCredential(smtpUser, smtpPass);
+                        smtp.EnableSsl = enableSsl;
+                        smtp.Send(staffMail);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // The application is already saved in BC, so only log the email failure
+                System.Diagnostics.Debug.WriteLine("Application email failed: " + ex.ToString());
             }
         }
 
